@@ -1,0 +1,105 @@
+#footer {
+
+
+    /* margin-top: 50px; */
+    background-color: #000000;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+#footer .separator {
+    width: 100%;
+    height: 1px;
+    /* Or any height you desire */
+    background-color: #ccc;
+    /* Or any color you desire */
+    margin-top: 20px;
+    /* Adjust as needed to control the space above the line */
+    margin-bottom: 20px;
+    /* Adjust as needed to control the space below the line */
+}
+
+.footer_wrapper {
+    display: grid;
+    grid-template-columns: 1.4fr repeat(3, 1fr);
+    justify-items: center;
+    gap: 2rem;
+}
+
+.foot_subs p {
+    color: #A9AFC3;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.foot_subs .btn {
+    margin-top: 1rem;
+}
+
+.foot_menu ul {
+    color: #A9AFC3;
+    margin-top: 1.8rem;
+    display: grid;
+    gap: 1rem;
+    list-style: none;
+}
+
+.foot_menu ul a {
+    color: #A9AFC3;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.foot_menu ul a:hover {
+    opacity: 1;
+}
+
+.foot_menu h4 {
+    color: #A9AFC3;
+    font-size: 16px;
+    opacity: 0.8;
+    justify-content: center;
+}
+
+.sub_footer_wrapper {
+    color: #A9AFC3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 40px;
+}
+
+.foot_copyright {
+    font-size: 0.95rem;
+}
+
+.foot_copyright a {
+    color: #eee;
+    opacity: 0.8;
+}
+
+.foot_copyright a:hover {
+    opacity: 1;
+}
+
+.foot_social {
+    display: flex;
+    gap: 2rem;
+    font-size: 1.2rem;
+    margin-right: 4rem;
+}
+
+.foot_about {
+    padding-left: 40px;
+}
+
+.foot_about h2 a {
+    color: #fff;
+    font-size: 24px;
+    opacity: 1;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding-right: 50px;
+}
