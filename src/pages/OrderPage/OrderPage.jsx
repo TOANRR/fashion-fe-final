@@ -6,7 +6,7 @@ import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons'
 import { WrapperInputNumber } from '../../components/ProductDetailComponent/style';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { useDispatch, useSelector } from 'react-redux';
-import { decreaseAmount, increaseAmount, removeAllOrderProduct, removeOrderProduct, selectedOrder } from '../../redux/slides/orderSlide';
+import { addOrderProduct, decreaseAmount, increaseAmount, removeAllOrderProduct, removeOrderProduct, resetOrder, selectedOrder } from '../../redux/slides/orderSlide';
 import { convertPrice } from '../../utils';
 import { useMemo } from 'react';
 import ModalComponent from '../../components/ModalComponent/ModalComponent';
@@ -49,13 +49,55 @@ const OrderPage = () => {
       try {
         const response = await axios.get('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
         setCities(response.data);
+
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
+    const updateOrder = async () => {
+      if (user?.id && user?.access_token) {
+
+        const res = await CardService.getAllItems(user?.id, user?.access_token)
+        dispatch(resetOrder())
+        res.data.forEach((data, index) => {
+          let orderItem = {
+            name: data?.product.name,
+            amount: data?.quantity,
+            image: data?.product.images[0],
+            price: data?.product.price,
+            product: data?.product._id,
+            discount: data?.product.discount,
+            countInstock: data?.countInStock,
+            size: data?.size
+          }
+          console.log(orderItem)
+          dispatch(addOrderProduct({
+            orderItem
+
+          }))
+        });
+
+
+      }
+    }
+    updateOrder()
+
   }, []);
+  useEffect(() => {
+    if (user?.city && (districts.length === 0)) {
+      const selectedC = cities.find((city) => city.Name === user?.city)
+      setDistricts(selectedC?.Districts || []);
+    }
+  }, [user?.city, cities]); // Gọi lại khi user.city hoặc cities thay đổi
+
+  useEffect(() => {
+    if (user?.district && (wards.length === 0)) {
+      const selectedD = districts.find((district) => district.Name === user?.district)
+      setWards(selectedD?.Wards || []);
+    }
+  }, [user?.district, districts]); // Gọi lại k
 
   const handleCityChange = (value) => {
     if (value) {
@@ -88,6 +130,13 @@ const OrderPage = () => {
       setWards([]);
     }
   };
+  // const handleWards = (value) => {
+
+  //   const selectedDistrict = districts.find((district) => district.Name === value);
+  //   setWards(selectedDistrict.Wards);
+
+
+  // };
   const handleWardChange = (value) => {
     if (value) {
       const selectedWard = wards.find((ward) => ward.Id === value);
@@ -117,7 +166,9 @@ const OrderPage = () => {
 
   const handleChangeCount = async (type, idProduct, limited, size) => {
     if (type === 'increase') {
+      // console.log(amout, limited)
       if (!limited) {
+
 
         const res = await CardService.addToCard({
 
@@ -126,24 +177,33 @@ const OrderPage = () => {
           user: user?.id,
           size: size
         }, user?.access_token)
-        if (res.message === "SUCCESS")
-          dispatch(increaseAmount({ idProduct, size }))
+        console.log(res)
+        if (res.status === "OK") { dispatch(increaseAmount({ idProduct, size })) }
 
+        else
+          message.error("số lượng không đủ")
       }
-    } else {
-      if (!limited) {
-
-        const res = await CardService.addToCard({
-
-          product: idProduct,
-          quantity: -1,
-          user: user?.id,
-          size: size
-        }, user?.access_token)
-        if (res.message === "SUCCESS")
-          dispatch(decreaseAmount({ idProduct, size }))
-      }
+      else
+        message.error("số lượng không đủ")
     }
+    else
+      if (type == 'decrease') {
+        if (!limited) {
+
+          const res = await CardService.addToCard({
+
+            product: idProduct,
+            quantity: -1,
+            user: user?.id,
+            size: size
+          }, user?.access_token)
+          if (res.status === "OK") { dispatch(decreaseAmount({ idProduct, size })) }
+          else
+            message.error("Vui lòng chọn số lượng lớn hơn 0")
+        }
+        else
+          message.error("Vui lòng chọn số lượng lớn hơn 0")
+      }
   };
 
   const handleDeleteOrder = async (idProduct, size) => {
@@ -180,6 +240,7 @@ const OrderPage = () => {
 
   useEffect(() => {
     if (isOpenModalUpdateInfo) {
+
       setStateUserDetails({
         city: user?.city,
         district: user?.district,
@@ -237,7 +298,7 @@ const OrderPage = () => {
   const handleAddCard = () => {
     if (!order?.orderItemsSlected?.length) {
       message.error('Vui lòng chọn sản phẩm')
-    } else if (!user?.phone || !user.address || !user.name || !user.city) {
+    } else if (!user?.phone || !user?.address || !user?.name || !user?.city || !user?.ward || !user?.district) {
       setIsOpenModalUpdateInfo(true)
     }
     else {
@@ -352,7 +413,7 @@ const OrderPage = () => {
                           <MinusOutlined style={{ color: '#000', fontSize: '10px' }} />
                         </button>
                         <WrapperInputNumber defaultValue={order?.amount} value={order?.amount} size="small" min={1} max={order?.countInstock} />
-                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('increase', order?.product, order?.amount === order.countInstock, order?.size)}>
+                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('increase', order?.product, order?.amount === order?.countInstock, order?.size)}>
                           <PlusOutlined style={{ color: '#000', fontSize: '10px' }} />
                         </button>
                       </WrapperCountOrder>
@@ -369,7 +430,7 @@ const OrderPage = () => {
               <WrapperInfo>
                 <div>
                   <span>Địa chỉ: </span>
-                  <span style={{ fontWeight: 'bold' }}>{`${user?.address} ${user?.city}`} </span>
+                  <span style={{ fontWeight: 'bold' }}>{`${user?.address} ${user?.ward} ${user?.district} ${user?.city}`} </span>
                   <span onClick={handleChangeAddress} style={{ color: 'blue', cursor: 'pointer' }}>Thay đổi</span>
                 </div>
               </WrapperInfo>

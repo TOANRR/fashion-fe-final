@@ -58,7 +58,7 @@ const SignInPage = () => {
 
             };
             const result = fetchData()
-              .catch(console.error);;
+              .catch(console.error);
 
             result.then(function (res) {
               console.log(res) // "Some User token"

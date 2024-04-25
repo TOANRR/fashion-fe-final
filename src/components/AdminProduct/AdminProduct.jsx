@@ -583,7 +583,7 @@ const AdminProduct = () => {
 
 
 
-  const onFinish = () => {
+  const onFinishmodal = () => {
     const params = {
       name: stateProduct.name,
       price: stateProduct.price,
@@ -731,14 +731,14 @@ const AdminProduct = () => {
           };
         }} />
       </div>
-      <ModalComponent forceRender={true} title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null} >
+      <ModalComponent title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null}  >
         <Loading isLoading={isPending}>
 
           <Form
             name="basic"
             labelCol={{ span: 5 }}
             wrapperCol={{ span: 30 }}
-            onFinish={onFinish}
+            onFinish={onFinishmodal}
             autoComplete="on"
             form={form}
           >
@@ -782,26 +782,29 @@ const AdminProduct = () => {
             <Form.Item
               label="Sizes"
               name="sizes"
-              rules={[{ required: true, message: 'Please input your discount of product!' }]}
+              rules={[{ required: true, message: 'nhập size và số lượng' }]}
             >
-              {renderSizeInputsAdd()}
-              <div style={{ marginBottom: '16px' }}>
-                <Space>
-                  <Input
-                    placeholder="Size"
-                    value={newSize.size}
-                    onChange={(e) => handleNewSizeChangeAdd(e.target.value, 'size')}
-                    style={{ width: '100px' }}
-                  />
-                  <Input
-                    style={{ width: '100px' }}
-                    placeholder="countInStock"
-                    value={newSize.countInStock}
-                    onChange={(e) => handleNewSizeChangeAdd(e.target.value, 'countInStock')}
-                  />
-                  <Button onClick={handleAddSizeAdd}>Add Size</Button>
-                </Space>
+              <div name="sizes">
+                {renderSizeInputsAdd()}
+                <div style={{ marginBottom: '16px' }}>
+                  <Space>
+                    <Input
+                      placeholder="Size"
+                      value={newSize.size}
+                      onChange={(e) => handleNewSizeChangeAdd(e.target.value, 'size')}
+                      style={{ width: '100px' }}
+                    />
+                    <Input
+                      style={{ width: '100px' }}
+                      placeholder="countInStock"
+                      value={newSize.countInStock}
+                      onChange={(e) => handleNewSizeChangeAdd(e.target.value, 'countInStock')}
+                    />
+                    <Button onClick={handleAddSizeAdd}>Add Size</Button>
+                  </Space>
+                </div>
               </div>
+
             </Form.Item>
 
             {/* {stateProduct.type === 'add_type' && (
@@ -837,7 +840,7 @@ const AdminProduct = () => {
             // rules={[{ required: true, message: 'Please input 4 images!' }]}
             >
               <Loading isLoading={loadImage}>
-                <div onClick={handleClick} style={{ cursor: "pointer" }}>
+                <div onClick={handleClick} style={{ cursor: "pointer" }} name="images">
                   {stateProduct.images[0] ? (
                     <img src={stateProduct.images[0]} alt="upload image" className="img-after" height="40" width="30" />
                   ) : (
@@ -891,11 +894,11 @@ const AdminProduct = () => {
           </Form>
         </Loading>
       </ModalComponent>
-      <DrawerComponent title='Chi tiết sản phẩm' isOpen={isOpenDrawer} onClose={handleCloseDrawer} width="90%" forceRender={true}>
+      <DrawerComponent title='Chi tiết sản phẩm' isOpen={isOpenDrawer} onClose={handleCloseDrawer} width="90%" >
         <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
 
           <Form
-            name="basic"
+            name="basic2"
             labelCol={{ span: 2 }}
             wrapperCol={{ span: 22 }}
             onFinish={onUpdateProduct}
@@ -954,14 +957,7 @@ const AdminProduct = () => {
             >
               <ReactQuill value={stateProductDetails.description} onChange={handleOnchangeDespcription} name="description" />
             </Form.Item>
-            {/* <Form.Item
-              label="Rating"
-              name="rating"
-              rules={[{ required: true, message: 'Please input your count rating!' }]}
-            >
 
-              <InputComponent value={stateProductDetails.rating} onChange={handleOnchangeDetails} name="rating" />
-            </Form.Item> */}
             <Form.Item
               label="Discount"
               name="discount"
@@ -975,7 +971,7 @@ const AdminProduct = () => {
             // rules={[{ required: true, message: 'Please input 4 images!' }]}
             >
               <Loading isLoading={loadImageDetail}>
-                <div onClick={handleClick} style={{ cursor: "pointer" }}>
+                <div onClick={handleClick} style={{ cursor: "pointer" }} name="images">
                   {stateProductDetails.images[0] ? (
                     <img src={stateProductDetails.images[0]} alt="upload image" className="img-after" height="40" width="30" />
                   ) : (
@@ -1020,24 +1016,27 @@ const AdminProduct = () => {
               name="sizes"
               rules={[{ required: true, message: 'Please input your discount of product!' }]}
             >
-              {renderSizeInputs()}
-              <div style={{ marginBottom: '16px' }}>
-                <Space>
-                  <Input
-                    placeholder="Size"
-                    value={newSize.size}
-                    onChange={(e) => handleNewSizeChange(e.target.value, 'size')}
-                    style={{ width: '100px' }}
-                  />
-                  <Input
-                    style={{ width: '100px' }}
-                    placeholder="countInStock"
-                    value={newSize.countInStock}
-                    onChange={(e) => handleNewSizeChange(e.target.value, 'countInStock')}
-                  />
-                  <Button onClick={handleAddSize}>Add Size</Button>
-                </Space>
+              <div name="sizes">
+                {renderSizeInputs()}
+                <div style={{ marginBottom: '16px' }}>
+                  <Space>
+                    <Input
+                      placeholder="Size"
+                      value={newSize.size}
+                      onChange={(e) => handleNewSizeChange(e.target.value, 'size')}
+                      style={{ width: '100px' }}
+                    />
+                    <Input
+                      style={{ width: '100px' }}
+                      placeholder="countInStock"
+                      value={newSize.countInStock}
+                      onChange={(e) => handleNewSizeChange(e.target.value, 'countInStock')}
+                    />
+                    <Button onClick={handleAddSize}>Add Size</Button>
+                  </Space>
+                </div>
               </div>
+
             </Form.Item>
 
 
@@ -1050,7 +1049,7 @@ const AdminProduct = () => {
           </Form>
         </Loading>
       </DrawerComponent>
-      <ModalComponent title="Xóa sản phẩm" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteProduct} forceRender={true}>
+      <ModalComponent title="Xóa sản phẩm" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteProduct} >
         <Loading isLoading={isLoadingDeleted}>
           <div>Bạn có chắc xóa sản phẩm này không?</div>
         </Loading>

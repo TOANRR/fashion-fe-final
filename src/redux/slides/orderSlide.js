@@ -80,11 +80,14 @@ export const orderSlide = createSlice({
         resetOrder: (state, action) => {
             state.orderItems = [];
             state.orderItemsSlected = [];
+        },
+        resetState: (state, action) => {
+            state.orderItems = [];
         }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { addOrderProduct, increaseAmount, decreaseAmount, removeOrderProduct, removeAllOrderProduct, selectedOrder, resetOrder } = orderSlide.actions
+export const { addOrderProduct, increaseAmount, decreaseAmount, removeOrderProduct, removeAllOrderProduct, selectedOrder, resetOrder, resetState } = orderSlide.actions
 
 export default orderSlide.reducer

@@ -1,0 +1,14 @@
+.blackSteps .ant-steps-item-title {
+    color: black;
+    /* Đổi màu chữ thành màu đen */
+}
+
+.blackSteps .ant-steps-item-process .ant-steps-item-icon>.ant-steps-icon {
+    background-color: black;
+    /* Đổi màu nền của bước đang được chọn thành màu đen */
+}
+
+.blackSteps .ant-steps-item-wait .ant-steps-item-icon>.ant-steps-icon {
+    border-color: black;
+    /* Đổi màu viền của bước chưa được hoàn thành thành màu đen */
+}

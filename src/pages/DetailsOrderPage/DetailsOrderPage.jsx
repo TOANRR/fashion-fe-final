@@ -41,7 +41,7 @@ const DetailsOrderPage = () => {
                             <WrapperLabel>Địa chỉ người nhận</WrapperLabel>
                             <WrapperContentInfo>
                                 <div className='name-info'>{data?.shippingAddress?.fullName}</div>
-                                <div className='address-info'><span>Địa chỉ: </span> {`${data?.shippingAddress?.address} ${data?.shippingAddress?.city}`}</div>
+                                <div className='address-info'><span>Địa chỉ: </span> {`${data?.shippingAddress?.address} ${data?.shippingAddress?.ward} ${data?.shippingAddress?.district} ${data?.shippingAddress?.city}`}</div>
                                 <div className='phone-info'><span>Điện thoại: </span> {data?.shippingAddress?.phone}</div>
                             </WrapperContentInfo>
                         </WrapperInfoUser>
@@ -91,7 +91,7 @@ const DetailsOrderPage = () => {
                                     </WrapperNameProduct>
                                     <WrapperItem>{convertPrice(order?.price)}</WrapperItem>
                                     <WrapperItem>{order?.amount}</WrapperItem>
-                                    <WrapperItem>{order?.discount ? convertPrice(order?.price * order?.discount / 100) : '0 VND'}</WrapperItem>
+                                    <WrapperItem>{order?.discount ? convertPrice(order?.price * order?.discount * order?.amount / 100) : '0 VND'}</WrapperItem>
 
 
                                 </WrapperProduct>

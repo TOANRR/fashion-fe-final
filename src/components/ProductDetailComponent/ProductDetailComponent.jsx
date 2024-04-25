@@ -10,7 +10,7 @@ import Loading from '../LoadingComponent/LoadingComponent'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { addOrderProduct } from '../../redux/slides/orderSlide'
+import { addOrderProduct, resetOrder } from '../../redux/slides/orderSlide'
 import { convertPrice } from '../../utils'
 import { useMutationHooks } from '../../hooks/useMutationHook'
 import * as CardService from '../../services/CardService'
@@ -75,17 +75,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
         if (!user?.id) {
             navigate('/sign-in', { state: location?.pathname })
         } else {
-            // {
-            //     name: { type: String, required: true },
-            //     amount: { type: Number, required: true },
-            //     image: { type: String, required: true },
-            //     price: { type: Number, required: true },
-            //     product: {
-            //         type: mongoose.Schema.Types.ObjectId,
-            //         ref: 'Product',
-            //         required: true,
-            //     },
-            // },
+
             if (sizeSelected.size === '') {
                 message.error('Vui lòng chọn size');
             }
@@ -97,19 +87,32 @@ const ProductDetailsComponent = ({ idProduct }) => {
                     user: user?.id,
                     size: sizeSelected.size
                 }, user?.access_token)
-                if (res.message === "SUCCESS")
-                    dispatch(addOrderProduct({
-                        orderItem: {
-                            name: productDetails?.name,
-                            amount: numProduct,
-                            image: productDetails?.images[0],
-                            price: productDetails?.price,
-                            product: productDetails?._id,
-                            discount: productDetails?.discount,
-                            size: sizeSelected.size
-                            // countInstock: productDetails?.countInStock
+                if (res.status === "OK") {
+                    const result = await CardService.getAllItems(user?.id, user?.access_token)
+                    dispatch(resetOrder())
+
+                    result.data.forEach((data, index) => {
+                        let orderItem = {
+                            name: data?.product.name,
+                            amount: data?.quantity,
+                            image: data?.product.images[0],
+                            price: data?.product.price,
+                            product: data?.product._id,
+                            discount: data?.product.discount,
+                            countInstock: data?.countInStock,
+                            size: data?.size
                         }
-                    }))
+                        console.log(orderItem)
+                        dispatch(addOrderProduct({
+                            orderItem
+
+                        }))
+                    });
+                }
+                else {
+                    message.error(res.message)
+                }
+
 
             }
         }

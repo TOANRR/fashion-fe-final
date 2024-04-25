@@ -109,6 +109,7 @@ const PaymentPage = () => {
 
     useEffect(() => {
         if (isOpenModalUpdateInfo) {
+
             setStateUserDetails({
                 city: user?.city,
                 name: user?.name,
@@ -157,6 +158,12 @@ const PaymentPage = () => {
         return Number(priceMemo) - Number(priceDiscountMemo) + Number(diliveryPriceMemo)
     }, [priceMemo, priceDiscountMemo, diliveryPriceMemo])
 
+    const handlePay = async () => {
+        const res = await PaymentService.getVnpay(order)
+        console.log(res.data)
+        window.location.href = res.data;
+
+    }
     const handleAddOrder = () => {
         if (user?.access_token && order?.orderItemsSlected && user?.name
             && user?.address && user?.phone && user?.city && priceMemo && user?.id) {
@@ -329,6 +336,7 @@ const PaymentPage = () => {
                                     <WrapperRadio onChange={handlePayment} value={payment}>
                                         <Radio value="later_money"> Thanh toán tiền mặt khi nhận hàng</Radio>
                                         <Radio value="paypal"> Thanh toán tiền bằng paypal</Radio>
+                                        <Radio value="vnpay"> Thanh toán tiền bằng vnpay</Radio>
                                     </WrapperRadio>
                                 </div>
                             </WrapperInfo>
@@ -338,7 +346,7 @@ const PaymentPage = () => {
                                 <WrapperInfo>
                                     <div>
                                         <span>Địa chỉ: </span>
-                                        <span style={{ fontWeight: 'bold' }}>{`${user?.address} ${user?.city}`} </span>
+                                        <span style={{ fontWeight: 'bold' }}>{`${user?.address} ${user?.ward} ${user?.district}${user?.city}`} </span>
                                         <span onClick={handleChangeAddress} style={{ color: 'blue', cursor: 'pointer' }}>Thay đổi</span>
                                     </div>
                                 </WrapperInfo>
@@ -376,7 +384,7 @@ const PaymentPage = () => {
                                     />
                                 </div>
                             ) : (<ButtonComponent
-                                onClick={() => handleAddOrder()}
+                                onClick={() => payment === 'vnpay' ? handlePay() : handleAddOrder()}
                                 size={40}
                                 styleButton={{
                                     background: '#000000',
@@ -385,7 +393,7 @@ const PaymentPage = () => {
                                     border: 'none',
                                     borderRadius: '4px'
                                 }}
-                                textbutton={'Đặt hàng'}
+                                textbutton={payment === 'vnpay' ? 'THANH TOÁN' : 'ĐẶT HÀNG'}
                                 styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
                             ></ButtonComponent>)}
 
@@ -422,8 +430,9 @@ const PaymentPage = () => {
                                 label="Địa chỉ"
 
                                 rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
+                                name="addr"
                             >
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column' }} name="addr">
                                     <Select
                                         className="form-select form-select-sm mb-3"
                                         placeholder="Chọn tỉnh thành"

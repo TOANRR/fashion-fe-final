@@ -1,0 +1,22 @@
+.container {
+    width: 100%;
+    overflow: hidden;
+    /* Ngăn tràn ra ngoài khi sử dụng float */
+}
+
+.leftSidebar {
+    width: 20%;
+    /* 2/5 của trang web */
+    padding-left: 50px;
+    margin-top: 50px;
+    /* Lề trái 50px */
+    float: left;
+    /* Cố định phần bên trái */
+}
+
+.rightContent {
+    width: 80%;
+    /* Phần còn lại của trang web */
+
+    /* Cố định phần bên phải */
+}

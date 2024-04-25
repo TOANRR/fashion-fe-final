@@ -35,7 +35,7 @@ const HomePage = () => {
   const [limit, setLimit] = useState(8)
 
   const fetchProductAll = async (context) => {
-    console.log('context', context)
+    // console.log('context', context)
     const limit = context?.queryKey && context?.queryKey[1]
     const search = context?.queryKey && context?.queryKey[2]
     const ids = context?.queryKey && context?.queryKey[3]
@@ -61,7 +61,7 @@ const HomePage = () => {
     mang.forEach(function (value) {
       sum += value.countInStock;
     });
-    console.log(sum)
+    // console.log(sum)
     return sum;
   }
   const { isLoading, data: products, isPreviousData } = useQuery({ queryKey: ['products', limit, searchDebounce, searchImageDebounce], queryFn: fetchProductAll, retry: 3, retryDelay: 1000, keepPreviousData: true })

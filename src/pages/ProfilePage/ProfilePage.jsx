@@ -56,6 +56,19 @@ const ProfilePage = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        if (user?.city && (districts.length === 0)) {
+            const selectedC = cities.find((city) => city.Name === user?.city)
+            setDistricts(selectedC?.Districts || []);
+        }
+    }, [user?.city, cities]); // Gọi lại khi user.city hoặc cities thay đổi
+
+    useEffect(() => {
+        if (user?.district && (wards.length === 0)) {
+            const selectedD = districts.find((district) => district.Name === user?.district)
+            setWards(selectedD?.Wards || []);
+        }
+    }, [user?.district, districts]); // Gọi lại k
     const handleCityChange = (value) => {
         if (value) {
             const selectedCity = cities.find((city) => city.Id === value);
@@ -138,6 +151,7 @@ const ProfilePage = () => {
     const handleGetDetailsUser = async (id, token) => {
         const res = await UserService.getDetailUser(id, token)
         dispatch(updateUser({ ...res?.data, access_token: token }))
+        window.location.reload()
     }
 
     const handleOnchangeEmail = (value) => {
