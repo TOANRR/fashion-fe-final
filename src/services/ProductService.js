@@ -69,3 +69,12 @@ export const getProductType = async (type, page, limit) => {
         return res.data
     }
 }
+export const getAllTypeCategories = async () => {
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/product/types-categories`)
+    return res.data
+}
+export const getFilterProduct = async (data) => {
+    console.log(data)
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/product/filter-product`, data)
+    return res.data
+}

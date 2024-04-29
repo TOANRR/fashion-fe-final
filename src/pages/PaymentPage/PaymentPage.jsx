@@ -231,8 +231,8 @@ const PaymentPage = () => {
                     totalPriceMemo: totalPriceMemo
                 }
             })
-        } else if (isError) {
-            message.error()
+        } else if (dataAdd?.status === "ERR") {
+            message.error(dataAdd?.message)
         }
     }, [isSuccess, isError])
 

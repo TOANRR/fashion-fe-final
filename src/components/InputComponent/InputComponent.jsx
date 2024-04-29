@@ -6,7 +6,7 @@ const InputComponent = ({ size, placeholder, bordered, style, ...rests }) => {
     <Input
       size={size}
       placeholder={placeholder}
-      bordered={bordered}
+      variant={bordered}
       style={style}
       {...rests}
     />

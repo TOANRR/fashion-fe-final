@@ -1,5 +1,6 @@
 @import "~slick-carousel/slick/slick.css";
 @import "~slick-carousel/slick/slick-theme.css";
+
 /* @import 'antd/dist/antd.min.css'; */
 
 body {
@@ -7,8 +8,15 @@ body {
   box-sizing: border-box;
   padding: 0;
   min-width: 400px;
+  font-family: "Trirong", serif;
 }
 
+
 html {
-  font-size: 100%;
+  font-size: 90%;
+}
+
+:root {
+  --primary-color: black;
+  /* Thiết lập màu chính thành đen */
 }

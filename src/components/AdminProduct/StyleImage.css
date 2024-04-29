@@ -9,6 +9,10 @@
     display: none;
 }
 
+.image-upload {
+    display: none;
+}
+
 .image-upload-button {
     background-color: #ccc;
     border: none;
@@ -17,7 +21,7 @@
     margin-top: 1rem;
     cursor: pointer;
     border-radius: 5px;
-    height: 50px;
+    height: 80px;
 }
 
 .image-upload-button:hover {
@@ -25,14 +29,21 @@
 }
 
 .img-before {
-    height: 50px;
-    width: 42px;
+    height: 80px;
+    width: 80px;
     margin-left: 50px;
 }
 
 .img-after {
-    height: 50px;
-    width: 42px;
+    height: 80px;
+    width: 80px;
     margin-left: 50px;
     border-radius: 0%;
+}
+
+.react-quill {
+    width: 100%;
+    /* Thiết lập chiều rộng */
+    height: 300px;
+    /* Thiết lập chiều cao */
 }

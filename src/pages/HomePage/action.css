@@ -1,0 +1,62 @@
+.image-container {
+    position: relative;
+    overflow: hidden;
+    height: 300px;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    transition: filter 0.3s;
+}
+
+.hovered img {
+    filter: brightness(70%);
+}
+
+.ant-btn:hover {
+    transition: none;
+    /* Tắt hiệu ứng chuyển động */
+}
+
+.explore-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Căn chữ theo chiều dọc */
+}
+
+.explore-button:hover {
+    background-color: white;
+
+}
+
+.explore-button.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+    /* CSS styles for hover state */
+    color: #000000;
+    /* Màu chữ khi hover */
+    border-color: #000000;
+    /* Màu viền khi hover */
+}
+
+.explore-button span {
+    margin-right: 5px;
+    /* Khoảng cách giữa chữ và biểu tượng */
+}
+
+.banner-col:hover .explore-button {
+    opacity: 1;
+}

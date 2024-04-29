@@ -21,10 +21,9 @@ const CardComponent = (props) => {
   return (
     <WrapperCardStyle
       hoverable
-      headStyle={{ width: '200px', height: '200px' }}
-      style={{ width: 250, height: 350 }}
-      bodyStyle={{ padding: '10px' }}
-      cover={<img alt="example" src={images[currentImageIndex]} width={150} height={255} onMouseEnter={handleMouseEnter} />}
+      styles={{ header: { width: '200px', height: '200px' }, body: { padding: '10px' } }}
+      style={{ width: 250, height: 390 }}
+      cover={<img alt="example" src={images[currentImageIndex]} width={150} height={280} onMouseEnter={handleMouseEnter} />}
       onClick={() => countInStock !== 0 && handleDetailsProduct(id)}
       disabled={countInStock === 0}
     >
@@ -50,13 +49,18 @@ const CardComponent = (props) => {
         <span style={{ marginRight: '4px' }}>
           <span>5 </span> <StarFilled style={{ fontSize: '12px', color: 'rgb(253, 216, 54)' }} />
         </span>
-        <WrapperStyleTextSell> | Số lượng {countInStock || 1000}+</WrapperStyleTextSell>
+        <WrapperStyleTextSell> | Đã bán {selled || 0}+</WrapperStyleTextSell>
       </WrapperReportText>
       <WrapperPriceText>
         <span style={{ marginRight: '8px' }}>{convertPrice(price)}</span>
-        <WrapperDiscountText>
-          - {discount || 5} %
-        </WrapperDiscountText>
+        {discount ? (
+          <WrapperDiscountText>
+            giảm {discount} %
+          </WrapperDiscountText>
+        ) : (
+          <WrapperDiscountText>
+          </WrapperDiscountText>
+        )}
       </WrapperPriceText>
     </WrapperCardStyle>
   )
