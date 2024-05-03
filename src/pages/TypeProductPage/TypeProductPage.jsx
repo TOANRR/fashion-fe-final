@@ -115,6 +115,7 @@ const SearchPage = () => {
 
 
     return (
+
         <div className="warrap">
             <div className="leftSidebar">
                 <h1>Phân loại</h1>

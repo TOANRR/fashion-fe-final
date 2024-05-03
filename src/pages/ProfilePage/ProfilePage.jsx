@@ -261,6 +261,7 @@ const ProfilePage = () => {
                         title: <a href="">Thông tin người dùng</a>,
                     }
                 ]}
+                style={{ fontSize: "20px" }}
             />
             <Loading isLoading={isPending}>
                 <Row>

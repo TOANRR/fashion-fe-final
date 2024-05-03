@@ -76,11 +76,12 @@ function App() {
           <Routes>
             {routes.map((route) => {
               const Page = route.page
+              const checkSign = !route.isAuth || user.id
               const ischeckAuth = !route.isPrivate || user.isAdmin
               const Layout = route.isShowHeader ? DefaultComponent : Fragment
               return (
 
-                <Route key={route.path} path={ischeckAuth ? route.path : undefined} element={
+                <Route key={route.path} path={(ischeckAuth && checkSign) ? route.path : undefined} element={
                   <Layout>
                     <Page />
                   </Layout>

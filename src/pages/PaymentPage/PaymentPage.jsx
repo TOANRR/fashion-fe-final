@@ -159,9 +159,30 @@ const PaymentPage = () => {
     }, [priceMemo, priceDiscountMemo, diliveryPriceMemo])
 
     const handlePay = async () => {
-        const res = await PaymentService.getVnpay(order)
-        console.log(res.data)
-        window.location.href = res.data;
+        if (user?.access_token && order?.orderItemsSlected && user?.name
+            && user?.address && user?.phone && user?.city && priceMemo && user?.id) {
+            // eslint-disable-next-line no-unused-expressions
+            mutationAddOrder.mutate(
+                {
+                    token: user?.access_token,
+                    orderItems: order?.orderItemsSlected,
+                    fullName: user?.name,
+                    address: user?.address,
+                    phone: user?.phone,
+                    city: user?.city,
+                    paymentMethod: payment,
+                    itemsPrice: priceMemo,
+                    shippingPrice: diliveryPriceMemo,
+                    totalPrice: totalPriceMemo,
+                    user: user?.id,
+                    district: user?.district,
+                    ward: user?.ward,
+                    delivery: delivery
+
+                }
+            )
+        }
+
 
     }
     const handleAddOrder = () => {
@@ -182,7 +203,8 @@ const PaymentPage = () => {
                     totalPrice: totalPriceMemo,
                     user: user?.id,
                     district: user?.district,
-                    ward: user?.ward
+                    ward: user?.ward,
+                    delivery: delivery
 
                 }
             )
@@ -216,25 +238,39 @@ const PaymentPage = () => {
     const { data: dataAdd, isPending: isLoadingAddOrder, isSuccess, isError } = mutationAddOrder
 
     useEffect(() => {
-        if (isSuccess && dataAdd?.status === 'OK') {
-            const arrayOrdered = []
-            order?.orderItemsSlected?.forEach(element => {
-                arrayOrdered.push(element.product)
-            });
-            dispatch(removeAllOrderProduct({ listChecked: arrayOrdered }))
-            message.success('Đặt hàng thành công')
-            navigate('/orderSuccess', {
-                state: {
-                    delivery,
-                    payment,
-                    orders: order?.orderItemsSlected,
-                    totalPriceMemo: totalPriceMemo
+        async function handleOrder() {
+            if (isSuccess && dataAdd?.status === 'OK') {
+                const arrayOrdered = [];
+                order?.orderItemsSlected?.forEach(element => {
+                    arrayOrdered.push(element.product);
+                });
+                dispatch(removeAllOrderProduct({ listChecked: arrayOrdered }));
+                if (dataAdd?.data?.paymentMethod !== "vnpay") {
+                    message.success('Đặt hàng thành công');
+                    navigate('/orderSuccess', {
+                        state: {
+                            delivery,
+                            payment,
+                            orders: order?.orderItemsSlected,
+                            totalPriceMemo: totalPriceMemo
+                        }
+                    });
+                } else {
+                    const res = await PaymentService.getVnpay(dataAdd?.data);
+                    window.location.href = res.data;
                 }
-            })
-        } else if (dataAdd?.status === "ERR") {
-            message.error(dataAdd?.message)
+            } else if (dataAdd?.status === "ERR") {
+                message.error(dataAdd?.message);
+            }
         }
-    }, [isSuccess, isError])
+
+        handleOrder();
+    }, [isSuccess, dataAdd?.status]); // Dependencies here
+
+    const handleData = async () => {
+        const res = await PaymentService.getVnpay(dataAdd?.data)
+        return res
+    }
 
     const handleCancleUpdate = () => {
         setStateUserDetails({
@@ -289,7 +325,8 @@ const PaymentPage = () => {
                 totalPrice: totalPriceMemo,
                 user: user?.id,
                 isPaid: true,
-                paidAt: details.update_time
+                paidAt: details.update_time,
+                delivery: delivery
             }
         )
     }
@@ -346,7 +383,7 @@ const PaymentPage = () => {
                                 <WrapperInfo>
                                     <div>
                                         <span>Địa chỉ: </span>
-                                        <span style={{ fontWeight: 'bold' }}>{`${user?.address} ${user?.ward} ${user?.district}${user?.city}`} </span>
+                                        <span style={{ fontWeight: 'bold' }}>{`${user?.address} ${user?.ward} ${user?.district} ${user?.city}`} </span>
                                         <span onClick={handleChangeAddress} style={{ color: 'blue', cursor: 'pointer' }}>Thay đổi</span>
                                     </div>
                                 </WrapperInfo>

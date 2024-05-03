@@ -5,7 +5,7 @@ import { WrapperHeader, WrapperUploadFile } from './style'
 import TableComponent from '../TableComponent/TableComponent'
 import { useState } from 'react'
 import InputComponent from '../InputComponent/InputComponent'
-import { getBase64, renderOptions } from '../../utils'
+import { getBase64, renderOptions, renderOptionsCate } from '../../utils'
 import * as ProductService from '../../services/ProductService'
 import { useMutationHooks } from '../../hooks/useMutationHook'
 import Loading from '../../components/LoadingComponent/LoadingComponent'
@@ -22,6 +22,7 @@ import { storage } from '../../components/FirebaseImage/config';
 import { ref, getDownloadURL, uploadBytesResumable, uploadBytes } from "firebase/storage";
 import { limit } from 'firebase/firestore'
 import { CLOTHING_TYPES } from '../../contant';
+import { type } from '@testing-library/user-event/dist/type'
 const AdminProduct = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,6 +45,7 @@ const AdminProduct = () => {
 
   const [sizes, setSizes] = useState([]);
   const [newSize, setNewSize] = useState({ size: '', countInStock: '' });
+
 
   const handleSizeChangeAdd = (index, value, field) => {
     const newSizes = [...stateProduct.sizes];
@@ -160,7 +162,7 @@ const AdminProduct = () => {
     images: [],
     type: '',
     countInStock: '',
-    newType: '',
+    newCategory: '',
     discount: '',
     category: '',
     sizes: []
@@ -176,7 +178,8 @@ const AdminProduct = () => {
     countInStock: '',
     discount: '',
     sizes: [],
-    category: ''
+    category: '',
+    newCategory: '',
   })
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -259,7 +262,7 @@ const AdminProduct = () => {
   }
 
   const fetchGetDetailsProduct = async (rowSelected) => {
-    const res = await ProductService.getDetailsProduct(rowSelected)
+    const res = await ProductService.getDetailsProductNostar(rowSelected)
     if (res?.data) {
       setStateProductDetails({
         name: res?.data?.name,
@@ -278,11 +281,12 @@ const AdminProduct = () => {
     }
     setIsLoadingUpdate(false)
   }
-  const fetchAllTypeProduct = async () => {
-    const res = await ProductService.getAllTypeProduct()
+  const fetchAllCategories = async () => {
+    const res = await ProductService.getCategories()
     console.log(res)
     return res
   }
+  const categoryProduct = useQuery({ queryKey: ['category-product'], queryFn: fetchAllCategories })
 
 
   useEffect(() => {
@@ -306,7 +310,7 @@ const AdminProduct = () => {
   const { data: dataDeletedMany, isPending: isLoadingDeletedMany, isSuccess: isSuccessDelectedMany, isError: isErrorDeletedMany } = mutationDeletedMany
 
   const queryProduct = useQuery({ queryKey: ['products'], queryFn: getAllProducts })
-  const typeProduct = useQuery({ queryKey: ['type-product'], queryFn: fetchAllTypeProduct })
+  // const typeProduct = useQuery({ queryKey: ['type-product'], queryFn: fetchAllTypeProduct })
   const { isLoading: isLoadingProducts, data: products } = queryProduct
   const renderAction = () => {
     return (
@@ -595,7 +599,7 @@ const AdminProduct = () => {
       type: stateProduct.type,
       countInStock: stateProduct.countInStock,
       discount: stateProduct.discount,
-      category: stateProduct.category,
+      category: stateProduct.category === 'add_category' ? stateProduct.newCategory : stateProduct.category,
       sizes: stateProduct.sizes
 
     }
@@ -644,7 +648,8 @@ const AdminProduct = () => {
   //   })
   // }
   const onUpdateProduct = () => {
-    mutationUpdate.mutate({ id: rowSelected, token: user?.access_token, ...stateProductDetails }, {
+    const para = { ...stateProductDetails, category: stateProductDetails.category === 'add_category' ? stateProductDetails.newCategory : stateProductDetails.category }
+    mutationUpdate.mutate({ id: rowSelected, token: user?.access_token, ...para }, {
       onSettled: () => {
         queryProduct.refetch()
       }
@@ -656,6 +661,25 @@ const AdminProduct = () => {
       type: value
     })
   }
+  const handleChangeSelectDetail = (value) => {
+    setStateProductDetails({
+      ...stateProductDetails,
+      type: value
+    })
+  }
+  const handleChangeSelectCate = (value) => {
+    setStateProduct({
+      ...stateProduct,
+      category: value
+    })
+  }
+  const handleChangeSelectCateDetail = (value) => {
+    setStateProductDetails({
+      ...stateProductDetails,
+      category: value
+    })
+  }
+
 
   const handleClickDetail = (event) => {
     hiddenFileInputDetail.current.click();
@@ -769,23 +793,32 @@ const AdminProduct = () => {
                     // style={{ width: 120 }}
                     value={stateProduct.type}
                     onChange={handleChangeSelect}
-                    options={renderOptions(typeProduct?.data?.data)}
+                    options={renderOptions(CLOTHING_TYPES)}
                   />
                 </Form.Item>
                 <Form.Item
                   label="Danh mục"
                   name="category"
-                  rules={[{ required: true, message: 'Vui lòng nhập danh mục sản phẩm!' }]}
+                  rules={[{ required: true, message: 'Please input your type!' }]}
                 >
-                  <Input
+                  <Select
                     name="category"
                     // defaultValue="lucy"
                     // style={{ width: 120 }}
                     value={stateProduct.category}
-                    onChange={handleOnchange}
-
+                    onChange={handleChangeSelectCate}
+                    options={renderOptionsCate(categoryProduct?.data)}
                   />
                 </Form.Item>
+                {stateProduct.category === 'add_category' && (
+                  <Form.Item
+                    label='Thêm'
+                    name="newCategory"
+                    rules={[{ required: true, message: 'Please input your type!' }]}
+                  >
+                    <InputComponent value={stateProduct.newCategory} onChange={handleOnchange} name="newCategory" />
+                  </Form.Item>
+                )}
                 <Form.Item
                   label="Sizes"
                   name="sizes"
@@ -930,45 +963,58 @@ const AdminProduct = () => {
                   label="Tên"
                   name="name"
                   rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm!' }]}
+                  labelCol={{ span: 4 }}
                 >
-                  <InputComponent style={{ marginLeft: "15px" }} value={stateProductDetails.name} onChange={handleOnchangeDetails} name="name" />
+                  <InputComponent value={stateProductDetails.name} onChange={handleOnchangeDetails} name="name" />
                 </Form.Item>
 
                 <Form.Item
                   label="Loại"
                   name="type"
                   rules={[{ required: true, message: 'Vui lòng nhập loại sản phẩm!' }]}
+                  labelCol={{ span: 4 }}
                 >
-                  <Select style={{ marginLeft: "15px" }}
+                  <Select
                     name="type"
                     // defaultValue="lucy"
                     // style={{ width: 120 }}
                     value={stateProductDetails.type}
-                    onChange={handleChangeSelect}
+                    onChange={handleChangeSelectDetail}
                     options={renderOptions(CLOTHING_TYPES)}
                   />
                 </Form.Item>
                 <Form.Item
                   label="Danh mục"
                   name="category"
-                  rules={[{ required: true, message: 'Vui lòng nhập danh mục sản phẩm!' }]}
+                  rules={[{ required: true, message: 'Please input your type!' }]}
+                  labelCol={{ span: 4 }}
                 >
-                  <Input
+                  <Select
                     name="category"
                     // defaultValue="lucy"
                     // style={{ width: 120 }}
-                    style={{ marginLeft: "15px" }}
                     value={stateProductDetails.category}
-                    onChange={handleOnchange}
-
+                    onChange={handleChangeSelectCateDetail}
+                    options={renderOptionsCate(categoryProduct?.data)}
                   />
                 </Form.Item>
+                {stateProductDetails.category === 'add_category' && (
+                  <Form.Item
+                    label='Thêm'
+                    name="newCategory"
+                    rules={[{ required: true, message: 'Please input your type!' }]}
+                    labelCol={{ span: 4 }}
+                  >
+                    <InputComponent value={stateProductDetails.newCategory} onChange={handleOnchangeDetails} name="newCategory" />
+                  </Form.Item>
+                )}
                 <Form.Item
                   label="Sizes"
                   name="sizes"
                   rules={[{ required: true, message: 'Please input your discount of product!' }]}
+                  labelCol={{ span: 4 }}
                 >
-                  <div name="sizes" style={{ marginLeft: "15px" }}>
+                  <div name="sizes" >
                     {renderSizeInputs()}
                     <div style={{ marginBottom: '16px' }}>
                       <Space>
@@ -995,15 +1041,17 @@ const AdminProduct = () => {
                   label="Giá"
                   name="price"
                   rules={[{ required: true, message: 'Vui lòng nhập giá bán!' }]}
+                  labelCol={{ span: 4 }}
                 >
-                  <InputComponent style={{ marginLeft: "15px" }} value={stateProductDetails.price} onChange={handleOnchangeDetails} name="price" />
+                  <InputComponent value={stateProductDetails.price} onChange={handleOnchangeDetails} name="price" />
                 </Form.Item>
                 <Form.Item
                   label="Discount"
                   name="discount"
                   rules={[{ required: true, message: 'Vui lòng nhập discount, nhập 0 nếu không có discount!' }]}
+                  labelCol={{ span: 4 }}
                 >
-                  <InputComponent style={{ marginLeft: "15px" }} value={stateProductDetails.discount} onChange={handleOnchangeDetails} name="discount" />
+                  <InputComponent value={stateProductDetails.discount} onChange={handleOnchangeDetails} name="discount" />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -1011,6 +1059,7 @@ const AdminProduct = () => {
                   label="Ảnh"
                   name="images"
                   rules={[{ required: true, message: 'Please input 4 images!' }]}
+                  labelCol={{ span: 4 }}
                 >
                   <Loading isLoading={loadImageDetail}>
                     <div onClick={handleClickDetail} style={{ cursor: "pointer" }} name="images">
@@ -1056,9 +1105,10 @@ const AdminProduct = () => {
                   label="Mô tả"
                   name="description"
                   rules={[{ required: true, message: 'Mô tả không được để trống!' }]}
+                  labelCol={{ span: 4 }}
 
                 >
-                  <ReactQuill style={{ marginLeft: "15px" }} value={stateProductDetails.description} onChange={handleOnchangeDespcription} name="description" />
+                  <ReactQuill value={stateProductDetails.description} onChange={handleOnchangeDespcription} name="description" />
                 </Form.Item>
 
 

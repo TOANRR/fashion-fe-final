@@ -9,6 +9,8 @@ import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutationHooks } from '../../hooks/useMutationHook';
 import * as message from '../../components/MessageComponent/MessageComponent'
+import { Breadcrumb } from 'antd';
+import { red100 } from 'material-ui/styles/colors';
 
 const MyOrderPage = () => {
     const location = useLocation()
@@ -84,18 +86,37 @@ const MyOrderPage = () => {
 
     return (
         <Loading isLoading={isLoading || isLoadingCancel}>
+
             <WrapperContainer>
                 <div style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
-                    <h4>Đơn hàng của tôi</h4>
+                    <Breadcrumb
+                        items={[
+                            {
+                                title: <a href="/">Trang chủ</a>,
+                            },
+                            {
+                                title: <a href="">Đơn hàng của tôi</a>,
+                            }
+                        ]}
+                        style={{ fontSize: "20px" }}
+                    />
                     <WrapperListOrder>
                         {data?.map((order, index) => {
                             return (
                                 <WrapperItemOrder key={index}>
                                     <WrapperStatus>
-                                        <span style={{ fontSize: '14px', fontWeight: 'bold' }}>Trạng thái</span>
-                                        <div><span style={{ color: 'rgb(255, 66, 78)' }}>Giao hàng: </span>{`${order.isDelivered ? ' Đã giao hàng' : ' Chưa giao hàng'}`}</div>
-                                        <div><span style={{ color: 'rgb(255, 66, 78)' }}>Thanh toán:</span>{`${order.isPaid ? ' Đã thanh toán' : ' Chưa thanh toán'}`}</div>
+                                        {
+                                            (!order?.isCancel) ? (<div>
+                                                <span style={{ fontSize: '14px', fontWeight: 'bold' }}>Trạng thái</span>
+                                                <div><span style={{ color: 'rgb(255, 66, 78)', paddingTop: "20px" }}>Giao hàng: </span>{`${order.isDelivered ? ' Đã giao hàng' : ' Chưa giao hàng'}`}</div>
+                                                <div><span style={{ color: 'rgb(255, 66, 78)' }}>Thanh toán:</span>{`${order.isPaid ? ' Đã thanh toán' : ' Chưa thanh toán'}`}</div>
+
+                                            </div>) : (<div><span style={{ fontSize: '14px', fontWeight: 'bold' }}>Trạng thái</span>
+                                                <div><span style={{ color: "red", fontWeight: "600" }}>Đã bị hủy</span></div></div>)
+                                        }
+
                                     </WrapperStatus>
+
                                     {renderProduct(order?.orderItems)}
                                     <WrapperFooterItem>
                                         <div>
@@ -105,18 +126,20 @@ const MyOrderPage = () => {
                                             >{convertPrice(order?.totalPrice)}</span>
                                         </div>
                                         <div style={{ display: 'flex', gap: '10px' }}>
-                                            <ButtonComponent
-                                                onClick={() => handleCanceOrder(order)}
-                                                size={40}
-                                                styleButton={{
-                                                    height: '36px',
-                                                    border: '1px solid rgb(11, 116, 229)',
-                                                    borderRadius: '4px'
-                                                }}
-                                                textbutton={'Hủy đơn hàng'}
-                                                styleTextButton={{ color: 'rgb(11, 116, 229)', fontSize: '14px' }}
-                                            >
-                                            </ButtonComponent>
+                                            {
+                                                (!order?.isCancel) ? (<ButtonComponent
+                                                    onClick={() => handleCanceOrder(order)}
+                                                    size={40}
+                                                    styleButton={{
+                                                        height: '36px',
+                                                        border: '1px solid rgb(11, 116, 229)',
+                                                        borderRadius: '4px'
+                                                    }}
+                                                    textbutton={'Hủy đơn hàng'}
+                                                    styleTextButton={{ color: 'rgb(11, 116, 229)', fontSize: '14px' }}
+                                                >
+                                                </ButtonComponent>) : (<div></div>)
+                                            }
                                             <ButtonComponent
                                                 onClick={() => handleDetailsOrder(order?._id)}
                                                 size={40}
@@ -137,7 +160,7 @@ const MyOrderPage = () => {
                     </WrapperListOrder>
                 </div>
             </WrapperContainer>
-        </Loading>
+        </Loading >
     )
 }
 

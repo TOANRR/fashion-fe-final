@@ -70,7 +70,7 @@ export const footMenu = [
             {
                 id: 1,
                 link: "About Us",
-                path: "/"
+                path: "/about-us"
             },
             {
                 id: 2,

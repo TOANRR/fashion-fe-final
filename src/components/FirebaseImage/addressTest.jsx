@@ -1,72 +1,152 @@
-import React from 'react';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-// import CardComponent from './CardComponent'; // Đảm bảo đã import CardComponent hoặc tương tự
+import React, { useState, useEffect } from 'react';
+import { Form, Input, Rate, Checkbox, Button, List, Modal, Table } from 'antd';
+import './ProductReviewForm.css'; // Import CSS file for styling
 
-const ProductSlide = () => {
-    const products = [
-        {
-            id: 1,
-            name: "Product 1",
-            price: 10,
-            image: "data:image/jpeg;base64,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",
-            // Các thuộc tính khác của sản phẩm
-        },
-        {
-            id: 2,
-            name: "Product 2",
-            price: 20,
-            image: "data:image/jpeg;base64,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",
-            // Các thuộc tính khác của sản phẩm
-        },
-        // Các sản phẩm khác
-    ];
+const { TextArea } = Input;
 
-    const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 5, // Hiển thị 5 sản phẩm trên mỗi slide
-        slidesToScroll: 1,
-        autoplay: true,
-        responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                    infinite: true,
-                    dots: true
-                }
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                    initialSlide: 2
-                }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            }
-        ]
-    };
+const ProductReviewForm = () => {
+  const [form] = Form.useForm();
+  const [isModalVisible, setIsModalVisible] = useState(false); // Trạng thái cho biết modal có hiển thị hay không
+  const [submitting, setSubmitting] = useState(false);
+  const [comments, setComments] = useState([]); // Mảng chứa các bình luận
+  const rowClassName = () => 'custom-table-row';
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible); // Đảo ngược trạng thái hiển thị modal
+  };
 
-    return (
-        <Slider {...settings}>
-            {products.map(product => (
-                <div key={product.id}>
-                    <img src={product.image} alt="" />
-                </div>
-            ))}
-        </Slider>
-    );
+  const onFinish = (values) => {
+    setSubmitting(true);
+    console.log('Received values of form:', values);
+    // Gửi dữ liệu đánh giá và nhận xét lên server
+
+    // Thêm bình luận mới vào mảng bình luận
+    setComments([...comments, values]);
+
+    // Reset form
+    form.resetFields();
+    setSubmitting(false);
+    toggleModal(); // Đóng modal sau khi gửi thành công
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
+
+  useEffect(() => {
+    // Tạo 10 bình luận giả định
+    const dummyComments = [];
+    for (let i = 0; i < 20; i++) { // Sửa lại thành 20 bình luận để có đủ dữ liệu
+      dummyComments.push({
+        rating: Math.floor(Math.random() * 5) + 1, // Rating từ 1 đến 5
+        review: `Đây là bình luận số ${i + 1}`,
+        name: `Người dùng ${i + 1}`,
+        email: `user${i + 1}@example.com`,
+        shareReview: Math.random() < 0.5, // Ngẫu nhiên true hoặc false
+        receiveNotifications: Math.random() < 0.5, // Ngẫu nhiên true hoặc false
+        note: `Ghi chú cho bình luận số ${i + 1}`,
+      });
+    }
+    setComments(dummyComments);
+  }, []); // Chỉ gọi một lần khi component được tạo
+
+  // Tính toán thống kê rating
+  const ratingStats = {};
+  comments.forEach((comment) => {
+    const rating = comment.rating;
+    if (!ratingStats[rating]) {
+      ratingStats[rating] = 1;
+    } else {
+      ratingStats[rating]++;
+    }
+  });
+
+  // Chuyển đổi dữ liệu thống kê rating thành dạng phù hợp cho Table của Ant Design
+  const dataSource = Object.keys(ratingStats).map((rating) => ({
+    rating: <Rate disabled defaultValue={parseInt(rating)} />, // Chuyển rating thành component Rate
+    quantity: ratingStats[rating],
+  }));
+
+  const columns = [
+    {
+      title: 'Rating',
+      dataIndex: 'rating',
+      key: 'rating',
+      width: '50%'
+    },
+    {
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      key: 'quantity',
+      width: '50%'
+    },
+  ];
+
+  return (
+    <div className="product-review-popup-container">
+      {/* Bảng thống kê rating */}
+
+      {/* Bảng thống kê rating */}
+      <div style={{ width: "50%" }}>
+        <Table className="product-review-table" dataSource={dataSource} columns={columns} size="small" pagination={false} />
+
+      </div>
+
+
+      <Button type="primary" onClick={toggleModal}>
+        Mở Form
+      </Button>
+
+      <Modal
+        title="Đánh giá Sản phẩm"
+        open={isModalVisible}
+        onCancel={toggleModal}
+        footer={null}
+      >
+        <Form
+          form={form}
+          name="product_review"
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+        >
+          <Form.Item name="rating" label="Đánh giá" rules={[{ required: true }]}>
+            <Rate />
+          </Form.Item>
+
+          <Form.Item name="review" label="Nhận xét của bạn" rules={[{ required: true }]}>
+            <TextArea rows={4} />
+          </Form.Item>
+
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button type="primary" htmlType="submit" loading={submitting}>
+              Gửi Nhận xét
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Hiển thị danh sách bình luận */}
+      <List
+        dataSource={comments}
+        header={<div>Danh sách Bình luận</div>}
+        renderItem={(item) => (
+          <div style={{ borderBottom: '1px solid #ccc', paddingBottom: '8px' }}>
+            <div style={{ display: 'block', marginTop: '8px', fontWeight: 'bold' }}>{item.name ? item.name : item.email}</div>
+            <List.Item>
+
+              <List.Item.Meta
+
+                title={<Rate disabled defaultValue={item.rating} />} // Hiển thị rating dưới dạng sao
+                description={item.review}
+              />
+
+            </List.Item>
+          </div>
+
+        )}
+      />
+    </div>
+  );
 };
 
-export default ProductSlide;
+export default ProductReviewForm;

@@ -15,6 +15,9 @@ import DetailsOrderPage from "../pages/DetailsOrderPage/DetailsOrderPage";
 import UploadImageComponent from "../components/UploadImageComponent/UploadImageComponent";
 import FirebaseImageUpload from "../components/FirebaseImage/FirebaseImageUpload";
 import MyComponent from "../components/FirebaseImage/addressTest";
+import OrderSuccessVnpay from "../pages/OrderSuccessVnpay/OrderSuccessVnpay";
+import AboutUsPage from "../pages/AboutUsPage/AboutUsPage";
+
 export const routes = [
     {
         path: '/',
@@ -25,27 +28,38 @@ export const routes = [
     {
         path: '/order',
         page: OrderPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isAuth: true
     },
     {
         path: '/payment',
         page: PaymentPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isAuth: true
     },
     {
         path: '/my-order',
         page: MyOrderPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isAuth: true
     },
     {
         path: '/details-order/:id',
         page: DetailsOrderPage,
-        isShowHeader: true
+        isShowHeader: true,
+        isAuth: true
     },
     {
         path: '/orderSuccess',
         page: OrderSucess,
-        isShowHeader: true
+        isShowHeader: true,
+        isAuth: true
+    },
+    {
+        path: '/orderSuccessVnpay',
+        page: OrderSuccessVnpay,
+        isShowHeader: true,
+        isAuth: true
     },
     {
         path: '/products',
@@ -75,13 +89,20 @@ export const routes = [
     {
         path: '/profile-user',
         page: ProfilePage,
+        isShowHeader: true,
+        isAuth: true
+    },
+    {
+        path: '/about-us',
+        page: AboutUsPage,
         isShowHeader: true
     },
     {
         path: '/system/admin',
         page: AdminPage,
         isShowHeader: false,
-        isPrivate: true
+        isPrivate: true,
+        isAuth: true
     },
     {
         path: '/image',

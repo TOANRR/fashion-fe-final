@@ -8,7 +8,12 @@ import {
   UserOutlined,
   CaretDownOutlined,
   ShoppingCartOutlined,
-  SearchOutlined
+  SearchOutlined,
+  LogoutOutlined,
+  PoweroffOutlined,
+  DashboardOutlined,
+  SettingOutlined,
+  EditOutlined
 } from '@ant-design/icons';
 import ButttonInputSearch from '../ButtonInputSearch/ButtonInputSearch';
 import { useNavigate } from 'react-router-dom';
@@ -119,13 +124,13 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
 
   const content = (
     <div>
-      <WrapperContentPopup onClick={() => handleClickNavigate('profile')}>Thông tin người dùng</WrapperContentPopup>
+      <WrapperContentPopup onClick={() => handleClickNavigate('profile')}><EditOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Thông tin người dùng</WrapperContentPopup>
       {user?.isAdmin && (
 
-        <WrapperContentPopup onClick={() => handleClickNavigate('admin')}>Quản lí hệ thống</WrapperContentPopup>
+        <WrapperContentPopup onClick={() => handleClickNavigate('admin')}> <SettingOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Quản lí hệ thống</WrapperContentPopup>
       )}
-      <WrapperContentPopup onClick={() => handleClickNavigate('my-order')}>Đơn hàng của tôi</WrapperContentPopup>
-      <WrapperContentPopup onClick={() => handleClickNavigate()}>Đăng xuất</WrapperContentPopup>
+      <WrapperContentPopup onClick={() => handleClickNavigate('my-order')}><ShoppingCartOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Đơn hàng của tôi</WrapperContentPopup>
+      <WrapperContentPopup onClick={() => handleClickNavigate()}> <PoweroffOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Đăng xuất</WrapperContentPopup>
     </div>
   );
   const onChangeInput = (e) => {

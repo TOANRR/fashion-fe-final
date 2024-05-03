@@ -8,15 +8,11 @@ body {
   box-sizing: border-box;
   padding: 0;
   min-width: 400px;
-  font-family: "Trirong", serif;
+  font-family: "Noto Sans", sans-serif;
+  font-optical-sizing: auto;
 }
 
 
 html {
   font-size: 90%;
-}
-
-:root {
-  --primary-color: black;
-  /* Thiết lập màu chính thành đen */
 }

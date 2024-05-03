@@ -33,9 +33,25 @@ export const renderOptions = (arr) => {
         })
     }
     // results.push({
-    //     label: 'Thêm type',
-    //     value: 'add_type'
+    //     label: 'Thêm danh mục',
+    //     value: 'add_category'
     // })
+    return results
+}
+export const renderOptionsCate = (arr) => {
+    let results = []
+    if (arr) {
+        results = arr?.map((opt) => {
+            return {
+                value: opt,
+                label: opt
+            }
+        })
+    }
+    results.push({
+        label: 'Thêm danh mục',
+        value: 'add_category'
+    })
     return results
 }
 export const convertPrice = (price) => {

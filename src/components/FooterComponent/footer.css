@@ -30,7 +30,7 @@
     color: #A9AFC3;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    font-size: 0.875rem;
+    font-size: 16px;
     opacity: 0.9;
 }
 
@@ -48,7 +48,7 @@
 
 .foot_menu ul a {
     color: #A9AFC3;
-    font-size: 0.9rem;
+    font-size: 14px;
     opacity: 0.8;
 }
 

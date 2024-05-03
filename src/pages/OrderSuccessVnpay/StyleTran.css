@@ -1,0 +1,61 @@
+.failed-transaction-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 50px);
+    /* Chiều cao toàn màn hình trừ đi 50px */
+}
+
+.failed-transaction {
+    background-color: #88b6f3;
+
+    border: 1px solid #88b6f3;
+
+    border-radius: 5px;
+    padding: 20px;
+    max-width: 400px;
+}
+
+.failed-transaction-title {
+    color: #721c24;
+    font-size: 20px;
+    /* Kích thước chữ */
+    margin-bottom: 10px;
+    /* Khoảng cách giữa tiêu đề và nội dung */
+}
+
+.failed-transaction-message {
+    color: #721c24;
+    font-size: 16px;
+    /* Kích thước chữ */
+    line-height: 1.2;
+    /* Chiều cao dòng */
+}
+
+.failed-transaction-icon {
+    width: 24px;
+    /* Độ rộng của biểu tượng */
+    height: 24px;
+    /* Chiều cao của biểu tượng */
+    margin-right: 5px;
+    /* Khoảng cách giữa biểu tượng và nội dung */
+}
+
+.failed-transaction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    /* Khoảng cách giữa hình ảnh và các phần tử khác */
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+}

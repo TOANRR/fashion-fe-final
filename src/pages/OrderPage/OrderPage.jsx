@@ -1,4 +1,4 @@
-import { Checkbox, Form } from 'antd'
+import { Breadcrumb, Checkbox, Form } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { WrapperCountOrder, WrapperInfo, WrapperItemOrder, WrapperLeft, WrapperListOrder, WrapperRight, WrapperStyleHeader, WrapperTotal, WrapperStyleHeaderDilivery } from './style';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons'
@@ -364,8 +364,19 @@ const OrderPage = () => {
   ]
   return (
     <div style={{ background: '#f5f5fa', with: '100%', maxHeight: '2400vh' }}>
+      <Breadcrumb
+        items={[
+          {
+            title: <a href="/">Trang chủ</a>,
+          },
+          {
+            title: <a href="">Giỏ hàng</a>,
+          }
+        ]}
+        style={{ marginBottom: "25px", paddingTop: "30px", fontSize: "20px", paddingLeft: "3%" }}
+      />
       <div style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
-        <h3>Giỏ hàng</h3>
+
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <WrapperLeft>
             <WrapperStyleHeaderDilivery>
@@ -382,6 +393,7 @@ const OrderPage = () => {
                 <span>Kích cỡ</span>
                 <span>Đơn giá</span>
                 <span>Số lượng</span>
+                <span>Giảm</span>
                 <span>Thành tiền</span>
                 <span> </span>
               </div>
@@ -393,12 +405,19 @@ const OrderPage = () => {
                     <div style={{ width: '390px', display: 'flex', alignItems: 'center', gap: 4 }}>
                       <Checkbox onChange={onChangeSelect} value={{ id: order?.product, size: order?.size }} checked={listChecked.some(item => item.id === order?.product && item.size === order?.size)}></Checkbox>
                       <img src={order?.image} style={{ width: '77px', height: '79px', objectFit: 'cover' }} />
-                      <div style={{
-                        width: 260,
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap'
-                      }}>{order?.name}</div>
+                      <a href={`/product-details/${order?.product}`}
+                        target="_blank" // Để mở trong một tab mới
+                        rel="noopener noreferrer" // Đảm bảo an toàn khi mở trong tab mới
+                        style={{
+                          width: 260,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          textDecoration: 'none', // Loại bỏ gạch chân mặc định của thẻ <a>
+                          color: 'inherit', // Sử dụng màu chữ mặc định của thẻ <a>
+                          display: 'block',
+
+                        }}>{order?.name}</a>
                     </div>
                     <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <span>
@@ -417,6 +436,9 @@ const OrderPage = () => {
                           <PlusOutlined style={{ color: '#000', fontSize: '10px' }} />
                         </button>
                       </WrapperCountOrder>
+                      <span>
+                        <span style={{ fontSize: '13px', color: '#242424' }}>{order?.discount}%</span>
+                      </span>
                       <span style={{ color: 'rgb(255, 66, 78)', fontSize: '13px', fontWeight: 500 }}>{convertPrice(order?.price * order?.amount)}</span>
                       <DeleteOutlined style={{ cursor: 'pointer' }} onClick={() => handleDeleteOrder(order?.product, order?.size)} />
                     </div>
