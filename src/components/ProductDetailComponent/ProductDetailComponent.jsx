@@ -1,5 +1,5 @@
 import { Button, Col, Form, Image, List, Menu, Modal, Pagination, Rate, Row } from 'antd'
-import React from 'react'
+import React, { useEffect } from 'react'
 import imageProductSmall from '../../assets/images/imagesmall.webp'
 import { WrapperStyleImageSmall, WrapperStyleColImage, WrapperStyleNameProduct, WrapperStyleTextSell, WrapperPriceProduct, WrapperPriceTextProduct, WrapperAddressProduct, WrapperQualityProduct, WrapperInputNumber, WrapperBtnQualityProduct, WrapperStyleImage, WrapperStyleCount, WrapperStyleSize, StyledPriceWrapper, PriceContainer, Price, DiscountPrice, Currency } from './style'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
@@ -11,7 +11,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { addOrderProduct, resetOrder } from '../../redux/slides/orderSlide'
-import { convertPrice } from '../../utils'
+import { convertPrice, initFacebookSDK } from '../../utils'
 import { useMutationHooks } from '../../hooks/useMutationHook'
 import * as CardService from '../../services/CardService'
 import { Radio, message } from 'antd';
@@ -19,6 +19,8 @@ import TextArea from 'antd/es/input/TextArea'
 import './ProductReviewForm.css'; // Import CSS file for styling
 import RatingStatsTableComponent from '../RatingTableComponent/RatingTableComponent'
 import { UserOutlined } from '@ant-design/icons';
+import LikeButtonComponent from '../LikeButtonComponent/LikeButtonComponent'
+import CommentComponent from '../CommentComponent/CommentComponent'
 
 
 const ProductDetailsComponent = ({ idProduct }) => {
@@ -59,6 +61,9 @@ const ProductDetailsComponent = ({ idProduct }) => {
         "4": 0,
         "5": 0
     })
+    useEffect(() => {
+        initFacebookSDK()
+    }, []);
     const handleReview = async () => {
         const res = await ProductService.getReview(idProduct)
         setComments(res.reviews)
@@ -87,14 +92,15 @@ const ProductDetailsComponent = ({ idProduct }) => {
     const [submitting, setSubmitting] = useState(false);
 
     const rowClassName = () => 'custom-table-row';
-    const toggleModal = () => {
-        setIsModalVisible(!isModalVisible); // Đảo ngược trạng thái hiển thị modal
-        // console.log(comments)
-        // message.success(comments)
+    const toggleModal = async () => {
+        const res = await ProductService.getCheckReview({ userId: user?.id, productId: idProduct })
+        if (res.status === "ERR")
+            message.error(res.message)
+        else
+            setIsModalVisible(!isModalVisible);
+
     };
-    // const handleComment = (value) => {
-    //     setComments(value)
-    // }
+
     const onFinish = async (values) => {
         setSubmitting(true);
         console.log('Received values of form:', values);
@@ -272,29 +278,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                         <WrapperStyleSize style={{ marginRight: "50px" }}>Kích cỡ: </WrapperStyleSize>
                         <Radio.Group options={options} onChange={onChange3} value={value} optionType="button" />
                     </div>
-                    {/* {
-                        productDetails?.discount ? (
-                            <div style={{ marginTop: "20px" }}>
-                                <WrapperPriceProduct>
-                                    <WrapperPriceTextProduct>{convertPrice(productDetails?.price - productDetails?.price * productDetails?.discount / 100)}</WrapperPriceTextProduct>
-                                </WrapperPriceProduct>
-                                <StyledPriceWrapper>
-                                    <PriceContainer>
-                                        {discount && (
-                                            <div style={{ color: '#ff6666', fontStyle: 'italic', fontWeight: "600" }}>
-                                                Giảm giá: {discount} %
-                                            </div>
-                                        )}
-                                        <Price>{productDetails?.price.toLocaleString()}</Price>
-                                        <DiscountPrice>{productDetails?.price.toLocaleString()}</DiscountPrice>
-                                        <Currency>đ</Currency>
-                                    </PriceContainer>
-                                </StyledPriceWrapper>
-                            </div>
-                        ) : (<WrapperPriceProduct>
-                            <WrapperPriceTextProduct>{convertPrice(productDetails?.price)}</WrapperPriceTextProduct>
-                        </WrapperPriceProduct>)
-                    } */}
+
 
                     <StyledPriceWrapper>
                         <PriceContainer>
@@ -330,6 +314,9 @@ const ProductDetailsComponent = ({ idProduct }) => {
                             </button>
                         </WrapperQualityProduct>
                     </div>
+
+                    <LikeButtonComponent dataHref={`https://fe-deploy-yj5a-git-main-toanrrs-projects.vercel.app/${idProduct}`} />
+
                     <div style={{ display: 'flex', aliggItems: 'center', gap: '12px', marginTop: "50px" }}>
                         <ButtonComponent
                             size={40}
@@ -421,6 +408,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                     )}
                 </Col>
             </Row>
+            <CommentComponent dataHref={`https://fe-deploy-yj5a-git-main-toanrrs-projects.vercel.app/${idProduct}`} />
             <Modal
                 title="Đánh giá Sản phẩm"
                 open={isModalVisible}

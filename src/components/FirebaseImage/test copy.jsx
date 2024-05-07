@@ -4,8 +4,9 @@ import axios from 'axios';
 import * as ProductService from '../../services/ProductService';
 import { useQuery } from '@tanstack/react-query'
 import Loading from '../../components/LoadingComponent/LoadingComponent'
-import { LeftSide, RightContent, Wrapper, WrapperNavbar, WrapperProducts } from './style'
+import { WrapperNavbar, WrapperProducts } from './style'
 import { Col, Pagination, Row } from 'antd'
+import './SearchPage.css'; // Import CSS file
 import { limit } from 'firebase/firestore';
 import CardComponent from '../../components/CardComponent/CardComponent';
 const { Option } = Select;
@@ -115,8 +116,8 @@ const SearchPage = () => {
 
     return (
 
-        <Wrapper>
-            <LeftSide>
+        <div className="warrap">
+            <div className="leftSidebar">
                 <h1>Phân loại</h1>
                 <Menu mode="vertical-right" >
                     <Menu.Item>
@@ -156,9 +157,9 @@ const SearchPage = () => {
                         <Button style={{ background: '#000000', color: "#fff", width: "100%" }} onClick={handleSearch} >Search</Button>
                     </Menu.Item>
                 </Menu>
-            </LeftSide>
+            </div>
 
-            <RightContent>
+            <div className="rightContent">
 
                 <h2>Kết quả tìm kiếm</h2>
                 <Select defaultValue="price_low_to_high" style={{ width: 200, marginLeft: 'auto', marginRight: 0, marginTop: "20px" }} onChange={handleSortChange}>
@@ -194,8 +195,8 @@ const SearchPage = () => {
 
                 </Loading>
 
-            </RightContent>
-        </Wrapper>
+            </div>
+        </div>
 
     );
 };

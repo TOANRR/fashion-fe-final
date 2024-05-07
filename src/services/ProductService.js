@@ -112,3 +112,15 @@ export const getReview = async (id) => {
     return res.data
 
 }
+export const getCheckReview = async (data) => {
+
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/order/check-order`, data)
+    return res.data
+
+}
+export const getSearchImage = async (data) => {
+
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/product/search-image`, data)
+    return res.data
+
+}

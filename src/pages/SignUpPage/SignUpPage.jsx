@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { WrapperContainerLeft, WrapperContainerRight, WrapperCover, WrapperTextLight } from './style'
+import { WrapperContainerLeft, WrapperContainerRight, WrapperCover, WrapperTextLight, buttonStyle } from './style'
 import InputForm from '../../components/InputForm/InputForm'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
 import imageLogo from '../../assets/images/logo2.png'
-import { Image } from 'antd'
+import { Button, Image } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
+import { EyeFilled, EyeInvisibleFilled, GoogleOutlined } from '@ant-design/icons'
 import * as UserService from '../../services/UserService'
 import { useMutationHooks } from '../../hooks/useMutationHook'
 import Loading from '../../components/LoadingComponent/LoadingComponent'
@@ -17,6 +17,10 @@ const SignUpPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleGoogleLogin = () => {
+    window.open("http://localhost:3001/api/auth/google", "_self")
+  };
 
   const handleOnchangeEmail = (value) => {
     setEmail(value)
@@ -122,6 +126,9 @@ const SignUpPage = () => {
               styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
             ></ButtonComponent>
           </Loading>
+          <Button onClick={handleGoogleLogin} icon={<GoogleOutlined />} style={buttonStyle}>
+            Tạo tài khoản bằng Google
+          </Button>
           <p>Bạn đã có tài khoản? <WrapperTextLight onClick={handleNavigateSignIn}> Đăng nhập</WrapperTextLight></p>
         </WrapperContainerLeft>
         <WrapperContainerRight>

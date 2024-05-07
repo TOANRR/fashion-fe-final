@@ -158,16 +158,15 @@ const AboutUsPage = () => {
          </HistoryWrapper>
          <div style={{ height: '400px', width: '100%' }}>
          <BrandName ref={addWrapper}>Cửa hàng của chúng tôi</BrandName>
-       <MapContainer center={[bachKhoaLocation.lat, bachKhoaLocation.lng]} zoom={16} style={{ height: '400px', width: '100%' ,zIndex:'-1'  }}>
-         <TileLayer
-           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-         />
-         <Marker position={[bachKhoaLocation.lat, bachKhoaLocation.lng]}>
-           <Popup>
-             My store
-           </Popup>
-         </Marker>
-       </MapContainer>
+         <MapContainer center={[bachKhoaLocation.lat, bachKhoaLocation.lng]} zoom={16} style={{ height: '400px', width: '100%' }}>
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <Marker position={[bachKhoaLocation.lat, bachKhoaLocation.lng]}>
+            <Popup>
+              My store
+            </Popup>
+          </Marker>
+        </MapContainer>
+
      </div>
  
        </Content>

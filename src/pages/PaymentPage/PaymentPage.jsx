@@ -177,7 +177,8 @@ const PaymentPage = () => {
                     user: user?.id,
                     district: user?.district,
                     ward: user?.ward,
-                    delivery: delivery
+                    delivery: delivery,
+                    email: user?.email
 
                 }
             )
@@ -204,7 +205,8 @@ const PaymentPage = () => {
                     user: user?.id,
                     district: user?.district,
                     ward: user?.ward,
-                    delivery: delivery
+                    delivery: delivery,
+                    email: user?.email
 
                 }
             )
@@ -326,7 +328,8 @@ const PaymentPage = () => {
                 user: user?.id,
                 isPaid: true,
                 paidAt: details.update_time,
-                delivery: delivery
+                delivery: delivery,
+                email: user?.email
             }
         )
     }

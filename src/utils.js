@@ -62,3 +62,24 @@ export const convertPrice = (price) => {
         return null
     }
 }
+export const initFacebookSDK = () => {
+    if (window.FB) {
+        window.FB.XFBML.parse();
+    }
+    let locale = "vi_VN";
+    window.fbAsyncInit = function () {
+        window.FB.init({
+            appId: process.env.REACT_APP_FB_KEY,
+            autoLogAppEvents: true,
+            xfbml: true,
+            version: 'v8.6'
+        });
+    };
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = `https://connect.facebook.net/${locale}/sdk.js`;
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+}

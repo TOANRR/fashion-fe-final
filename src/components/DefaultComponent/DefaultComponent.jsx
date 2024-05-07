@@ -10,7 +10,7 @@ const DefaultComponent = ({ children }) => {
     <div>
       <HeaderComponent />
       <HeadNavComponent />
-      <ConfigProvider
+      {/* <ConfigProvider
         theme={{
           token: {
             // Seed Token
@@ -19,9 +19,9 @@ const DefaultComponent = ({ children }) => {
             colorInfo: "#000000"
           },
         }}
-      >
-        {children}
-      </ConfigProvider>
+      > */}
+      {children}
+      {/* </ConfigProvider> */}
 
       <ServiceSupport />
       <Footer />

@@ -39,3 +39,15 @@ export const WrapperTextLight = styled.span`
     font-size: 15px;
     cursor: pointer;
 `
+export const buttonStyle = {
+    backgroundColor: '#db4437',
+    color: '#fff',
+    border: 'none',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+};
+

@@ -15,8 +15,11 @@ import DetailsOrderPage from "../pages/DetailsOrderPage/DetailsOrderPage";
 import UploadImageComponent from "../components/UploadImageComponent/UploadImageComponent";
 import FirebaseImageUpload from "../components/FirebaseImage/FirebaseImageUpload";
 import MyComponent from "../components/FirebaseImage/addressTest";
+import MyComponent2 from "../components/FirebaseImage/test";
+import SearchImage from "../pages/SearchImagePage/SearchImagePage"
 import OrderSuccessVnpay from "../pages/OrderSuccessVnpay/OrderSuccessVnpay";
 import AboutUsPage from "../pages/AboutUsPage/AboutUsPage";
+import LoginSuccess from "../pages/LoginSuccessPage/LoginSuccessPage";
 
 export const routes = [
     {
@@ -114,9 +117,24 @@ export const routes = [
         isShowHeader: false
     },
     {
+        path: '/login-success',
+        page: LoginSuccess,
+        isShowHeader: false
+    },
+    {
         path: '/test',
         page: MyComponent,
         isShowHeader: false
+    },
+    {
+        path: '/test2',
+        page: MyComponent2,
+        isShowHeader: false
+    },
+    {
+        path: '/search-image',
+        page: SearchImage,
+        isShowHeader: true
     }
 
 ] 

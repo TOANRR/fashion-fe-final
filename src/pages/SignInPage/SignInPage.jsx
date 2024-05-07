@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
+import { Button } from 'antd';
 import InputForm from '../../components/InputForm/InputForm'
-import { WrapperContainerLeft, WrapperContainerRight, WrapperCover, WrapperTextLight } from './style'
+import { WrapperContainerLeft, WrapperContainerRight, WrapperCover, WrapperTextLight, buttonStyle } from './style'
 import imageLogologin from '../../assets/images/logo2.png'
 
 
 import { Image } from 'antd'
-import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
+import { EyeFilled, EyeInvisibleFilled, GoogleOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import * as UserService from '../../services/UserService'
@@ -31,6 +32,11 @@ const SignInPage = () => {
     data => UserService.loginUser(data)
   )
   const { data, isPending, isSuccess } = mutation
+
+  const handleGoogleLogin = () => {
+    window.open("http://localhost:3001/api/auth/google", "_self")
+  };
+
 
 
   useEffect(() => {
@@ -177,7 +183,10 @@ const SignInPage = () => {
               styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
             ></ButtonComponent>
           </Loading>
-          <p><WrapperTextLight>Quên mật khẩu?</WrapperTextLight></p>
+          <Button onClick={handleGoogleLogin} icon={<GoogleOutlined />} style={buttonStyle}>
+            Đăng nhập bằng Google
+          </Button>
+          {/* <p><WrapperTextLight>Quên mật khẩu?</WrapperTextLight></p> */}
           <p>Chưa có tài khoản? <WrapperTextLight onClick={handleNavigateSignUp}> Tạo tài khoản</WrapperTextLight></p>
         </WrapperContainerLeft>
         <WrapperContainerRight>

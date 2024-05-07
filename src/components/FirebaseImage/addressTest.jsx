@@ -1,152 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Input, Rate, Checkbox, Button, List, Modal, Table } from 'antd';
-import './ProductReviewForm.css'; // Import CSS file for styling
+import React, { useState } from 'react';
 
-const { TextArea } = Input;
+const CropImage = () => {
+  const [image, setImage] = useState(null);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [cropStart, setCropStart] = useState({ x: 0, y: 0 });
+  const [isCropping, setIsCropping] = useState(false);
+  const [cropSize, setCropSize] = useState({ width: 0, height: 0 });
 
-const ProductReviewForm = () => {
-  const [form] = Form.useForm();
-  const [isModalVisible, setIsModalVisible] = useState(false); // Trạng thái cho biết modal có hiển thị hay không
-  const [submitting, setSubmitting] = useState(false);
-  const [comments, setComments] = useState([]); // Mảng chứa các bình luận
-  const rowClassName = () => 'custom-table-row';
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible); // Đảo ngược trạng thái hiển thị modal
+  const onSelectFile = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
-  const onFinish = (values) => {
-    setSubmitting(true);
-    console.log('Received values of form:', values);
-    // Gửi dữ liệu đánh giá và nhận xét lên server
-
-    // Thêm bình luận mới vào mảng bình luận
-    setComments([...comments, values]);
-
-    // Reset form
-    form.resetFields();
-    setSubmitting(false);
-    toggleModal(); // Đóng modal sau khi gửi thành công
+  const onMouseDown = (e) => {
+    const { offsetX, offsetY } = e.nativeEvent;
+    setCropStart({ x: offsetX, y: offsetY });
+    setIsCropping(true);
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+  const onMouseMove = (e) => {
+    if (!isCropping) return;
+    const { offsetX, offsetY } = e.nativeEvent;
+    setCropSize({ width: offsetX - cropStart.x, height: offsetY - cropStart.y });
   };
 
-  useEffect(() => {
-    // Tạo 10 bình luận giả định
-    const dummyComments = [];
-    for (let i = 0; i < 20; i++) { // Sửa lại thành 20 bình luận để có đủ dữ liệu
-      dummyComments.push({
-        rating: Math.floor(Math.random() * 5) + 1, // Rating từ 1 đến 5
-        review: `Đây là bình luận số ${i + 1}`,
-        name: `Người dùng ${i + 1}`,
-        email: `user${i + 1}@example.com`,
-        shareReview: Math.random() < 0.5, // Ngẫu nhiên true hoặc false
-        receiveNotifications: Math.random() < 0.5, // Ngẫu nhiên true hoặc false
-        note: `Ghi chú cho bình luận số ${i + 1}`,
-      });
-    }
-    setComments(dummyComments);
-  }, []); // Chỉ gọi một lần khi component được tạo
-
-  // Tính toán thống kê rating
-  const ratingStats = {};
-  comments.forEach((comment) => {
-    const rating = comment.rating;
-    if (!ratingStats[rating]) {
-      ratingStats[rating] = 1;
-    } else {
-      ratingStats[rating]++;
-    }
-  });
-
-  // Chuyển đổi dữ liệu thống kê rating thành dạng phù hợp cho Table của Ant Design
-  const dataSource = Object.keys(ratingStats).map((rating) => ({
-    rating: <Rate disabled defaultValue={parseInt(rating)} />, // Chuyển rating thành component Rate
-    quantity: ratingStats[rating],
-  }));
-
-  const columns = [
-    {
-      title: 'Rating',
-      dataIndex: 'rating',
-      key: 'rating',
-      width: '50%'
-    },
-    {
-      title: 'Số lượng',
-      dataIndex: 'quantity',
-      key: 'quantity',
-      width: '50%'
-    },
-  ];
+  const onMouseUp = () => {
+    setIsCropping(false);
+    const croppedCanvas = document.createElement('canvas');
+    croppedCanvas.width = cropSize.width;
+    croppedCanvas.height = cropSize.height;
+    const ctx = croppedCanvas.getContext('2d');
+    const imageElement = document.getElementById('image-preview');
+    ctx.drawImage(
+      imageElement,
+      cropStart.x, cropStart.y,
+      cropSize.width, cropSize.height,
+      0, 0,
+      cropSize.width, cropSize.height
+    );
+    setCroppedImage(croppedCanvas.toDataURL());
+  };
 
   return (
-    <div className="product-review-popup-container">
-      {/* Bảng thống kê rating */}
-
-      {/* Bảng thống kê rating */}
-      <div style={{ width: "50%" }}>
-        <Table className="product-review-table" dataSource={dataSource} columns={columns} size="small" pagination={false} />
-
-      </div>
-
-
-      <Button type="primary" onClick={toggleModal}>
-        Mở Form
-      </Button>
-
-      <Modal
-        title="Đánh giá Sản phẩm"
-        open={isModalVisible}
-        onCancel={toggleModal}
-        footer={null}
-      >
-        <Form
-          form={form}
-          name="product_review"
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-        >
-          <Form.Item name="rating" label="Đánh giá" rules={[{ required: true }]}>
-            <Rate />
-          </Form.Item>
-
-          <Form.Item name="review" label="Nhận xét của bạn" rules={[{ required: true }]}>
-            <TextArea rows={4} />
-          </Form.Item>
-
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit" loading={submitting}>
-              Gửi Nhận xét
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      {/* Hiển thị danh sách bình luận */}
-      <List
-        dataSource={comments}
-        header={<div>Danh sách Bình luận</div>}
-        renderItem={(item) => (
-          <div style={{ borderBottom: '1px solid #ccc', paddingBottom: '8px' }}>
-            <div style={{ display: 'block', marginTop: '8px', fontWeight: 'bold' }}>{item.name ? item.name : item.email}</div>
-            <List.Item>
-
-              <List.Item.Meta
-
-                title={<Rate disabled defaultValue={item.rating} />} // Hiển thị rating dưới dạng sao
-                description={item.review}
-              />
-
-            </List.Item>
-          </div>
-
-        )}
-      />
+    <div>
+      <input type="file" onChange={onSelectFile} />
+      {image && (
+        <div style={{ position: 'relative', width: '500px', height: '500px' }}>
+          <img
+            id="image-preview"
+            src={image}
+            alt="Preview"
+            style={{ maxWidth: '100%', height: '100%', objectFit: 'contain' }}
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
+          />
+          {isCropping && (
+            <div
+              style={{
+                position: 'absolute',
+                border: '1px dashed red',
+                left: cropStart.x,
+                top: cropStart.y,
+                width: cropSize.width,
+                height: cropSize.height,
+              }}
+            ></div>
+          )}
+        </div>
+      )}
+      {croppedImage && <img src={croppedImage} alt="Cropped" />}
     </div>
   );
 };
 
-export default ProductReviewForm;
+export default CropImage;

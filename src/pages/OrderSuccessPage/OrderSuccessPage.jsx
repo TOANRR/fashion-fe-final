@@ -11,7 +11,7 @@ const OrderSucess = () => {
     const location = useLocation()
     const { state } = location
     return (
-        <div style={{ background: '#f5f5fa', with: '100%', height: '100vh' }}>
+        <div style={{ background: '#f5f5fa', with: '100%', minHeight: '100vh' }}>
             <Loading isLoading={false}>
                 <div style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
                     <h3>Đơn hàng đặt thành công</h3>
@@ -38,7 +38,7 @@ const OrderSucess = () => {
                                 {state.orders?.map((order) => {
                                     return (
                                         <WrapperItemOrder>
-                                            <div style={{ width: '500px', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                            <div style={{ width: '200px', display: 'flex', alignItems: 'center', gap: 4 }}>
                                                 <img src={order.image} style={{ width: '77px', height: '79px', objectFit: 'cover' }} />
                                                 <div style={{
                                                     width: 260,
@@ -59,8 +59,8 @@ const OrderSucess = () => {
                                     )
                                 })}
                             </WrapperItemOrderInfo>
-                            <div>
-                                <span style={{ fontSize: '16px', color: 'red' }}>Tổng tiền: {convertPrice(state?.totalPriceMemo)}</span>
+                            <div style={{ textAlign: 'right', marginTop: "20px" }}>
+                                <span style={{ color: '#ea8500', fontWeight: 'bold', fontSize: "20px", textAlign: 'right' }}>Tổng tiền: {convertPrice(state?.totalPriceMemo)}</span>
                             </div>
                         </WrapperContainer>
                     </div>

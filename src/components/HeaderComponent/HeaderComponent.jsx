@@ -46,55 +46,58 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const [fileImg, setFileImg] = useState();
   const [img, setImg] = useState("");
 
+  const handleSearchImage = async () => [
+    navigate('/search-image')
+  ]
 
-  const searchImageSubmit = async () => {
-    try {
+  // const searchImageSubmit = async () => {
+  //   try {
 
-      const res = await axios.get(`https://api-python-image-mmsqt5gz7-toanrrs-projects.vercel.app/`, {
-        query_img: img
-      }
+  //     const res = await axios.get(`https://api-python-image-mmsqt5gz7-toanrrs-projects.vercel.app/`, {
+  //       query_img: img
+  //     }
 
-      )
-      console.log("res", res)
-      if (res?.data?.status === "OK") {
-        setProductImgs(res.data.data)
-        console.log("productImgs", res.data.data)
-        setIsImage(true)
-        dispatch(searchProduct({ search: search, isImage: true, productImgs: res.data.data }))
-      }
+  //     )
+  //     console.log("res", res)
+  //     if (res?.data?.status === "OK") {
+  //       setProductImgs(res.data.data)
+  //       console.log("productImgs", res.data.data)
+  //       setIsImage(true)
+  //       dispatch(searchProduct({ search: search, isImage: true, productImgs: res.data.data }))
+  //     }
 
 
 
-      // const res = await axios.get(`http://127.0.0.1:5001`)
+  //     // const res = await axios.get(`http://127.0.0.1:5001`)
 
-    }
-    catch (error) {
-      console.error(error);
-    }
-  };
+  //   }
+  //   catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-  const handleChooseImg = (e) => {
-    const files = e.target.files;
-    if (files) {
-      const file = files[0];
-      if (!file) return;
-      if (file.type.indexOf("image/") === -1) {
-        alert("dinh dang file khong hop le");
-        return;
-      }
+  // const handleChooseImg = (e) => {
+  //   const files = e.target.files;
+  //   if (files) {
+  //     const file = files[0];
+  //     if (!file) return;
+  //     if (file.type.indexOf("image/") === -1) {
+  //       alert("dinh dang file khong hop le");
+  //       return;
+  //     }
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result;
-        setImg(result);
-      };
-      reader.readAsDataURL(files[0]);
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       const result = reader.result;
+  //       setImg(result);
+  //     };
+  //     reader.readAsDataURL(files[0]);
 
-      setFileImg(file);
+  //     setFileImg(file);
 
-      console.log("img", img)
-    }
-  };
+  //     console.log("img", img)
+  //   }
+  // };
 
   const handleSearch = () => {
     setIsImage(false)
@@ -178,38 +181,24 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               />
 
               {/* <UploadImageComponent /> */}
-              <SearchLabelImage htmlFor="image">
-                {(img !== "") ? (
-                  <img src={img} alt="file" />
-                ) : (
-                  <CameraOutlined />
-                )}
+              <SearchLabelImage >
+
+                <CameraOutlined onClick={handleSearchImage} />
+
 
               </SearchLabelImage>
-              <input type="file" id="image" hidden onChange={handleChooseImg} />
-              {(img !== "") ? (
-                <ButtonComponent
-                  size="large"
-                  styleButton={{ background: '#fff', border: 'none' }}
-                  icon={<SearchOutlined color="#fff" style={{ color: '#fff' }} />}
-                  textbutton="Tìm kiếm"
-                  styleTextButton={{ color: "#000000" }}
-                  display="inline"
-                  onClick={searchImageSubmit}
 
-                />
-              ) : (
-                <ButtonComponent
-                  size="large"
-                  styleButton={{ background: '#ffff', border: 'none' }}
-                  icon={<SearchOutlined color="#000000" style={{ color: '#000000' }} />}
-                  textbutton="Tìm kiếm"
-                  styleTextButton={{ color: "#000000" }}
-                  display="inline"
-                  onClick={handleSearch}
+              <ButtonComponent
+                size="large"
+                styleButton={{ background: '#ffff', border: 'none' }}
+                icon={<SearchOutlined color="#000000" style={{ color: '#000000' }} />}
+                textbutton="Tìm kiếm"
+                styleTextButton={{ color: "#000000" }}
+                display="inline"
+                onClick={handleSearch}
 
-                />
-              )}
+              />
+
 
             </div>
 
@@ -232,7 +221,15 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               {user?.access_token ? (
                 <>
                   <Popover content={content} trigger="click" open={isOpenPopup}>
-                    <div style={{ cursor: 'pointer' }} onClick={() => setIsOpenPopup((prev) => !prev)}>{userName?.length ? userName : user?.email}</div>
+                    <div style={{
+                      cursor: 'pointer', width: 100,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      textDecoration: 'none', // Loại bỏ gạch chân mặc định của thẻ <a>
+                      color: 'inherit', // Sử dụng màu chữ mặc định của thẻ <a>
+                      display: 'block',
+                    }} onClick={() => setIsOpenPopup((prev) => !prev)}>{userName?.length ? userName : user?.email}</div>
                   </Popover>
                 </>
               ) : (
