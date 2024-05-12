@@ -44,12 +44,35 @@ export const cancelOrder = async (id, access_token, orderItems, userId) => {
     })
     return res.data
 }
+export const deleteOrder = async (id, access_token) => {
+    const data = { orderId: id }
+    console.log(access_token)
+    const res = await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/order/delete-order`, {
+        headers: {
+            token: `Bearer ${access_token}`,
+            withCredentials: true
+        },
+        data: data
+    })
+    return res.data
+}
 
 export const getAllOrder = async (access_token) => {
     const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/order/get-all-order`, {
         headers: {
             token: `Bearer ${access_token}`,
         }
+    })
+    return res.data
+}
+export const updateOrder = async (id, access_token, data) => {
+    console.log(access_token)
+    const res = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/order/update-order/${id}`, data, {
+        headers: {
+            token: `Bearer ${access_token}`,
+            withCredentials: true
+        },
+
     })
     return res.data
 }

@@ -44,7 +44,9 @@ const TableComponent = (props) => {
           color: '#fff',
           fontWeight: 'bold',
           padding: '10px',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          marginBottom: "30px",
+          width: '90%'
         }}
           onClick={handleDeleteAll}
         >

@@ -34,7 +34,7 @@ const SignInPage = () => {
   const { data, isPending, isSuccess } = mutation
 
   const handleGoogleLogin = () => {
-    window.open("http://localhost:3001/api/auth/google", "_self")
+    window.open(`${process.env.REACT_APP_API_URL}/auth/google`, "_self")
   };
 
 

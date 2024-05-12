@@ -10,11 +10,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutationHooks } from '../../hooks/useMutationHook';
 import * as message from '../../components/MessageComponent/MessageComponent'
 import { Breadcrumb } from 'antd';
-import { red100 } from 'material-ui/styles/colors';
 
 const MyOrderPage = () => {
     const location = useLocation()
     const { state } = location
+    console.log(location)
     const user = useSelector((state) => state.user)
 
     const navigate = useNavigate()
@@ -24,7 +24,7 @@ const MyOrderPage = () => {
         return res.data
     }
 
-    const queryOrder = useQuery({ queryKey: ['orders'], queryFn: fetchMyOrder })
+    const queryOrder = useQuery({ queryKey: ['myorders'], queryFn: fetchMyOrder })
     const { isLoading, data } = queryOrder
 
     const handleDetailsOrder = (id) => {

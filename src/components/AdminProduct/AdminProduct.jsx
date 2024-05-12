@@ -1,11 +1,11 @@
-import { Button, Col, Form, Input, Modal, Row, Select, Space } from 'antd'
+import { Button, Col, Form, Input, Modal, Row, Select, Space, Switch } from 'antd'
 import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import React, { useRef } from 'react'
 import { WrapperHeader, WrapperUploadFile } from './style'
 import TableComponent from '../TableComponent/TableComponent'
 import { useState } from 'react'
 import InputComponent from '../InputComponent/InputComponent'
-import { getBase64, renderOptions, renderOptionsCate } from '../../utils'
+import { convertPrice, getBase64, renderOptions, renderOptionsCate } from '../../utils'
 import * as ProductService from '../../services/ProductService'
 import { useMutationHooks } from '../../hooks/useMutationHook'
 import Loading from '../../components/LoadingComponent/LoadingComponent'
@@ -23,6 +23,7 @@ import { ref, getDownloadURL, uploadBytesResumable, uploadBytes } from "firebase
 import { limit } from 'firebase/firestore'
 import { CLOTHING_TYPES } from '../../contant';
 import { type } from '@testing-library/user-event/dist/type'
+import TableComponentProduct from '../TableComponentProduct/TableComponentProduct'
 const AdminProduct = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -394,7 +395,7 @@ const AdminProduct = () => {
       />
     ),
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+      record[dataIndex]?.toString().toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
@@ -415,25 +416,44 @@ const AdminProduct = () => {
     //     text
     //   ),
   });
-  const columns = [
+  const ImageCell = ({ images }) => (
+    <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+      {images.map((image, index) => (
+        <img key={index} src={image} alt={`Ảnh ${index}`} style={{ width: '50px', height: 'auto' }} />
+      ))}
+    </div>
+  );
+  const SizesCell = ({ sizes }) => (
+    <ul>
+      {sizes.map((size, index) => (
+        <li key={index}>
+          {size.size}:  {size.countInStock} sản phẩm
+        </li>
+      ))}
+    </ul>
+  );
+  const [columns, setColumns] = useState([
     {
-      title: 'Name',
+      key: 'name',
+      title: 'Tên',
       dataIndex: 'name',
-      with: 200,
-      render: (text) => <a>{text}</a>,
+      fixed: 'left',
+      width: 250,
+      render: (text, record) => (
+        <a href={`${process.env.REACT_APP_URL}/product-details/${record._id}`} target="_blank" rel="noopener noreferrer">
+          {text}
+        </a>
+      ),
       sorter: (a, b) => a.name.length - b.name.length,
       style: { wordWrap: 'break-word', overflowWrap: 'break-word' },
-
-      // ellipsis: {
-      //   showTitle: false,
-      // },
       ...getColumnSearchProps('name')
     },
     {
-      title: 'Price',
+      key: 'price',
+      title: 'Giá',
       dataIndex: 'price',
-      with: 80,
-
+      render: (text) => <span>{convertPrice(text)}</span>,
+      width: 200,
       ellipsis: {
         showTitle: false,
       },
@@ -456,48 +476,85 @@ const AdminProduct = () => {
           return record.price <= 500000
         }
       }
-
     },
-    // {
-    //   title: 'Rating',
-    //   dataIndex: 'rating',
-    //   sorter: (a, b) => a.rating - b.rating,
-    //   filters: [
-    //     {
-    //       text: '>= 3',
-    //       value: '>='
-    //     },
-    //     {
-    //       text: '<= 3',
-    //       value: '<='
-    //     }
-    //   ],
-    //   onFilter: (value, record) => {
-    //     console.log('value', value, record)
-    //     if (value === '>=') {
-    //       return record.rating >= 3
-    //     } else if (value === '<=') {
-    //       return record.rating <= 3
-    //     }
-    //   }
-    // },
     {
-      title: 'Type',
+      key: 'type',
+      title: 'Loại',
       dataIndex: 'type',
+      render: (text) => <span style={{ textTransform: 'uppercase' }}>{text}</span>,
+      width: 120,
+      filters: [
+        {
+          text: 'WOMEN',
+          value: 'women'
+        },
+        {
+          text: 'MEN',
+          value: 'men'
+        },
+        {
+          text: 'KIDS',
+          value: 'kids'
+        }
+      ],
+      onFilter: (value, record) => {
+        console.log('value', value, record)
+        if (value === 'men') {
+          return record.type === 'men'
+        } else if (value === 'women') {
+          return record.type === "women"
+        }
+        else if (value === 'kids') {
+          return record.type === "kids"
+        }
+      }
     },
     {
+      key: 'category',
+      title: 'Danh mục',
+      dataIndex: 'category',
+      sorter: (a, b) => a.name.length - b.name.length,
+      style: { wordWrap: 'break-word', overflowWrap: 'break-word' },
+      ...getColumnSearchProps('category'),
+      width: 200
+    },
+    {
+      key: 'images',
+      title: 'Hình ảnh',
+      dataIndex: 'images',
+      render: (images) => <ImageCell images={images} />,
+      width: 300
+    },
+    {
+      key: 'sizes',
+      title: 'Kích thước',
+      dataIndex: 'sizes',
+      width: 200,
+      render: (sizes) => <SizesCell sizes={sizes} />,
+    },
+    {
+      key: 'action',
       title: 'Action',
       dataIndex: 'action',
-      render: renderAction
+      render: renderAction,
+      width: 100,
+      fixed: 'right'
     },
-  ];
+  ]);
+  const handleToggleColumn = (checked, columnName) => {
+    setColumns((prevColumns) =>
+      prevColumns.map((column) =>
+        column.key === columnName ? { ...column, hidden: !checked } : column
+      )
+    );
+  };
   const dataTable = products?.data?.length && products?.data?.map((product) => {
     return { ...product, key: product._id }
   })
 
   useEffect(() => {
     if (isSuccess && data?.status === 'OK') {
-      message.success()
+      message.success("Thêm mới thành công")
       handleCancel()
     } else if (data?.status === 'ERR') {
       message.error(data?.message)
@@ -549,7 +606,7 @@ const AdminProduct = () => {
 
   useEffect(() => {
     if (isSuccessUpdated && dataUpdated?.status === 'OK') {
-      message.success()
+      message.success("Cập nhật thành công")
       handleCloseDrawer()
     } else if (isErrorUpdated) {
       message.error()
@@ -753,8 +810,21 @@ const AdminProduct = () => {
       <div style={{ marginTop: '10px' }}>
         <Button style={{ height: '100px', width: '100px', borderRadius: '6px', borderStyle: 'dashed' }} onClick={() => setIsModalOpen(true)}><PlusOutlined style={{ fontSize: '60px' }} /></Button>
       </div>
-      <div style={{ marginTop: '20px' }}>
-        <TableComponent handleDelteMany={handleDelteManyProducts} columns={columns} isLoading={isLoadingProducts} data={dataTable} onRow={(record, rowIndex) => {
+      <div style={{ marginTop: '20px', width: "100%" }}>
+        <div style={{ marginBottom: 16, fontSize: "10px" }}>
+
+          {columns.map((column) => (
+            <span key={column.key} style={{ marginLeft: 8 }}>
+              {column.title}{' '}
+              <Switch
+                onChange={(checked) => handleToggleColumn(checked, column.key)}
+                checked={!column.hidden}
+                size="small"
+              />
+            </span>
+          ))}
+        </div>
+        <TableComponentProduct style={{ width: '1000px' }} handleDelteMany={handleDelteManyProducts} columns={columns.filter((column) => !column.hidden)} isLoading={isLoadingProducts} scroll={{ x: 800 }} data={dataTable} onRow={(record, rowIndex) => {
           return {
             onClick: event => {
               setRowSelected(record._id)

@@ -1,4 +1,4 @@
-import { Button, Form, Space } from 'antd'
+import { Button, Form, Select, Space, Switch } from 'antd'
 import React from 'react'
 import { WrapperHeader, WrapperUploadFile } from './style'
 import TableComponent from '../TableComponent/TableComponent'
@@ -16,6 +16,7 @@ import { useMutationHooks } from '../../hooks/useMutationHook'
 import * as UserService from '../../services/UserService'
 import { useQuery } from '@tanstack/react-query'
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
+const { Option } = Select;
 
 const AdminUser = () => {
   const [rowSelected, setRowSelected] = useState('')
@@ -32,14 +33,17 @@ const AdminUser = () => {
     email: '',
     phone: '',
     isAdmin: false,
-    address: ''
+    address: '',
+    avatar: ''
   })
   const [stateUserDetails, setStateUserDetails] = useState({
     name: '',
     email: '',
     phone: '',
     isAdmin: false,
-    address: ''
+    address: '',
+    avatar: ''
+
   })
 
   const [form] = Form.useForm();
@@ -101,6 +105,7 @@ const AdminUser = () => {
         phone: res?.data?.phone,
         address: res?.data?.address,
         isAdmin: res?.data?.isAdmin,
+        avatar: res?.data?.avatar
       })
     }
     setIsLoadingUpdate(false)
@@ -219,7 +224,7 @@ const AdminUser = () => {
       />
     ),
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+      record[dataIndex]?.toString().toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
@@ -240,64 +245,129 @@ const AdminUser = () => {
     //     text
     //   ),
   });
-  const columns = [
+  const formatDateTime = (dateTimeString) => {
+    const dateTime = new Date(dateTimeString);
+    const year = dateTime.getFullYear();
+    const month = dateTime.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
+    const day = dateTime.getDate();
+    const hours = dateTime.getHours();
+    const minutes = dateTime.getMinutes();
+    const seconds = dateTime.getSeconds();
+
+    // Định dạng lại thành chuỗi ngày giờ
+    return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day} ${hours}:${minutes}:${seconds}`;
+  };
+  const [columns, setColumns] = useState([
     {
-      title: 'Name',
+      key: 'name',
+      title: 'Tên',
       dataIndex: 'name',
       sorter: (a, b) => a.name.length - b.name.length,
-      ...getColumnSearchProps('name')
+      ...getColumnSearchProps('name'),
+      fixed: 'left',
+      width: 180
     },
     {
+      key: 'email',
       title: 'Email',
       dataIndex: 'email',
       sorter: (a, b) => a.email.length - b.email.length,
-      ...getColumnSearchProps('email')
+      ...getColumnSearchProps('email'),
+      width: 250,
+      fixed: 'left',
     },
     {
-      title: 'Address',
-      dataIndex: 'address'
-    },
-    {
+      key: 'isAdmin',
       title: 'Admin',
       dataIndex: 'isAdmin',
-      // filters: [
-      //   {
-      //     text: 'True',
-      //     value: true,
-      //   },
-      //   {
-      //     text: 'False',
-      //     value: false,
-      //   }
-      // ],
-      // onFilter: (value, record) => {
-      //   console.log('value', value, record)
-      //   if (value === 'TRUE') {
-      //     return record.isAdmin === true
-      //   } else if (value === 'FALSE') {
-      //     return record.isAdmin === false
-      //   }
-      // }
+      filters: [
+        {
+          text: 'TRUE',
+          value: 'TRUE',
+        },
+        {
+          text: 'FALSE',
+          value: 'FALSE',
+        }
+      ],
+      onFilter: (value, record) => {
+        console.log('value', value, record)
+        if (value === 'TRUE') {
+          return record.isAdmin === 'TRUE'
+        } else if (value === 'FALSE') {
+          return record.isAdmin === 'FALSE'
+        }
+      },
+      width: 100
     },
     {
-      title: 'Phone',
+      key: 'phone',
+      title: 'Điện Thoại',
       dataIndex: 'phone',
       sorter: (a, b) => a.phone - b.phone,
-      ...getColumnSearchProps('phone')
+      ...getColumnSearchProps('phone'),
+      width: 150
     },
     {
+      key: 'address',
+      title: 'Địa chỉ',
+      dataIndex: 'address',
+      width: 300
+    },
+    {
+      key: 'city',
+      title: 'Tỉnh/Thành Phố',
+      dataIndex: 'city',
+      sorter: (a, b) => a.city?.length - b.city?.length,
+      ...getColumnSearchProps('city'),
+      width: 150
+    },
+    {
+      key: 'district',
+      title: 'Quận/huyện',
+      dataIndex: 'district',
+      sorter: (a, b) => a.city?.length - b.city?.length,
+      ...getColumnSearchProps('district'),
+      width: 150
+    },
+    {
+      key: 'ward',
+      title: 'Phường/Xã',
+      dataIndex: 'ward',
+      sorter: (a, b) => a.city?.length - b.city?.length,
+      ...getColumnSearchProps('ward'),
+      width: 150
+    },
+    {
+      key: 'date',
+      title: 'Ngày tạo',
+      dataIndex: 'createdAt',
+      render: (text) => <span>{formatDateTime(text)}</span>,
+      width: 180,
+    },
+    {
+      key: 'action',
       title: 'Action',
       dataIndex: 'action',
-      render: renderAction
+      render: renderAction,
+      width: 80,
+      fixed: 'right'
     },
-  ];
+  ]);
+  const handleToggleColumn = (checked, columnName) => {
+    setColumns((prevColumns) =>
+      prevColumns.map((column) =>
+        column.key === columnName ? { ...column, hidden: !checked } : column
+      )
+    );
+  };
   const dataTable = users?.data?.length && users?.data?.map((user) => {
     return { ...user, key: user._id, isAdmin: user.isAdmin ? 'TRUE' : 'FALSE' }
   })
 
   useEffect(() => {
     if (isSuccessDelected && dataDeleted?.status === 'OK') {
-      message.success()
+      message.success("Xóa người dùng thành công")
       handleCancelDelete()
     } else if (isErrorDeleted) {
       message.error()
@@ -312,13 +382,14 @@ const AdminUser = () => {
       phone: '',
       address: '',
       isAdmin: false,
+      avatar: ''
     })
     form.resetFields()
   };
 
   useEffect(() => {
     if (isSuccessUpdated && dataUpdated?.status === 'OK') {
-      message.success()
+      message.success("Cập nhật người dùng thành công")
       handleCloseDrawer()
     } else if (isErrorUpdated) {
       message.error()
@@ -380,11 +451,29 @@ const AdminUser = () => {
       }
     })
   }
+  const handleChange = (value) => {
+    // Cập nhật giá trị isAdmin trong stateUserDetails
+    setStateUserDetails({ ...stateUserDetails, isAdmin: value });
+  };
+
   return (
     <div>
       <WrapperHeader>Quản lý người dùng</WrapperHeader>
-      <div style={{ marginTop: '20px' }}>
-        <TableComponent handleDelteMany={handleDelteManyUsers} columns={columns} isLoading={isLoadingUsers} data={dataTable} onRow={(record, rowIndex) => {
+      <div style={{ marginTop: '20px', width: "100%" }}>
+        <div style={{ marginBottom: 16, fontSize: "10px" }}>
+
+          {columns.map((column) => (
+            <span key={column.key} style={{ marginLeft: 8 }}>
+              {column.title}{' '}
+              <Switch
+                onChange={(checked) => handleToggleColumn(checked, column.key)}
+                checked={!column.hidden}
+                size="small"
+              />
+            </span>
+          ))}
+        </div>
+        <TableComponent style={{ width: '1000px' }} handleDelteMany={handleDelteManyUsers} columns={columns.filter((column) => !column.hidden)} isLoading={isLoadingUsers} data={dataTable} scroll={{ x: 800 }} onRow={(record, rowIndex) => {
           return {
             onClick: event => {
               setRowSelected(record._id)
@@ -404,7 +493,7 @@ const AdminUser = () => {
             form={form}
           >
             <Form.Item
-              label="Name"
+              label="Tên"
               name="name"
 
             >
@@ -416,21 +505,63 @@ const AdminUser = () => {
               name="email"
               rules={[{ required: true, message: 'Please input your email!' }]}
             >
-              <InputComponent value={stateUserDetails['email']} onChange={handleOnchangeDetails} name="email" />
+              <InputComponent value={stateUserDetails['email']} onChange={handleOnchangeDetails} name="email" disabled />
             </Form.Item>
             <Form.Item
-              label="Address"
+              label="Địa chỉ"
               name="address"
               rules={[{ required: false }]}
             >
-              <InputComponent value={stateUserDetails['address']} onChange={handleOnchangeDetails} name="address" />
+              <InputComponent value={stateUserDetails['address']} onChange={handleOnchangeDetails} name="address" disabled />
             </Form.Item>
             <Form.Item
-              label="Phone"
+              label="SĐT"
               name="phone"
 
             >
-              <InputComponent value={stateUserDetails.phone} onChange={handleOnchangeDetails} name="phone" />
+              <InputComponent value={stateUserDetails.phone} onChange={handleOnchangeDetails} name="phone" disabled />
+            </Form.Item>
+            <Form.Item
+              label="Admin"
+              name="isAdmin"
+
+            >
+              <Select id="isAdminSelect" value={stateUserDetails.isAdmin} onChange={handleChange} >
+                <Option value={true}>TRUE</Option>
+                <Option value={false}>FALSE</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Avatar"
+              name="avatar"
+
+            >
+              {
+                stateUserDetails['avatar'] ? (
+                  // Nếu có, hiển thị ảnh kích thước 40x40 hình tròn
+                  <img
+                    src={stateUserDetails.avatar}
+                    alt="User Avatar"
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                    }}
+                  />
+                ) : (
+                  // Nếu không, hiển thị ảnh trống
+                  <img
+                    src="https://i.pinimg.com/236x/2a/65/f9/2a65f948b71ff3a70e21c64bca10a312.jpg" // Đường dẫn đến ảnh trống
+                    alt="Empty Avatar"
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                    }}
+                  />
+                )
+              }
+
             </Form.Item>
 
             {/* <Form.Item
