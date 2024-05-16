@@ -65,6 +65,14 @@ export const getAllOrder = async (access_token) => {
     })
     return res.data
 }
+export const getAllOrderByTime = async (access_token, start, end) => {
+    const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/order/get-all-order?start=${start}&end=${end}`, {
+        headers: {
+            token: `Bearer ${access_token}`,
+        }
+    })
+    return res.data
+}
 export const updateOrder = async (id, access_token, data) => {
     console.log(access_token)
     const res = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/order/update-order/${id}`, data, {
@@ -74,5 +82,15 @@ export const updateOrder = async (id, access_token, data) => {
         },
 
     })
+    return res.data
+}
+export const getTotalRevenueAndOrders = async (access_token) => {
+    console.log(access_token)
+    const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/dashboard/total-revenue-and-orders`, {
+        headers: {
+            token: `Bearer ${access_token}`,
+        }
+    })
+    console.log(res)
     return res.data
 }

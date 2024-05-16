@@ -52,16 +52,11 @@ const AdminOrder = () => {
     const searchInput = useRef(null);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-
-    // const [stateUser, setStateUser] = useState({
-    //     name: '',
-    //     email: '',
-    //     phone: '',
-    //     isAdmin: false,
-    //     address: '',
-    //     avatar: ''
-    // })
+    const [searchRange, setSearchRange] = useState([]);
+    const [loadingTable, setLoadingTable] = useState(false)
     const [stateOrderDetails, setStateOrderDetails] = useState(initialOrderState);
+    const [start, setStart] = useState('');
+    const [end, setEnd] = useState('');
 
     const [form] = Form.useForm();
 
@@ -110,10 +105,9 @@ const AdminOrder = () => {
     }
 
 
-    const getAllOrder = async () => {
-        const res = await OrderServices.getAllOrder(user.access_token)
-        // console.log('res', res)
-        return res
+    const getAllOrder = async (start, end) => {
+        const res = await OrderServices.getAllOrderByTime(user.access_token, start, end);
+        return res;
     }
 
     const fetchGetDetailsOrder = async (rowSelected) => {
@@ -124,15 +118,12 @@ const AdminOrder = () => {
         setIsLoadingUpdate(false)
     }
 
-    // useEffect(() => {
-    //     form.setFieldsValue(stateUserDetails)
-    // }, [form, stateUserDetails])
+
 
     useEffect(() => {
         if (rowSelected && isOpenDrawer) {
             setIsLoadingUpdate(true)
             fetchGetDetailsOrder(rowSelected)
-            // console.log(stateOrderDetails)
         }
     }, [rowSelected, isOpenDrawer])
 
@@ -143,8 +134,23 @@ const AdminOrder = () => {
     const { data: dataDeleted, isPending: isLoadingDeleted, isSuccess: isSuccessDelected, isError: isErrorDeleted } = mutationDeleted
     // const { data: dataDeletedMany, isLoading: isLoadingDeletedMany, isSuccess: isSuccessDelectedMany, isError: isErrorDeletedMany } = mutationDeletedMany
 
-    const queryOrder = useQuery({ queryKey: ['orders'], queryFn: getAllOrder })
-    const { isLoading: isLoadingUsers, data: orders } = queryOrder
+    const queryOrder = useQuery({
+        queryKey: ['orders'],
+        queryFn: () => getAllOrder(start, end) // Thêm start và end vào đây
+    }); const { isLoading: isLoadingOrder, data: orders } = queryOrder
+    const [dataTable, setTable] = useState()
+    useEffect(() => {
+        if (orders?.data) {
+            setTable(orders.data.map((order) => {
+                return {
+                    ...order,
+                    key: order._id,
+                    fullname: order.shippingAddress.fullName,
+                    address: order.shippingAddress.address + ', ' + order.shippingAddress.city + ', ' + order.shippingAddress.district + ', ' + order.shippingAddress.ward + ', sđt: ' + order.shippingAddress.phone
+                };
+            }));
+        }
+    }, [orders]);
     const renderAction = () => {
         return (
             <div>
@@ -156,12 +162,11 @@ const AdminOrder = () => {
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
-        // setSearchText(selectedKeys[0]);
-        // setSearchedColumn(dataIndex);
+
     };
     const handleReset = (clearFilters) => {
         clearFilters();
-        // setSearchText('');
+
     };
 
     const getColumnSearchProps = (dataIndex) => ({
@@ -233,18 +238,7 @@ const AdminOrder = () => {
         },
 
     });
-    const formatDateTime = (dateTimeString) => {
-        const dateTime = new Date(dateTimeString);
-        const year = dateTime.getFullYear();
-        const month = dateTime.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
-        const day = dateTime.getDate();
-        const hours = dateTime.getHours();
-        const minutes = dateTime.getMinutes();
-        const seconds = dateTime.getSeconds();
 
-        // Định dạng lại thành chuỗi ngày giờ
-        return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day} ${hours}:${minutes}:${seconds}`;
-    };
     const [columns, setColumns] = useState([
 
         {
@@ -458,11 +452,7 @@ const AdminOrder = () => {
             )
         );
     };
-    const dataTable = orders?.data?.length && orders?.data?.map((order) => {
-        return {
-            ...order, key: order._id, fullname: order.shippingAddress.fullName, address: order.shippingAddress.address + ', ' + order.shippingAddress.city + ', ' + order.shippingAddress.district + ', ' + order.shippingAddress.ward + ', sđt: ' + order.shippingAddress.phone
-        }
-    })
+
 
     useEffect(() => {
         if (isSuccessDelected && dataDeleted?.status === 'OK') {
@@ -582,6 +572,9 @@ const AdminOrder = () => {
     const { data: dataUpdated, isPending: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
 
     useEffect(() => {
+        queryOrder.refetch();
+    }, [start, end])
+    useEffect(() => {
         if (isSuccessUpdated && dataUpdated?.message === 'OK') {
             message.success("update trạng thái thành công")
             handleCloseDrawer()
@@ -589,10 +582,46 @@ const AdminOrder = () => {
             message.error()
         }
     }, [isSuccessUpdated])
+    const handleSearchOrder = async () => {
+        if (searchRange.length !== 2) {
+            message.error("Please select a search range");
+            return;
+        }
 
+        setStart(searchRange[0].startOf('day').toISOString());
+        setEnd(searchRange[1].endOf('day').toISOString());
+
+    }
+
+    const handleResetSearch = async () => {
+        setSearchRange([]);
+        setStart('');
+        setEnd('');
+        queryOrder.refetch();
+
+    }
     return (
         <div>
             <WrapperHeader>Quản lý đơn hàng</WrapperHeader>
+            <Row gutter={[20, 20]}>
+                <Col span={12}>
+                    <DatePicker.RangePicker
+                        style={{ width: '100%' }}
+                        onChange={(dates) => setSearchRange(dates)}
+                        value={searchRange}
+                        allowClear={false}
+                    />
+                </Col>
+                <Col span={12}>
+                    <Button type="primary" onClick={handleSearchOrder} icon={<SearchOutlined />}>
+                        Tìm kiếm
+                    </Button>
+                    <Button style={{ marginLeft: '20px', backgroundColor: 'red', color: '#fff' }} onClick={handleResetSearch} icon={<CloseCircleOutlined />}>
+                        Reset
+                    </Button>
+                </Col>
+
+            </Row>
             <div style={{ marginTop: '20px', width: "100%" }}>
                 <div style={{ marginBottom: 16, fontSize: "10px" }}>
 
@@ -607,7 +636,7 @@ const AdminOrder = () => {
                         </span>
                     ))}
                 </div>
-                <TableComponent style={{ width: '1000px' }} handleDelteMany={handleDelteManyOrders} columns={columns.filter((column) => !column.hidden)} isLoading={isLoadingUsers} data={dataTable} scroll={{ x: 800 }} onRow={(record, rowIndex) => {
+                <TableComponent style={{ width: '1000px' }} handleDelteMany={handleDelteManyOrders} columns={columns.filter((column) => !column.hidden)} isLoading={isLoadingOrder || loadingTable} data={dataTable} scroll={{ x: 800 }} onRow={(record, rowIndex) => {
                     return {
                         onClick: event => {
                             setRowSelected(record._id)
