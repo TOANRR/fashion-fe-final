@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
 import { Button } from 'antd';
 import InputForm from '../../components/InputForm/InputForm'
-import { WrapperContainerLeft, WrapperContainerRight, WrapperCover, WrapperTextLight, buttonStyle } from './style'
+import { WrapperContainerLeft, WrapperContainerRight, WrapperCover, WrapperTextLight, ButtonStyle, ResponsiveImage, ResponsiveContainer } from './style'
 import imageLogologin from '../../assets/images/logo2.png'
 
 
@@ -117,7 +117,9 @@ const SignInPage = () => {
   const handleNavigateSignUp = () => {
     navigate('/sign-up')
   }
-
+  const handleNavigateForgotPassword = () => {
+    navigate('/forgot-password')
+  }
   const handleOnchangeEmail = (value) => {
     setEmail(value)
   }
@@ -136,7 +138,11 @@ const SignInPage = () => {
 
   return (
     <WrapperCover >
-      <div style={{ width: '800px', height: '445px', borderRadius: '6px', background: '#fff', display: 'flex', boxShadow: '5px 5px 10px 0 rgba(0, 0, 0, 0.7)' }}>
+      <ResponsiveContainer>
+        <WrapperContainerRight>
+          <ResponsiveImage src={imageLogologin} preview={false} alt="iamge-logo" height="203px" width="203px" />
+          {/* <h4>Mua sắm tại web-economerce</h4> */}
+        </WrapperContainerRight>
         <WrapperContainerLeft>
           <h1>Đăng nhập</h1>
           <p>Cùng đăng nhập và mua sắm nhé!</p>
@@ -183,17 +189,16 @@ const SignInPage = () => {
               styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
             ></ButtonComponent>
           </Loading>
-          <Button onClick={handleGoogleLogin} icon={<GoogleOutlined />} style={buttonStyle}>
+          <ButtonStyle onClick={handleGoogleLogin} icon={<GoogleOutlined />}>
             Đăng nhập bằng Google
-          </Button>
-          {/* <p><WrapperTextLight>Quên mật khẩu?</WrapperTextLight></p> */}
-          <p>Chưa có tài khoản? <WrapperTextLight onClick={handleNavigateSignUp}> Tạo tài khoản</WrapperTextLight></p>
+          </ButtonStyle>
+          <p><WrapperTextLight onClick={handleNavigateForgotPassword}>Quên mật khẩu?</WrapperTextLight></p>
+          <p style={{ marginTop: "-10px" }}>Chưa có tài khoản? <WrapperTextLight onClick={handleNavigateSignUp}> Tạo tài khoản</WrapperTextLight></p>
         </WrapperContainerLeft>
-        <WrapperContainerRight>
-          <Image src={imageLogologin} preview={false} alt="iamge-logo" height="203px" width="203px" />
-          {/* <h4>Mua sắm tại web-economerce</h4> */}
-        </WrapperContainerRight>
-      </div>
+
+      </ResponsiveContainer>
+
+
     </WrapperCover >
   )
 }

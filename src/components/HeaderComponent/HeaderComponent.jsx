@@ -1,6 +1,6 @@
 import React from 'react'
 import { Badge, Col, Popover } from 'antd'
-import { WrapperHeader, WrapperHeaderAccout, WrapperTextHeader, WrapperTextHeaderSmall, WrapperContentPopup, SearchLabelImage } from './style'
+import { WrapperHeader, WrapperHeaderAccout, WrapperTextHeader, WrapperTextHeaderSmall, WrapperContentPopup, SearchLabelImage, UserNameDiv, ResponsiveUserIcon } from './style'
 import { searchProduct } from '../../redux/slides/productSlide';
 import { CameraOutlined } from '@ant-design/icons'
 // import Search  from 'antd/es/input/Search';
@@ -13,7 +13,8 @@ import {
   PoweroffOutlined,
   DashboardOutlined,
   SettingOutlined,
-  EditOutlined
+  EditOutlined,
+  KeyOutlined
 } from '@ant-design/icons';
 import ButttonInputSearch from '../ButtonInputSearch/ButtonInputSearch';
 import { useNavigate } from 'react-router-dom';
@@ -50,59 +51,24 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     navigate('/search-image')
   ]
 
-  // const searchImageSubmit = async () => {
-  //   try {
 
-  //     const res = await axios.get(`https://api-python-image-mmsqt5gz7-toanrrs-projects.vercel.app/`, {
-  //       query_img: img
-  //     }
-
-  //     )
-  //     console.log("res", res)
-  //     if (res?.data?.status === "OK") {
-  //       setProductImgs(res.data.data)
-  //       console.log("productImgs", res.data.data)
-  //       setIsImage(true)
-  //       dispatch(searchProduct({ search: search, isImage: true, productImgs: res.data.data }))
-  //     }
-
-
-
-  //     // const res = await axios.get(`http://127.0.0.1:5001`)
-
-  //   }
-  //   catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  // const handleChooseImg = (e) => {
-  //   const files = e.target.files;
-  //   if (files) {
-  //     const file = files[0];
-  //     if (!file) return;
-  //     if (file.type.indexOf("image/") === -1) {
-  //       alert("dinh dang file khong hop le");
-  //       return;
-  //     }
-
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       const result = reader.result;
-  //       setImg(result);
-  //     };
-  //     reader.readAsDataURL(files[0]);
-
-  //     setFileImg(file);
-
-  //     console.log("img", img)
-  //   }
-  // };
 
   const handleSearch = () => {
-    setIsImage(false)
-    setProductImgs([])
-    dispatch(searchProduct({ search: search, isImage: isImage, productImgs: productImgs }))
+    // setIsImage(false)
+    // setProductImgs([])
+    // dispatch(searchProduct({ search: search, isImage: isImage, productImgs: productImgs }))
+    if (search) {
+      if (window.location.pathname === '/search') {
+        navigate(`/search?key=${encodeURIComponent(search)}`);
+        window.location.reload();
+      }
+      else {
+        navigate(`/search?key=${encodeURIComponent(search)}`);
+
+      }
+    }
+
+
   }
   const handleNavigateLogin = () => {
     navigate('/sign-in')
@@ -128,6 +94,8 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const content = (
     <div>
       <WrapperContentPopup onClick={() => handleClickNavigate('profile')}><EditOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Thông tin người dùng</WrapperContentPopup>
+      <WrapperContentPopup onClick={() => handleClickNavigate('change-password')}><KeyOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Đổi mật khẩu</WrapperContentPopup>
+
       {user?.isAdmin && (
 
         <WrapperContentPopup onClick={() => handleClickNavigate('admin')}> <SettingOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Quản lí hệ thống</WrapperContentPopup>
@@ -143,6 +111,9 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const handleClickNavigate = (type) => {
     if (type === 'profile') {
       navigate('/profile-user')
+    }
+    else if (type === 'change-password') {
+      navigate('/change-password')
     } else if (type === 'admin') {
       navigate('/system/admin')
     } else if (type === 'my-order') {
@@ -157,55 +128,52 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     }
     setIsOpenPopup(false)
   }
-
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      // Xử lý logic khi nhấn phím Enter ở đây
+      handleSearch()
+    }
+  };
 
   return (
     <div style={{ height: '60px', width: '100%', display: 'flex', background: '#ffff', justifyContent: 'center' }}>
       <WrapperHeader style={{ justifyContent: isHiddenSearch && isHiddenSearch ? 'space-between' : 'unset', width: '100%' }}>
-        <Col span={6}>
+        <Col span={5}>
           {/* // <WrapperTextHeader onClick={() => navigate('/')} style={{ cursor: "pointer", paddingLeft: "25px" }}><img src='/src/assets/images/logo.png'></img></WrapperTextHeader> */}
-          <img src={logo} alt="logo" width="120" height="35" onClick={() => navigate('/')} style={{ cursor: "pointer", paddingLeft: "25px" }}></img>
+          <img src={logo} alt="logo" width="40%" height="35" onClick={() => navigate('/')} style={{ cursor: "pointer", paddingLeft: "25px" }}></img>
         </Col>
         {!isHiddenSearch && (
           <Col span={12}>
-            <div style={{ display: 'flex', }}>
-              <InputComponent
-                size="large"
-                placeholder="Nhập và tìm kiếm"
-                bordered="bordered"
-                style={{ backgroundColor: "#fff" }}
-                display="inline"
-                position="absolute"
-                z-index="2"
-                onChange={onChangeInput}
-              />
-
-              {/* <UploadImageComponent /> */}
-              <SearchLabelImage >
-
-                <CameraOutlined onClick={handleSearchImage} />
-
-
-              </SearchLabelImage>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div style={{ width: "80%", position: "relative" }}>
+                <InputComponent
+                  size="large"
+                  placeholder="Nhập và tìm kiếm"
+                  style={{ backgroundColor: "#fff", width: "100%" }}
+                  onChange={onChangeInput}
+                  onKeyPress={handleKeyPress}
+                />
+                <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", right: "10px" }}>
+                  <SearchLabelImage>
+                    <CameraOutlined onClick={handleSearchImage} />
+                  </SearchLabelImage>
+                </div>
+              </div>
 
               <ButtonComponent
                 size="large"
-                styleButton={{ background: '#ffff', border: 'none' }}
+                styleButton={{ background: '#fff', border: 'none', marginLeft: "20px" }}
                 icon={<SearchOutlined color="#000000" style={{ color: '#000000' }} />}
                 textbutton="Tìm kiếm"
                 styleTextButton={{ color: "#000000" }}
                 display="inline"
                 onClick={handleSearch}
-
               />
-
-
             </div>
-
           </Col>
         )}
 
-        <Col span={6} style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+        <Col span={6} style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', paddingRight: "30px" }}>
           <Loading isLoading={loading}>
             <WrapperHeaderAccout>
               {userAvatar ? (
@@ -216,20 +184,12 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                   objectFit: 'cover'
                 }} />
               ) : (
-                <UserOutlined style={{ fontSize: '25px' }} />
+                <ResponsiveUserIcon />
               )}
               {user?.access_token ? (
                 <>
-                  <Popover content={content} trigger="click" open={isOpenPopup}>
-                    <div style={{
-                      cursor: 'pointer', width: 100,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      textDecoration: 'none', // Loại bỏ gạch chân mặc định của thẻ <a>
-                      color: 'inherit', // Sử dụng màu chữ mặc định của thẻ <a>
-                      display: 'block',
-                    }} onClick={() => setIsOpenPopup((prev) => !prev)}>{userName?.length ? userName : user?.email}</div>
+                  <Popover content={content} >
+                    <UserNameDiv onClick={() => setIsOpenPopup((prev) => !prev)}>{userName?.length ? userName : user?.email}</UserNameDiv>
                   </Popover>
                 </>
               ) : (

@@ -22,6 +22,7 @@ export const Wrapper = styled.div`
     width: 100%;
     overflow: hidden;
     display: flex;
+    padding-bottom:50px;
     /* Ngăn tràn ra ngoài khi sử dụng float */
 `
 export const LeftSide = styled.div`

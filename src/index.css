@@ -8,8 +8,10 @@ body {
   box-sizing: border-box;
   padding: 0;
   min-width: 400px;
-  font-family: "Noto Sans", sans-serif;
+  font-family: "Roboto Condensed", sans-serif;
   font-optical-sizing: auto;
+  font-style: normal;
+  /* zoom: 90%; */
 }
 
 

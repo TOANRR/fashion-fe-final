@@ -35,8 +35,15 @@
 }
 
 .img-after {
-    height: 80px;
-    width: 80px;
+    height: auto;
+    width: 60px;
+    margin-left: 50px;
+    border-radius: 0%;
+}
+
+.img-after-up {
+    height: auto;
+    width: 100px;
     margin-left: 50px;
     border-radius: 0%;
 }

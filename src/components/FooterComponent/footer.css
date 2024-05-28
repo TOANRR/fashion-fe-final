@@ -1,7 +1,4 @@
 #footer {
-
-
-    /* margin-top: 50px; */
     background-color: #000000;
     padding-top: 3rem;
     padding-bottom: 3rem;
@@ -10,13 +7,9 @@
 #footer .separator {
     width: 100%;
     height: 1px;
-    /* Or any height you desire */
     background-color: #ccc;
-    /* Or any color you desire */
     margin-top: 20px;
-    /* Adjust as needed to control the space above the line */
     margin-bottom: 20px;
-    /* Adjust as needed to control the space below the line */
 }
 
 .footer_wrapper {
@@ -24,6 +17,20 @@
     grid-template-columns: 1.4fr repeat(3, 1fr);
     justify-items: center;
     gap: 2rem;
+
+    @media (max-width: 992px) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    @media (max-width: 576px) {
+        gap: 1rem;
+        padding: 2rem 1rem;
+    }
 }
 
 .foot_subs p {
@@ -32,6 +39,10 @@
     margin-bottom: 1rem;
     font-size: 16px;
     opacity: 0.9;
+
+    @media (max-width: 576px) {
+        font-size: 14px;
+    }
 }
 
 .foot_subs .btn {
@@ -44,12 +55,21 @@
     display: grid;
     gap: 1rem;
     list-style: none;
+
+    @media (max-width: 576px) {
+        margin-top: 1.5rem;
+        gap: 0.8rem;
+    }
 }
 
 .foot_menu ul a {
     color: #A9AFC3;
     font-size: 14px;
     opacity: 0.8;
+
+    @media (max-width: 576px) {
+        font-size: 12px;
+    }
 }
 
 .foot_menu ul a:hover {
@@ -61,6 +81,10 @@
     font-size: 16px;
     opacity: 0.8;
     justify-content: center;
+
+    @media (max-width: 576px) {
+        font-size: 14px;
+    }
 }
 
 .sub_footer_wrapper {
@@ -69,10 +93,24 @@
     justify-content: space-between;
     align-items: center;
     padding-left: 40px;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: 20px;
+    }
+
+    @media (max-width: 576px) {
+        padding-left: 10px;
+    }
 }
 
 .foot_copyright {
     font-size: 0.95rem;
+
+    @media (max-width: 576px) {
+        font-size: 0.85rem;
+    }
 }
 
 .foot_copyright a {
@@ -89,17 +127,43 @@
     gap: 2rem;
     font-size: 1.2rem;
     margin-right: 4rem;
+
+    @media (max-width: 768px) {
+        margin-right: 2rem;
+    }
+
+    @media (max-width: 576px) {
+        font-size: 1rem;
+        margin-right: 1rem;
+    }
 }
 
 .foot_about {
     padding-left: 40px;
+
+    @media (max-width: 768px) {
+        padding-left: 20px;
+    }
+
+    @media (max-width: 576px) {
+        padding-left: 10px;
+    }
 }
 
-.foot_about h2 a {
+.foot_about h1 a {
     color: #fff;
     font-size: 24px;
     opacity: 1;
-    transform: translate(-50%, -50%);
     margin: 0;
     padding-right: 50px;
+
+    @media (max-width: 768px) {
+        font-size: 20px;
+        padding-right: 30px;
+    }
+
+    @media (max-width: 576px) {
+        font-size: 18px;
+        padding-right: 20px;
+    }
 }

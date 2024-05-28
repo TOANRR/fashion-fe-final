@@ -45,8 +45,6 @@
 
 .custom-file-search {
     cursor: pointer;
-    /* display: flex; */
-    margin-left: 37%;
     padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
@@ -55,7 +53,7 @@
     font-size: 10px;
     transition: background-color 0.3s;
     margin-bottom: 30px;
-
+    /* Remove margin-left: 37%; */
 }
 
 .custom-file-search:hover {

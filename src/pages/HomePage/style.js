@@ -68,8 +68,10 @@ export const WrapperProducts = styled.div`
     display: flex;
     gap: 14px;
     margin-top: 20px;
-    padding-left: 50px
-    flex-wrap: wrap;
+    // justify-content: center; /* Căn giữa theo chiều ngang */
+    // align-items: center; /* Căn giữa theo chiều dọc */
+    // flex-wrap: wrap;
+    padding-left:5%;
 `
 export const Nav = styled.nav`
   ul {
@@ -98,4 +100,10 @@ export const NavLink = styled(Link)`
         font-weight: bold; /* In đậm chữ khi hover */
         font-style: italic; /* Nghiêng chữ khi hover */
     }
+`;
+export const ParentContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Adjust as needed */
 `;

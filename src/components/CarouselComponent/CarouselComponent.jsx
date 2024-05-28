@@ -10,7 +10,7 @@ const ProductSlide = ({ products }) => {
         items: 5,
         loop: true,
         autoplay: true,
-        autoplayTimeout: 1000,
+        autoplayTimeout: 5000,
         responsive: {
             0: {
                 items: 1,

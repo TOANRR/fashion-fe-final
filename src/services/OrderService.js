@@ -32,10 +32,22 @@ export const getDetailsOrder = async (id, access_token) => {
     return res.data
 }
 
-export const cancelOrder = async (id, access_token, orderItems, userId) => {
-    const data = { orderItems, orderId: id }
+export const cancelOrder = async (id, access_token, orderItems, userId, reason) => {
+    const data = { orderItems, orderId: id, cancelReason: reason }
     console.log(access_token)
     const res = await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/order/cancel-order/${userId}`, {
+        headers: {
+            token: `Bearer ${access_token}`,
+            withCredentials: true
+        },
+        data: data
+    })
+    return res.data
+}
+export const cancelOrderAd = async (id, access_token, reason) => {
+    const data = { orderId: id, cancelReason: reason }
+    console.log(access_token)
+    const res = await axiosJWT.delete(`${process.env.REACT_APP_API_URL}/order/cancel-order`, {
         headers: {
             token: `Bearer ${access_token}`,
             withCredentials: true
@@ -92,5 +104,21 @@ export const getTotalRevenueAndOrders = async (access_token) => {
         }
     })
     console.log(res)
+    return res.data
+}
+export const getOrdersByStatus = async (status, id, access_token) => {
+    const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/order/get-order-status/${id}?status=${status}`, {
+        headers: {
+            token: `Bearer ${access_token}`,
+        }
+    })
+    return res.data
+}
+export const getNewId = async (id, access_token) => {
+    const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/order/get-new-id/${id}`, {
+        headers: {
+            token: `Bearer ${access_token}`,
+        }
+    })
     return res.data
 }

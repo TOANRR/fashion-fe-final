@@ -9,7 +9,8 @@ const CardComponent = (props) => {
   const { countInStock, description, images, name, price, rating, type, discount, selled, id } = props
   const navigate = useNavigate()
   const handleDetailsProduct = (id) => {
-    navigate(`/product-details/${id}`)
+    window.location.href = `/product-details/${id}`;
+
   }
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const handleMouseEnter = () => {
@@ -22,8 +23,8 @@ const CardComponent = (props) => {
     <WrapperCardStyle
       hoverable
       styles={{ header: { width: '200px', height: '200px' }, body: { padding: '10px' } }}
-      style={{ width: 250, height: 390 }}
-      cover={<img alt="example" src={images[currentImageIndex]} width={150} height={280} onMouseEnter={handleMouseEnter} />}
+      style={{ width: 250, height: 480 }}
+      cover={<img alt="example" src={images[currentImageIndex]} width="auto" height='375px' onMouseEnter={handleMouseEnter} />}
       onClick={() => countInStock !== 0 && handleDetailsProduct(id)}
       disabled={countInStock === 0}
     >
@@ -43,6 +44,7 @@ const CardComponent = (props) => {
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
+        fontWeight: '600'
 
       }}>{name}</div>
       <WrapperReportText>

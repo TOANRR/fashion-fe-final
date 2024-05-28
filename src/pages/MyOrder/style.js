@@ -29,7 +29,7 @@ export const WrapperStyleHeaderDilivery = styled.div`
 export const WrapperContainer = styled.div`
   min-height: 120vh;
   width: 100%;
-  background-color: #f5f5fa;
+  background-color: #F9F9FC;
 
 `
 
@@ -65,10 +65,10 @@ export const WrapperItemOrder = styled.div`
   align-items: center;
   padding: 9px 16px;
   background: #fff;
-  margin-top: 12px;
+  // margin-top: 20px; /* Thiết lập margin-top */
   flex-direction: column;
-  width: 950px;
-  margin: 0 auto;
+  width: 80%;
+  margin: 20px auto; /* Căn giữa */
   background: #fff;
   border-radius: 6px;
   box-shadow: 0 12px 12px #ccc;

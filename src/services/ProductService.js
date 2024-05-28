@@ -90,6 +90,12 @@ export const getProductByType = async (data) => {
     // console.log(res.data)
     return res.data
 }
+export const getProductByCategory = async (type, cate) => {
+    // console.log(data)
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/product/product-category/${cate}?type=${type}`)
+    // console.log(res.data)
+    return res.data
+}
 export const getCategories = async () => {
 
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/product/categories`)
@@ -123,4 +129,10 @@ export const getSearchImage = async (data) => {
     const res = await axios.post(`${process.env.REACT_APP_API_URL}/product/search-image`, data)
     return res.data
 
+}
+export const getSearchResult = async (search) => {
+
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/product/search-name?query=${search}`)
+
+    return res.data
 }

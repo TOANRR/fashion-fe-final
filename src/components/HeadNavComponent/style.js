@@ -43,6 +43,6 @@ export const NavLink = styled(Link)`
           text-decoration-color: #ffffff; /* Màu dấu gạch chân khi hover là trắng */
           color: #fff; /* Màu chữ khi hover là màu xám trắng */
           font-weight: bold; /* In đậm chữ khi hover */
-          font-style: italic; /* Nghiêng chữ khi hover */
+          // font-style: italic; /* Nghiêng chữ khi hover */
       }
   `;

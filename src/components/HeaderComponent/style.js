@@ -1,5 +1,6 @@
 import { Row } from "antd";
 import styled from "styled-components";
+import { UserOutlined, CaretDownOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 
 export const WrapperHeader = styled(Row)`
     // padding: 10px 120px;
@@ -26,12 +27,20 @@ export const WrapperHeaderAccout = styled.div`
     align-items: center;
     color: #000000;
     gap: 10px;
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
 `
 
 export const WrapperTextHeaderSmall = styled.span`
     font-size: 12px;
     color: #000000;
     white-space: nowrap;
+    @media (max-width: 768px) {
+      font-size: 10px;
+    }
 `
 export const WrapperContentPopup = styled.p`
     cursor: pointer;
@@ -41,8 +50,8 @@ export const WrapperContentPopup = styled.p`
 `
 export const SearchLabelImage = styled.label`
   position: relative;
-  width: 35px;
-  height: 35px;
+  width: 5%;
+  height: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,9 +60,8 @@ export const SearchLabelImage = styled.label`
   cursor: pointer;
   padding-left: 5px;
   padding-right:5px;
-  position: absolute;
-  right: 130px;
   z-index: 3;
+  font-size: 18px;
   i,
   p {
     color: hsl(244, 4%, 36%);
@@ -64,11 +72,38 @@ export const SearchLabelImage = styled.label`
   p {
     font-size: 24px;
   }
-  img {
-    position: absolute;
-    top: 2px;
-    bottom: 2px;
-    width: 100%;
-    height: 100%;
+
+  
+`;
+export const AvatarImage = styled.img`
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  object-fit: cover;
+  @media (max-width: 768px) {
+    height: 20px;
+    width: 20px;
+  }
+`;
+
+export const UserNameDiv = styled.div`
+  cursor: pointer;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  @media (max-width: 768px) {
+    width: 80px;
+    font-size: 12px;
+  }
+`;
+
+export const ResponsiveUserIcon = styled(UserOutlined)`
+  font-size: 25px;
+  @media (max-width: 768px) {
+    font-size: 15px;
   }
 `;

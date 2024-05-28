@@ -59,7 +59,8 @@ export const WrapperProduct = styled.div`
 export const WrapperNameProduct = styled.div`
   display:flex;
   align-items: flex-start;
-  width: 670px;
+  font-weight: bold;
+  width: 470px;
 `
 
 export const WrapperItem = styled.div`
@@ -81,3 +82,22 @@ export const WrapperAllPrice = styled.div`
   flex-direction: column;
   align-items: flex-end
 `
+
+export const WrapperWatermark = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px; /* Điều chỉnh kích thước của khung */
+    height: 150px;
+    border-radius: 50%; /* Tạo khung tròn */
+    background-color: rgba(255, 0, 0, 0.1); /* Màu nền */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: red; /* Màu chữ đỏ */
+    font-weight: bold; /* Chữ đậm */
+    font-style: italic; /* Chữ nghiêng */
+    // transform: rotate(-45deg); /* Độ nghiêng */
+`;

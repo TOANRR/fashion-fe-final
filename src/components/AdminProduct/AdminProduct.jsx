@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Modal, Row, Select, Space, Switch } from 'antd'
+import { Button, Col, Form, Input, Modal, Row, Select, Space, Switch, Tag } from 'antd'
 import { PlusOutlined, DeleteOutlined, EditOutlined, SearchOutlined, MinusCircleOutlined } from '@ant-design/icons'
 import React, { useRef } from 'react'
 import { WrapperHeader, WrapperUploadFile } from './style'
@@ -40,7 +40,11 @@ const AdminProduct = () => {
   const hiddenFileInputDetail = useRef(null);
   const [loadImage, setLoadImage] = useState(false)
   const [loadImageDetail, setLoadImageDetail] = useState(false)
-
+  const colors = {
+    women: 'volcano', // Màu đỏ của Ant Design
+    men: 'geekblue', // Màu xanh của Ant Design
+    kids: 'gold', // Màu vàng của Ant Design
+  };
 
 
 
@@ -419,7 +423,7 @@ const AdminProduct = () => {
   const ImageCell = ({ images }) => (
     <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
       {images.map((image, index) => (
-        <img key={index} src={image} alt={`Ảnh ${index}`} style={{ width: '50px', height: 'auto' }} />
+        <img key={index} src={image} alt={`Ảnh ${index}`} style={{ width: 'auto', height: '70px' }} />
       ))}
     </div>
   );
@@ -434,8 +438,15 @@ const AdminProduct = () => {
   );
   const [columns, setColumns] = useState([
     {
+      title: 'STT',
+      dataIndex: 'index',
+      rowScope: 'row',
+      fixed: 'left',
+      width: 60,
+    },
+    {
       key: 'name',
-      title: 'Tên',
+      title: 'Sản phẩm',
       dataIndex: 'name',
       fixed: 'left',
       width: 250,
@@ -481,7 +492,9 @@ const AdminProduct = () => {
       key: 'type',
       title: 'Loại',
       dataIndex: 'type',
-      render: (text) => <span style={{ textTransform: 'uppercase' }}>{text}</span>,
+      render: (text) => (
+        <Tag color={colors[text.toLowerCase()]}>{text.toUpperCase()}</Tag>
+      ),
       width: 120,
       filters: [
         {
@@ -533,6 +546,13 @@ const AdminProduct = () => {
       render: (sizes) => <SizesCell sizes={sizes} />,
     },
     {
+      key: 'selled',
+      title: 'Đã bán',
+      dataIndex: 'selled',
+      width: 120,
+      render: (selled) => <span>{selled ? selled : 0} sản phẩm</span>,
+    },
+    {
       key: 'action',
       title: 'Action',
       dataIndex: 'action',
@@ -548,8 +568,8 @@ const AdminProduct = () => {
       )
     );
   };
-  const dataTable = products?.data?.length && products?.data?.map((product) => {
-    return { ...product, key: product._id }
+  const dataTable = products?.data?.length && products?.data?.map((product, index) => {
+    return { ...product, key: product._id, index: index + 1 }
   })
 
   useEffect(() => {
@@ -568,7 +588,7 @@ const AdminProduct = () => {
     } else if (isErrorDeleted) {
       message.error()
     }
-  }, [isSuccessDelected])
+  }, [isSuccessDelected, isErrorDeleted])
 
   useEffect(() => {
     if (isSuccessDelectedMany && dataDeletedMany?.status === 'OK') {
@@ -608,8 +628,8 @@ const AdminProduct = () => {
     if (isSuccessUpdated && dataUpdated?.status === 'OK') {
       message.success("Cập nhật thành công")
       handleCloseDrawer()
-    } else if (isErrorUpdated) {
-      message.error()
+    } else if (dataUpdated?.status === 'OK') {
+      message.error(dataUpdated?.message)
     }
   }, [isSuccessUpdated])
 
@@ -871,14 +891,31 @@ const AdminProduct = () => {
                   name="category"
                   rules={[{ required: true, message: 'Please input your type!' }]}
                 >
-                  <Select
+                  {/* <Select
                     name="category"
                     // defaultValue="lucy"
                     // style={{ width: 120 }}
                     value={stateProduct.category}
                     onChange={handleChangeSelectCate}
                     options={renderOptionsCate(categoryProduct?.data)}
+                  /> */}
+                  <Select
+                    showSearch
+                    name="category"
+                    value={stateProduct.category}
+                    onChange={handleChangeSelectCate}
+                    placeholder="Chọn danh mục"
+                    optionFilterProp="children"
+                    filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                    filterSort={(optionA, optionB) =>
+                      (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                    }
+                    style={{ width: 200 }}
+                    options={renderOptionsCate(categoryProduct?.data)}
+
                   />
+
+
                 </Form.Item>
                 {stateProduct.category === 'add_category' && (
                   <Form.Item
@@ -942,7 +979,7 @@ const AdminProduct = () => {
                   <Loading isLoading={loadImage}>
                     <div onClick={handleClick} style={{ cursor: "pointer" }} name="images">
                       {stateProduct.images[0] ? (
-                        <img src={stateProduct.images[0]} alt="upload image" className="img-after" height="40" width="30" />
+                        <img src={stateProduct.images[0]} alt="upload image" className="img-after-up" />
                       ) : (
                         <img src="https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg" className="img-before" />
                       )}
@@ -950,19 +987,19 @@ const AdminProduct = () => {
 
 
                       {stateProduct.images[1] ? (
-                        <img src={stateProduct.images[1]} alt="upload image" className="img-after" height="40" width="30" />
+                        <img src={stateProduct.images[1]} alt="upload image" className="img-after-up" />
                       ) : (
                         <img src="https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg" className="img-before" />
                       )}
 
                       {stateProduct.images[2] ? (
-                        <img src={stateProduct.images[2]} alt="upload image" className="img-after" height="40" width="30" />
+                        <img src={stateProduct.images[2]} alt="upload image" className="img-after-up" />
                       ) : (
                         <img src="https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg" className="img-before" />
                       )}
 
                       {stateProduct.images[3] ? (
-                        <img src={stateProduct.images[3]} alt="upload image" className="img-after" height="40" width="30" />
+                        <img src={stateProduct.images[3]} alt="upload image" className="img-after-up" />
                       ) : (
                         <img src="https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg" className="img-before" />
                       )}
@@ -1059,13 +1096,28 @@ const AdminProduct = () => {
                   rules={[{ required: true, message: 'Please input your type!' }]}
                   labelCol={{ span: 4 }}
                 >
-                  <Select
+                  {/* <Select
                     name="category"
                     // defaultValue="lucy"
                     // style={{ width: 120 }}
                     value={stateProductDetails.category}
                     onChange={handleChangeSelectCateDetail}
                     options={renderOptionsCate(categoryProduct?.data)}
+                  /> */}
+                  <Select
+                    showSearch
+                    name="category"
+                    value={stateProductDetails.category}
+                    onChange={handleChangeSelectCateDetail}
+                    placeholder="Chọn danh mục"
+                    optionFilterProp="children"
+                    filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                    filterSort={(optionA, optionB) =>
+                      (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                    }
+                    style={{ width: 200 }}
+                    options={renderOptionsCate(categoryProduct?.data)}
+
                   />
                 </Form.Item>
                 {stateProductDetails.category === 'add_category' && (
@@ -1134,7 +1186,7 @@ const AdminProduct = () => {
                   <Loading isLoading={loadImageDetail}>
                     <div onClick={handleClickDetail} style={{ cursor: "pointer" }} name="images">
                       {stateProductDetails.images[0] ? (
-                        <img src={stateProductDetails.images[0]} alt="upload image" className="img-after" height="40" width="30" />
+                        <img src={stateProductDetails.images[0]} alt="upload image" className="img-after" height="40" width='auto' />
                       ) : (
                         <img src="https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg" className="img-before" />
                       )}
@@ -1142,19 +1194,19 @@ const AdminProduct = () => {
 
 
                       {stateProductDetails.images[1] ? (
-                        <img src={stateProductDetails.images[1]} alt="upload image" className="img-after" height="40" width="30" />
+                        <img src={stateProductDetails.images[1]} alt="upload image" className="img-after" height="40" width='auto' />
                       ) : (
                         <img src="https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg" className="img-before" />
                       )}
 
                       {stateProductDetails.images[2] ? (
-                        <img src={stateProductDetails.images[2]} alt="upload image" className="img-after" height="40" width="30" />
+                        <img src={stateProductDetails.images[2]} alt="upload image" className="img-after" height="40" width='auto' />
                       ) : (
                         <img src="https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg" className="img-before" />
                       )}
 
                       {stateProductDetails.images[3] ? (
-                        <img src={stateProductDetails.images[3]} alt="upload image" className="img-after" height="40" width="30" />
+                        <img src={stateProductDetails.images[3]} alt="upload image" className="img-after" height="40" width='auto' />
                       ) : (
                         <img src="https://t4.ftcdn.net/jpg/04/81/13/43/360_F_481134373_0W4kg2yKeBRHNEklk4F9UXtGHdub3tYk.jpg" className="img-before" />
                       )}

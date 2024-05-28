@@ -20,7 +20,14 @@ import SearchImage from "../pages/SearchImagePage/SearchImagePage"
 import OrderSuccessVnpay from "../pages/OrderSuccessVnpay/OrderSuccessVnpay";
 import AboutUsPage from "../pages/AboutUsPage/AboutUsPage";
 import LoginSuccess from "../pages/LoginSuccessPage/LoginSuccessPage";
-
+import ChangePassword from "../pages/ChangePasswordPage/ChangePasswordPage"
+import SearchPage from "../pages/SearchProductPage/SearchProductPage"
+import TypePage from "../pages/TypePage/TypePage"
+import CategoryPage from "../pages/CategoryPage/CategoryPage";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage/ForgotPasswordPage";
+import ResetPasswordPage from "../pages/ResetPasswordPage/ResetPasswordPage";
+import ArticlesPage from "../pages/ArticlesPage/ArticlesPage";
+import ArticleDetailsPage from "../pages/ArticleDetailsPage/ArticlesDetailPage";
 export const routes = [
     {
         path: '/',
@@ -85,6 +92,16 @@ export const routes = [
         isShowHeader: false
     },
     {
+        path: '/forgot-password',
+        page: ForgotPasswordPage,
+        isShowHeader: false
+    },
+    {
+        path: '/reset-password/:token',
+        page: ResetPasswordPage,
+        isShowHeader: false
+    },
+    {
         path: '/product-details/:id',
         page: ProductDetailPage,
         isShowHeader: true
@@ -135,6 +152,37 @@ export const routes = [
         path: '/search-image',
         page: SearchImage,
         isShowHeader: true
+    },
+    {
+        path: '/search',
+        page: SearchPage,
+        isShowHeader: true
+    },
+    {
+        path: '/type/:id',
+        page: TypePage,
+        isShowHeader: true
+    },
+    {
+        path: '/category/:id',
+        page: CategoryPage,
+        isShowHeader: true
+    },
+    {
+        path: '/articles',
+        page: ArticlesPage,
+        isShowHeader: true
+    },
+    {
+        path: '/articles/:id',
+        page: ArticleDetailsPage,
+        isShowHeader: true
+    },
+    {
+        path: '/change-password',
+        page: ChangePassword,
+        isShowHeader: true,
+        isAuth: true
     }
 
 ] 

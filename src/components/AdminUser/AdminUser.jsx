@@ -1,4 +1,4 @@
-import { Button, Form, Select, Space, Switch } from 'antd'
+import { Button, Form, Select, Space, Switch, Tag } from 'antd'
 import React from 'react'
 import { WrapperHeader, WrapperUploadFile } from './style'
 import TableComponent from '../TableComponent/TableComponent'
@@ -16,6 +16,8 @@ import { useMutationHooks } from '../../hooks/useMutationHook'
 import * as UserService from '../../services/UserService'
 import { useQuery } from '@tanstack/react-query'
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
+import axios from 'axios';
+
 const { Option } = Select;
 
 const AdminUser = () => {
@@ -27,7 +29,12 @@ const AdminUser = () => {
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
-
+  const [cities, setCities] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [city, setCity] = useState('')
+  const [district, setDistrict] = useState('');
+  const [ward, setWard] = useState('');
   const [stateUser, setStateUser] = useState({
     name: '',
     email: '',
@@ -42,7 +49,10 @@ const AdminUser = () => {
     phone: '',
     isAdmin: false,
     address: '',
-    avatar: ''
+    avatar: '',
+    city: '',
+    district: '',
+    ward: ''
 
   })
 
@@ -105,11 +115,75 @@ const AdminUser = () => {
         phone: res?.data?.phone,
         address: res?.data?.address,
         isAdmin: res?.data?.isAdmin,
-        avatar: res?.data?.avatar
+        avatar: res?.data?.avatar,
+        city: res?.data?.city,
+        district: res?.data?.district,
+        ward: res?.data?.ward
       })
+      setCity(res?.data?.city)
+      setDistrict(res?.data?.district)
+      setWard(res?.data?.ward)
     }
+    const response = await axios.get('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json');
+    setCities(response.data);
     setIsLoadingUpdate(false)
   }
+  useEffect(() => {
+    if (stateUserDetails?.city && (districts.length === 0)) {
+      const selectedC = cities.find((city) => city.Name === stateUserDetails?.city)
+      setDistricts(selectedC?.Districts || []);
+    }
+  }, [stateUserDetails?.city, cities]); // Gọi lại khi user.city hoặc cities thay đổi
+
+  useEffect(() => {
+    if (stateUserDetails?.district && (wards.length === 0)) {
+      const selectedD = districts.find((district) => district.Name === stateUserDetails?.district)
+      setWards(selectedD?.Wards || []);
+    }
+  }, [stateUserDetails?.district, districts]); // Gọi lại k
+  const handleCityChange = (value) => {
+    if (value) {
+      const selectedCity = cities.find((city) => city.Id === value);
+      setDistricts(selectedCity.Districts);
+      setCity(selectedCity.Name)
+      setStateUserDetails((prevState) => ({
+        ...prevState,
+        city: selectedCity.Name
+      }));
+      setWards([]);
+      setDistrict('')
+      setWard('')
+    } else {
+      setDistricts([]);
+      setWards([]);
+    }
+  };
+
+  const handleDistrictChange = (value) => {
+    if (value) {
+      const selectedDistrict = districts.find((district) => district.Id === value);
+      setWards(selectedDistrict.Wards);
+      setDistrict(selectedDistrict.Name)
+      setStateUserDetails((prevState) => ({
+        ...prevState,
+        district: selectedDistrict.Name
+      }));
+      setWard('')
+    } else {
+      setWards([]);
+    }
+  };
+  const handleWardChange = (value) => {
+    if (value) {
+      const selectedWard = wards.find((ward) => ward.Id === value);
+      setWard(selectedWard.Name)
+      setStateUserDetails((prevState) => ({
+        ...prevState,
+        ward: selectedWard.Name
+      }));
+      console.log(city, district, ward)
+    }
+  };
 
   useEffect(() => {
     form.setFieldsValue(stateUserDetails)
@@ -259,6 +333,13 @@ const AdminUser = () => {
   };
   const [columns, setColumns] = useState([
     {
+      title: 'STT',
+      dataIndex: 'index',
+      rowScope: 'row',
+      fixed: 'left',
+      width: 60,
+    },
+    {
       key: 'name',
       title: 'Tên',
       dataIndex: 'name',
@@ -298,6 +379,11 @@ const AdminUser = () => {
           return record.isAdmin === 'FALSE'
         }
       },
+      render: (isAdmin) => (
+        isAdmin === 'TRUE' ?
+          <Tag color="green">Admin</Tag> :
+          <Tag color="blue">Not Admin</Tag>
+      ),
       width: 100
     },
     {
@@ -361,16 +447,16 @@ const AdminUser = () => {
       )
     );
   };
-  const dataTable = users?.data?.length && users?.data?.map((user) => {
-    return { ...user, key: user._id, isAdmin: user.isAdmin ? 'TRUE' : 'FALSE' }
+  const dataTable = users?.data?.length && users?.data?.map((user, index) => {
+    return { ...user, key: user._id, isAdmin: user.isAdmin ? 'TRUE' : 'FALSE', index: index + 1 }
   })
 
   useEffect(() => {
     if (isSuccessDelected && dataDeleted?.status === 'OK') {
       message.success("Xóa người dùng thành công")
       handleCancelDelete()
-    } else if (isErrorDeleted) {
-      message.error()
+    } else if (dataDeleted?.status === 'ERR') {
+      message.error(dataDeleted?.message)
     }
   }, [isSuccessDelected])
 
@@ -382,7 +468,10 @@ const AdminUser = () => {
       phone: '',
       address: '',
       isAdmin: false,
-      avatar: ''
+      avatar: '',
+      city: '',
+      district: '',
+      ward: ''
     })
     form.resetFields()
   };
@@ -398,9 +487,9 @@ const AdminUser = () => {
 
   useEffect(() => {
     if (isSuccessDelectedMany && dataDeletedMany?.status === 'OK') {
-      message.success()
-    } else if (isErrorDeletedMany) {
-      message.error()
+      message.success("xóa thành công")
+    } else if (dataDeletedMany?.status === 'ERR') {
+      message.error(dataDeletedMany?.message)
     }
   }, [isSuccessDelectedMany])
 
@@ -461,9 +550,8 @@ const AdminUser = () => {
       <WrapperHeader>Quản lý người dùng</WrapperHeader>
       <div style={{ marginTop: '20px', width: "100%" }}>
         <div style={{ marginBottom: 16, fontSize: "10px" }}>
-
-          {columns.map((column) => (
-            <span key={column.key} style={{ marginLeft: 8 }}>
+          {columns.map((column, index) => (
+            <span key={index} style={{ marginLeft: 8 }}>
               {column.title}{' '}
               <Switch
                 onChange={(checked) => handleToggleColumn(checked, column.key)}
@@ -507,19 +595,67 @@ const AdminUser = () => {
             >
               <InputComponent value={stateUserDetails['email']} onChange={handleOnchangeDetails} name="email" disabled />
             </Form.Item>
+
             <Form.Item
               label="Địa chỉ"
+              name="city"
+              rules={[{ required: false }]}
+            >
+              <div>
+                <Select
+                  className="form-select form-select-sm mb-3"
+                  placeholder="Chọn tỉnh thành"
+                  onChange={handleCityChange}
+                  value={city ? city : undefined}
+                  style={{ width: 150 }}
+
+                >
+                  {cities.map((city) => (
+                    <Option key={city.Id} value={city.Id}>{city.Name}</Option>
+                  ))}
+                </Select>
+
+                <Select
+                  className="form-select form-select-sm mb-3"
+                  placeholder=" quận/huyện"
+                  onChange={handleDistrictChange}
+                  value={district ? district : undefined}
+                  style={{ width: 150 }}
+
+                >
+                  {districts.map((district) => (
+                    <Option key={district.Id} value={district.Id}>{district.Name}</Option>
+                  ))}
+                </Select>
+
+                <Select
+                  className="form-select form-select-sm"
+                  placeholder="phường/xã"
+                  onChange={handleWardChange}
+                  value={ward ? ward : undefined}
+                  style={{ width: 150 }}
+
+
+                >
+                  {wards.map((ward) => (
+                    <Option key={ward.Id} value={ward.Id}>{ward.Name}</Option>
+                  ))}
+                </Select>
+              </div>
+            </Form.Item>
+            <Form.Item
+              label="Số nhà"
               name="address"
               rules={[{ required: false }]}
             >
-              <InputComponent value={stateUserDetails['address']} onChange={handleOnchangeDetails} name="address" disabled />
+              <InputComponent value={stateUserDetails['address']} onChange={handleOnchangeDetails} name="address" />
             </Form.Item>
             <Form.Item
               label="SĐT"
               name="phone"
 
             >
-              <InputComponent value={stateUserDetails.phone} onChange={handleOnchangeDetails} name="phone" disabled />
+              <InputComponent value={stateUserDetails.phone} onChange={handleOnchangeDetails} name="phone" />
             </Form.Item>
             <Form.Item
               label="Admin"
@@ -564,24 +700,6 @@ const AdminUser = () => {
 
             </Form.Item>
 
-            {/* <Form.Item
-              label="Image"
-              name="image"
-              rules={[{ required: true, message: 'Please input your count image!' }]}
-            >
-              <WrapperUploadFile onChange={handleOnchangeAvatarDetails} maxCount={1}>
-                <Button >Select File</Button>
-                {stateProductDetails?.image && (
-                  <img src={stateProductDetails?.image} style={{
-                    height: '60px',
-                    width: '60px',
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    marginLeft: '10px'
-                  }} alt="avatar" />
-                )}
-              </WrapperUploadFile>
-            </Form.Item> */}
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button style={{ backgroundColor: "#000000", color: "#fff" }} htmlType="submit">
                 Apply

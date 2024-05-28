@@ -1,0 +1,7 @@
+.paid-row {
+    border: 2px solid green;
+}
+
+.unpaid-row {
+    border: 2px solid red;
+}

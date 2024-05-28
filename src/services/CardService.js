@@ -6,7 +6,7 @@ import axios from "axios"
 // // }
 // http://localhost:3001/api/order/get-order-details/639724669c6dda4fa11edcde
 export const addToCard = async (data, access_token) => {
-    console.log(data)
+    // console.log(data)
     const res = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/card/create/${data.user}`, data, {
         headers: {
             token: `Bearer ${access_token}`,

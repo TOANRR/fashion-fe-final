@@ -9,11 +9,8 @@ export const WrapperHeader = styled.h1`
 export const WrapperContentProfile = styled.div`
     display: flex;
     flex-direction: column;
-    height: 57vh;
     border: 1px solid #ccc;
-    width: 600px;
-    margin: 0 auto;
-    margin-top: 30px;
+    width: 100%;
     padding: 50px;
     border-radius: 10px;
     gap: 30px;
@@ -21,16 +18,16 @@ export const WrapperContentProfile = styled.div`
 
 export const WrapperLabel = styled.label`
     color: #000;
-    font-size: 12px;
+    font-size: 16px;
     line-height: 30px;
     font-weight: 600;
-    width: 80px;
+    width: 22%;
     text-align: left;
 `
 
 export const WrapperInput = styled.div`
     display: flex;
-    align-items: cemter;
+    align-items: center;
     gap: 20px;
 `
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { WrapperContainerLeft, WrapperContainerRight, WrapperCover, WrapperTextLight, buttonStyle } from './style'
+import { WrapperContainerLeft, WrapperContainerRight, WrapperCover, WrapperTextLight, ButtonStyle, ResponsiveImage, ResponsiveContainer } from './style'
 import InputForm from '../../components/InputForm/InputForm'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
 import imageLogo from '../../assets/images/logo2.png'
@@ -35,6 +35,7 @@ const SignUpPage = () => {
   useEffect(() => {
     if (data?.status === 'OK') {
       message.success()
+      navigate('/sign-in')
     }
     else if (data?.status === 'ERR') {
       message.error()
@@ -62,7 +63,11 @@ const SignUpPage = () => {
 
   return (
     <WrapperCover>
-      <div style={{ width: '800px', height: '445px', borderRadius: '6px', background: '#fff', display: 'flex', boxShadow: '5px 5px 10px 0 rgba(0, 0, 0, 0.7)' }}>
+      <ResponsiveContainer>
+        <WrapperContainerRight>
+          <Image src={imageLogo} preview={false} alt="iamge-logo" height="203px" width="203px" />
+
+        </WrapperContainerRight>
         <WrapperContainerLeft>
           <h1>Đăng kí</h1>
           <p>Chào mừng bạn tới với chúng tôi!</p>
@@ -115,7 +120,7 @@ const SignUpPage = () => {
               onClick={handleSignUp}
               size={40}
               styleButton={{
-                background: 'rgb(255, 57, 69)',
+                background: '#000000',
                 height: '48px',
                 width: '100%',
                 border: 'none',
@@ -126,16 +131,15 @@ const SignUpPage = () => {
               styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
             ></ButtonComponent>
           </Loading>
-          <Button onClick={handleGoogleLogin} icon={<GoogleOutlined />} style={buttonStyle}>
+          <ButtonStyle onClick={handleGoogleLogin} icon={<GoogleOutlined />} >
             Tạo tài khoản bằng Google
-          </Button>
+          </ButtonStyle>
           <p>Bạn đã có tài khoản? <WrapperTextLight onClick={handleNavigateSignIn}> Đăng nhập</WrapperTextLight></p>
         </WrapperContainerLeft>
-        <WrapperContainerRight>
-          <Image src={imageLogo} preview={false} alt="iamge-logo" height="203px" width="203px" />
+      </ResponsiveContainer>
 
-        </WrapperContainerRight>
-      </div>
+
+
     </WrapperCover >
   )
 }

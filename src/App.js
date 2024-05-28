@@ -82,9 +82,22 @@ function App() {
               return (
 
                 <Route key={route.path} path={(ischeckAuth && checkSign) ? route.path : undefined} element={
-                  <Layout>
-                    <Page />
-                  </Layout>
+                  <div>
+                    <Layout>
+                      <Page />
+                    </Layout>
+                    <div style={{ display: route.isShowHeader ? 'block' : 'none' }}>
+                      {(user ? (
+                        // Nếu user tồn tại, hiển thị df-messenger với user-id
+                        <df-messenger intent="WELCOME" chat-title="TKLFashion" agent-id="e7f8ffc8-4612-4cab-914d-8d81f3b0ba0a" language-code="vi" user-id={user.id}></df-messenger>
+                      ) : (
+                        // Nếu user không tồn tại, hiển thị df-messenger bình thường
+                        <df-messenger intent="WELCOME" chat-title="TKLFashion" agent-id="e7f8ffc8-4612-4cab-914d-8d81f3b0ba0a" language-code="vi"></df-messenger>
+                      ))}
+                    </div>
+                  </div>
+
+
                 } />
               )
             })}

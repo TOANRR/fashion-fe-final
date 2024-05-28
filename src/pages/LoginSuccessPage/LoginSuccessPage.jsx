@@ -1,3 +1,4 @@
+import { Spin } from 'antd';
 import React, { useEffect } from 'react';
 
 const LoginSuccess = () => {
@@ -14,8 +15,8 @@ const LoginSuccess = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Redirecting...</h1>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <Spin size="large" /> redicting {/* Thêm biểu tượng loading từ Ant Design và thiết lập kích thước lớn */}
         </div>
     );
 };

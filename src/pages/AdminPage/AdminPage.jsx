@@ -1,12 +1,13 @@
-import { Menu } from 'antd'
+import { ConfigProvider, Menu } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { getItem } from '../../utils'
-import { UserOutlined, AppstoreOutlined, ShoppingCartOutlined, DashboardOutlined } from '@ant-design/icons'
+import { UserOutlined, AppstoreOutlined, ShoppingCartOutlined, DashboardOutlined, ReadOutlined } from '@ant-design/icons'
 import HeaderComponent from '../../components/HeaderComponent/HeaderComponent';
 import AdminUser from '../../components/AdminUser/AdminUser';
 import AdminProduct from '../../components/AdminProduct/AdminProduct';
 import AdminOrder from '../../components/AdminOrder/AdminOrder';
 import AdminDashboard from '../../components/AdminDashboard/AdminDashboard';
+import AdminArticle from '../../components/AdminArticle/AdminArticle';
 
 
 const AdminPage = () => {
@@ -15,14 +16,12 @@ const AdminPage = () => {
     getItem('Người dùng', 'user', <UserOutlined />),
     getItem('Sản phẩm', 'product', <AppstoreOutlined />),
     getItem('Đơn hàng', 'order', <ShoppingCartOutlined />),
-
+    getItem('Bài đăng', 'article', <ReadOutlined />),
 
   ];
 
   const searchParams = new URLSearchParams(window.location.search);
   const paramValue = searchParams.get('select');
-  // const rootSubmenuKeys = ['user', 'product', 'order', 'dashboard'];
-  const [openKeys, setOpenKeys] = useState(paramValue);
   const [keySelected, setKeySelected] = useState(paramValue || 'dashboard')
   const renderPage = (key) => {
     switch (key) {
@@ -50,25 +49,23 @@ const AdminPage = () => {
             <AdminDashboard />
           )
         }
+      case 'article':
+        {
+          return (
+            <AdminArticle />
+          )
+        }
       default:
         {
 
         }
     }
   }
-  // const onOpenChange = (keys) => {
-  //   const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
-  //   if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-  //     setOpenKeys(keys);
-  //   } else {
-  //     setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
-  //   }
-  // };
-
-  const handleOnCLick = ({ key }) => {
-    setKeySelected(key)
+  const handleOnClick = ({ key }) => {
+    setKeySelected(key);
     updateSearchParam(key);
   }
+
   const updateSearchParam = (key) => {
     const searchParams = new URLSearchParams(window.location.search);
     searchParams.set('select', key);
@@ -77,28 +74,48 @@ const AdminPage = () => {
     window.history.replaceState(null, null, newURL);
   };
 
+
+
   return (
     <>
-      <HeaderComponent isHiddenSearch isHiddenCart />
-      <div style={{ display: 'flex' }}>
-        <Menu
-          mode="inline"
-          openKeys={openKeys}
-          //onOpenChange={onOpenChange}
-          style={{
-            width: 256,
-            boxShadow: '1px 1px 2px #ccc',
-            height: '170vh'
-          }}
-          items={items}
-          onClick={handleOnCLick}
-        />
-        <div style={{ flex: 1, padding: '15px' }}>
-          {renderPage(keySelected)}
+      <ConfigProvider
+        theme={{
+          token: {
+            colorSuccess: "#58ea10",
+            colorPrimary: "#000000",
+            colorInfo: "#000000",
+            colorPrimaryBg: "#4040401d",
+            colorPrimaryBgHover: "#3333332e",
+            colorPrimaryHover: "#0d0d0d",
+            colorPrimaryBorderHover: "#1a1a1a",
+            colorPrimaryBorder: "#262626",
+            colorPrimaryTextHover: "#0d0d0df7"
+          },
+        }}
+      >
+        <HeaderComponent isHiddenSearch isHiddenCart />
+        <div style={{ display: 'flex' }}>
+          <Menu
+            mode="inline"
+            style={{
+              width: 256,
+              boxShadow: '1px 1px 2px #ccc',
+              minHeight: '100vh'
+            }}
+            items={items.map(item => ({
+              ...item,
+              style: keySelected === item.key ? { color: 'white', background: 'black' } : {}
+            }))}
+            onClick={handleOnClick}
+          />
+          <div style={{ flex: 1, padding: '15px' }}>
+            {renderPage(keySelected)}
+          </div>
         </div>
-      </div>
+      </ConfigProvider>
+
     </>
   )
 }
 
-export default AdminPage
+export default AdminPage;

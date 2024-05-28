@@ -103,7 +103,7 @@ const AboutUsPage = () => {
     lng: 105.843219,
   };
   return (
-    <div>
+    <div style={{paddingBottom:"100px"}}>
         <Breadcrumb
                 items={[
                     {
@@ -113,7 +113,7 @@ const AboutUsPage = () => {
                         title: <a href="">About us</a>,
                     }
                 ]}
-               style= {{ marginBottom: "25px", paddingTop: "30px", fontSize: "20px", paddingLeft: "3%" }}
+               style= {{ marginBottom: "25px", paddingTop: "30px", fontSize: "20px", paddingLeft: "3%" , fontWeight:"500"}}
             />
         <Wrapper >
        

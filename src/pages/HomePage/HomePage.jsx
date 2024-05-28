@@ -1,11 +1,11 @@
 import React from 'react'
 import TypeProduct from '../../components/TypeProduct/TypeProduct'
-import { WrapperButtonMore, WrapperTypeFeatured, WrapperTypeFeaturedSec, WrapperTypeProduct, Nav, NavLink } from './style'
+import { WrapperButtonMore, WrapperTypeFeatured, WrapperTypeFeaturedSec, WrapperTypeProduct, Nav, NavLink, ParentContainer } from './style'
 import SliderComponent from '../../components/SliderComponent/SliderComponent'
 import slider1 from '../../assets/images/slider1.jpg'
 import slider2 from '../../assets/images/slider2.jpg'
 import slider3 from '../../assets/images/slider3.jpg'
-import CardComponent from '../../components/CardComponent/CardComponent'
+import CardHomeComponent from '../../components/CardHomeComponent/CardHomeComponent'
 import { WrapperProducts } from '../TypeProductPage/style'
 import { useQuery } from '@tanstack/react-query'
 import * as ProductService from '../../services/ProductService'
@@ -22,6 +22,7 @@ import { animateScroll as scroll } from 'react-scroll';
 
 import './action.css'
 import { Link } from 'react-router-dom'
+import SliderArticlesComponent from '../../components/SliderArtilcesComponent/SliderArticlesComponent'
 // import NavbarComponent from '../../components/NavbarComponent/NavbarComponent'
 // import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
 
@@ -45,43 +46,32 @@ const HomePage = () => {
   const fetchProductsType = async (type) => {
     return await ProductService.getProductByType(type);
   };
-  const que = useQuery({ queryKey: ['products-wo'], queryFn: () => fetchProductsType('women') })
-  const { data: productsWomen, isLoading: womenLoad } = que
-  console.log(que)
-  const { data: productsMen, isLoading: menLoad } = useQuery({ queryKey: ['products-men'], queryFn: () => fetchProductsType('men') })
-  const { data: productsKids, isLoading: kidLoad } = useQuery({ queryKey: ['products-kid'], queryFn: () => fetchProductsType('kids') })
+  const { data: productsWomen, isLoading: womenLoad } = useQuery({
+    queryKey: ['products-women'],
+    queryFn: () => fetchProductsType('women'),
+    retry: 3,
+  });
+
+  const { data: productsMen, isLoading: menLoad } = useQuery({
+    queryKey: ['products-men'],
+    queryFn: () => fetchProductsType('men'),
+    retry: 3,
+  });
+
+  const { data: productsKids, isLoading: kidLoad } = useQuery({
+    queryKey: ['products-kids'],
+    queryFn: () => fetchProductsType('kids'),
+    retry: 3,
+  });
+
   const fetchProductAll = async (context) => {
     // console.log('context', context)
     const limit = context?.queryKey && context?.queryKey[1]
     const search = context?.queryKey && context?.queryKey[2]
     const ids = context?.queryKey && context?.queryKey[3]
-    // if (isImage) {
 
-    //   const res = await ProductService.getAllProductImage(ids, limit)
-    //   return res
-    // }
-    // else {
     const res = await ProductService.getAllProduct(search, limit)
-    // if (productsWomen.length === 0) {
-    //   console.log("here")
-    //   setWomenLoad(true)
-    //   setProductsWomen(fetchProductsType('women').data)
-    //   setWomenLoad(false)
 
-
-    // }
-    // if (productsMen.length === 0) {
-    //   setMenLoad(true)
-    //   setProductsMen(fetchProductsType('women').data)
-    //   setMenLoad(false)
-
-    // }
-    // if (productsKids.length === 0) {
-    //   setKidLoad(true)
-    //   setProductsKids(fetchProductsType('women').data)
-    //   setKidLoad(false)
-
-    //}
     return res
     // }
 
@@ -132,7 +122,7 @@ const HomePage = () => {
           <div id="container" style={{ height: '100%', width: '100%', margin: '0 auto' }}>
             <SliderComponent arrImages={[slider1, slider2, slider3]} />
           </div>
-          <Row gutter={[16, 16]} justify="space-between" style={{ marginTop: "30px" }}>
+          <Row justify="space-between" style={{ marginTop: "30px", width: "100%", display: "flex", justifyContent: "center" }}>
             <Col span={8} className="banner-col" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
               <div className={`image-container ${isHovered ? 'hovered' : ''}`}>
                 <img src="https://www.gento.vn/wp-content/uploads/2023/05/xu-huong-thoi-trang-nam-0.jpg" alt="Men's Fashion" />
@@ -161,12 +151,11 @@ const HomePage = () => {
           <div style={{ width: '100%', height: "70px", margin: '0 auto', backgroundColor: '#000000', marginBottom: "30px", marginTop: "40px" }}>
             <WrapperTypeFeatured>FEATURED PRODUCTS</WrapperTypeFeatured>
           </div>
-          <div id="container" style={{ height: '100%', width: '1050px', margin: '0 auto' }}>
-
-            <WrapperProducts>
-              {products?.data?.map((product) => {
-                return (
-                  <CardComponent
+          <div id="container" style={{ height: '100%', width: '80%', margin: '0 auto' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <WrapperProducts>
+                {products?.data?.map((product) => (
+                  <CardHomeComponent
                     key={product._id}
                     countInStock={sumArray(product.sizes)}
                     description={product.description}
@@ -179,36 +168,50 @@ const HomePage = () => {
                     discount={product.discount}
                     id={product._id}
                   />
-                )
-              })}
-            </WrapperProducts>
+                ))}
+              </WrapperProducts>
 
+              <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                {!(
+                  products?.total === products?.data?.length || products?.totalPage === 1
+                ) && (
+                    <ParentContainer>
+                      <WrapperButtonMore
+                        textbutton={isPreviousData ? 'Load more' : 'Xem thêm'}
+                        type="outline"
+                        styleButton={{
+                          border: '1px solid #000000',
+                          color: `${products?.total === products?.data?.length ? '#ccc' : '#000000'
+                            }`,
+                          width: '240px',
+                          height: '38px',
+                          borderRadius: '4px',
+                        }}
+                        styleTextButton={{
+                          fontWeight: 500,
+                          color: products?.total === products?.data?.length && '#fff',
+                        }}
+                        onClick={() => setLimit((prev) => prev + 4)}
+                      />
+                    </ParentContainer>
 
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-              {
-                !(products?.total === products?.data?.length || products?.totalPage === 1) && <WrapperButtonMore
-                  textbutton={isPreviousData ? 'Load more' : "Xem thêm"} type="outline" styleButton={{
-                    border: '1px solid #000000', color: `${products?.total === products?.data?.length ? '#ccc' : '#000000'}`,
-                    width: '240px', height: '38px', borderRadius: '4px'
-                  }}
-                  styleTextButton={{ fontWeight: 500, color: products?.total === products?.data?.length && '#fff' }}
-                  onClick={() => setLimit((prev) => prev + 4)}
-                />
-              }
+                  )}
+              </div>
             </div>
+          </div>;
 
-          </div>
           <div style={{
             backgroundColor: '#ffffff',
             borderRadius: '4px',
             padding: '20px',
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)', marginTop: "40px", marginBottom: "20px"
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)',
+            marginTop: "40px",
+            marginBottom: "20px"
           }}>
             <div id="nam-gioi-section" style={{ width: '100%', height: "70px", margin: '0 auto', backgroundColor: '#ffff' }}>
-              <WrapperTypeFeaturedSec>THỜI TRANG CHO NAM GIỚI</WrapperTypeFeaturedSec>
+              <WrapperTypeFeaturedSec>THỜI TRANG CHO NAM</WrapperTypeFeaturedSec>
             </div>
             <Loading isLoading={menLoad}>
-              {console.log(productsMen)}
               <CarouselComponent products={productsMen} />
             </Loading>
           </div>
@@ -217,29 +220,31 @@ const HomePage = () => {
             backgroundColor: '#ffffff',
             borderRadius: '4px',
             padding: '20px',
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)', marginBottom: "20px"
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)',
+            marginBottom: "20px"
           }}>
             <div id="nu-gioi-section" style={{ width: '100%', height: "70px", margin: '0 auto', backgroundColor: '#ffff' }}>
-              <WrapperTypeFeaturedSec>THỜI TRANG CHO NỮ GIỚI</WrapperTypeFeaturedSec>
+              <WrapperTypeFeaturedSec>THỜI TRANG CHO NỮ </WrapperTypeFeaturedSec>
             </div>
             <Loading isLoading={womenLoad}>
-              {console.log(productsWomen)}
               <CarouselComponent products={productsWomen} />
             </Loading>
           </div>
+
           <div style={{
             backgroundColor: '#ffffff',
             borderRadius: '4px',
             padding: '20px',
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)', marginBottom: "20px"
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)',
+            marginBottom: "20px"
           }}>
             <div id="be-section" style={{ width: '100%', height: "70px", margin: '0 auto', backgroundColor: '#ffff' }}>
               <WrapperTypeFeaturedSec>THỜI TRANG CHO BÉ</WrapperTypeFeaturedSec>
             </div>
             <Loading isLoading={kidLoad}>
-              {console.log(productsKids)}
               <CarouselComponent products={productsKids} />
             </Loading>
+            <SliderArticlesComponent />
           </div>
 
 

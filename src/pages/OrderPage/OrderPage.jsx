@@ -6,7 +6,7 @@ import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons'
 import { WrapperInputNumber } from '../../components/ProductDetailComponent/style';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { useDispatch, useSelector } from 'react-redux';
-import { addOrderProduct, decreaseAmount, increaseAmount, removeAllOrderProduct, removeOrderProduct, resetOrder, selectedOrder } from '../../redux/slides/orderSlide';
+import { addOrderProduct, decreaseAmount, increaseAmount, removeAllOrderProduct, removeOrderProduct, resetOrder, selectedOrder, setAmount } from '../../redux/slides/orderSlide';
 import { convertPrice } from '../../utils';
 import { useMemo } from 'react';
 import ModalComponent from '../../components/ModalComponent/ModalComponent';
@@ -178,7 +178,7 @@ const OrderPage = () => {
           size: size
         }, user?.access_token)
         console.log(res)
-        if (res.status === "OK") { dispatch(increaseAmount({ idProduct, size })) }
+        if (res.status === "OK") { console.log("+1"); dispatch(setAmount({ idProduct, size, amount: res.data.quantity })) }
 
         else
           message.error("số lượng không đủ")
@@ -197,7 +197,8 @@ const OrderPage = () => {
             user: user?.id,
             size: size
           }, user?.access_token)
-          if (res.status === "OK") { dispatch(decreaseAmount({ idProduct, size })) }
+          console.log(res)
+          if (res.status === "OK") { console.log("-1"); dispatch(setAmount({ idProduct, size, amount: res.data.quantity })) }
           else
             message.error("Vui lòng chọn số lượng lớn hơn 0")
         }
@@ -363,19 +364,17 @@ const OrderPage = () => {
     },
   ]
   return (
-    <div style={{ background: '#f5f5fa', with: '100%', maxHeight: '2400vh' }}>
+    <div style={{ background: '#F9F9FC', minWith: '1100px', minHeight: '100vh', paddingBottom: "30px" }}>
       <Breadcrumb
         items={[
+
           {
-            title: <a href="/">Trang chủ</a>,
-          },
-          {
-            title: <a href="">Giỏ hàng</a>,
+            title: <a href="#">GIỎ HÀNG</a>,
           }
         ]}
-        style={{ marginBottom: "25px", paddingTop: "30px", fontSize: "20px", paddingLeft: "3%" }}
+        style={{ marginBottom: "25px", paddingTop: "30px", fontSize: "24px", paddingLeft: "4%", fontWeight: "500" }}
       />
-      <div style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
+      <div style={{ height: '100%', minWidth: '1100px', margin: '0 auto' }}>
 
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <WrapperLeft>
@@ -452,7 +451,7 @@ const OrderPage = () => {
               <WrapperInfo>
                 <div>
                   <span>Địa chỉ: </span>
-                  <span style={{ fontWeight: 'bold' }}>{`${user?.address} ${user?.ward} ${user?.district} ${user?.city}`} </span>
+                  <span style={{ fontWeight: 'bold' }}>{`${user?.address}, ${user?.ward}, ${user?.district}, ${user?.city}`} </span>
                   <span onClick={handleChangeAddress} style={{ color: 'blue', cursor: 'pointer' }}>Thay đổi</span>
                 </div>
               </WrapperInfo>
@@ -484,9 +483,11 @@ const OrderPage = () => {
               styleButton={{
                 background: '#000000',
                 height: '48px',
-                width: '320px',
+                width: '330px',
                 border: 'none',
-                borderRadius: '4px'
+                borderRadius: '4px',
+                marginLeft: "6px"
+
               }}
               textbutton={'Mua hàng'}
               styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}

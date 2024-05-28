@@ -25,9 +25,9 @@ const Footer = () => {
             <div className="container">
                 <div className="wrapper footer_wrapper">
                     <div className="foot_about">
-                        <h2>
+                        <h1 className="link-name">
                             <Link to="/">TKLFashion</Link>
-                        </h2>
+                        </h1>
                         <div className="foot_subs">
 
                             <p>Subscribe to our Email alerts to receive early discount offers, and new products info.</p>
@@ -96,7 +96,7 @@ const Footer = () => {
                         <div className="foot_copyright">
                             <p>
                                 {currYear} | TKLFashion. All Rights Reserved.
-                                Built by | <a href="https://gulshansongara.netlify.app/">Trịnh Khánh Ly</a>
+                                Built by | <a href="https://github.com/DangSauQuaKhu">Trịnh Khánh Ly</a>
                             </p>
                         </div>
                         <div className="foot_social">

@@ -5,16 +5,31 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { orderContant } from '../../contant';
 import { convertPrice } from '../../utils';
+import { Breadcrumb } from 'antd';
 
 
 const OrderSucess = () => {
     const location = useLocation()
     const { state } = location
     return (
-        <div style={{ background: '#f5f5fa', with: '100%', minHeight: '100vh' }}>
+        <div style={{ background: '#F9F9FC', with: '100%', minHeight: '100vh' }}>
+            <Breadcrumb
+                items={[
+                    {
+                        title: <a href="/">Trang chủ</a>,
+                    },
+                    {
+                        title: <a href="/order">Giỏ hàng</a>,
+                    },
+                    {
+                        title: <a href="#">Đơn đặt hàng thành công</a>,
+                    }
+                ]}
+                style={{ marginBottom: "25px", paddingTop: "30px", fontSize: "18px", paddingLeft: "5%", fontWeight: "500" }}
+            />
             <Loading isLoading={false}>
-                <div style={{ height: '100%', width: '1270px', margin: '0 auto' }}>
-                    <h3>Đơn hàng đặt thành công</h3>
+                <div style={{ height: '100%', width: '90%', margin: '0 auto' }}>
+
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <WrapperContainer>
                             <WrapperInfo>

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^41.4.2",
+    "@ckeditor/ckeditor5-react": "^7.0.0",
     "@reduxjs/toolkit": "^1.9.7",
     "@tanstack/react-query": "^5.14.6",
     "@tanstack/react-query-devtools": "^5.14.6",
@@ -26,7 +28,7 @@
     "react-dropzone": "^14.2.3",
     "react-easy-crop": "^5.0.6",
     "react-export-table-to-excel": "^1.0.6",
-    "react-image-crop": "^11.0.5",
+    "react-image-crop": "^8.6.12",
     "react-leaflet": "^4.2.1",
     "react-owl-carousel": "^2.3.3",
     "react-paypal-button-v2": "^2.6.3",
@@ -40,6 +42,7 @@
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.1",
+    "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

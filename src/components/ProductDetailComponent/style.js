@@ -6,7 +6,7 @@ export const WrapperStyleImageSmall = styled.img`
     width: 80px;
 `
 export const WrapperStyleImage = styled.img`
-    height: 520px; 
+    height: auto; 
     width: 100%;
 `
 

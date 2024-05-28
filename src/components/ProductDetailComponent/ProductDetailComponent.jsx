@@ -1,4 +1,4 @@
-import { Button, Col, Form, Image, List, Menu, Modal, Pagination, Rate, Row } from 'antd'
+import { Breadcrumb, Button, Col, Form, Image, List, Menu, Modal, Pagination, Rate, Row } from 'antd'
 import React, { useEffect } from 'react'
 import imageProductSmall from '../../assets/images/imagesmall.webp'
 import { WrapperStyleImageSmall, WrapperStyleColImage, WrapperStyleNameProduct, WrapperStyleTextSell, WrapperPriceProduct, WrapperPriceTextProduct, WrapperAddressProduct, WrapperQualityProduct, WrapperInputNumber, WrapperBtnQualityProduct, WrapperStyleImage, WrapperStyleCount, WrapperStyleSize, StyledPriceWrapper, PriceContainer, Price, DiscountPrice, Currency } from './style'
@@ -219,6 +219,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
 
                         }))
                     });
+                    message.success("thêm vào giỏ hàng thành công")
                 }
                 else {
                     message.error(res.message)
@@ -242,6 +243,30 @@ const ProductDetailsComponent = ({ idProduct }) => {
 
     return (
         <Loading isLoading={isLoading}>
+            <Breadcrumb
+                items={[
+                    {
+                        title: <a href="/">Trang chủ</a>,
+                    },
+                    {
+                        title: (
+                            <a href={`/type/${productDetails?.product.type}`}>
+                                {productDetails?.product.type === 'women'
+                                    ? 'Thời trang cho nữ'
+                                    : productDetails?.product.type === 'men'
+                                        ? 'Thời trang cho nam'
+                                        : productDetails?.product.type === 'kids'
+                                            ? 'Thời trang cho bé'
+                                            : productDetails?.product.type?.toUpperCase()}
+                            </a>
+                        ),
+                    },
+                    {
+                        title: <a href={`/category/${encodeURIComponent(productDetails?.product.category)}?type=${productDetails?.product.type}`}>{productDetails?.product.category}</a>,
+                    },
+                ]}
+                style={{ fontSize: "18px", fontWeight: "500", marginTop: "35px" }}
+            />
             <Row style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.7)', padding: '16px', background: '#fff', borderRadius: '4px', marginTop: "30px" }}>
                 <Col span={10} style={{ borderRight: '1px solid #e5e5e5', paddingRight: '8px' }}>
                     <WrapperStyleImage src={selectImage} alt="image product" />
@@ -276,7 +301,8 @@ const ProductDetailsComponent = ({ idProduct }) => {
                     </div>
                     <div style={{ marginTop: "30px" }}>
                         <WrapperStyleSize style={{ marginRight: "50px" }}>Kích cỡ: </WrapperStyleSize>
-                        <Radio.Group options={options} onChange={onChange3} value={value} optionType="button" />
+                        <Radio.Group options={options} onChange={onChange3} value={value} optionType="button"
+                            buttonStyle="solid" />
                     </div>
 
 
@@ -354,20 +380,20 @@ const ProductDetailsComponent = ({ idProduct }) => {
             </Row >
             <Row style={{ background: "#ffffff", marginTop: "30px", background: "#f9f9f9", borderRadius: "4px", padding: "20px", paddingBottom: "30px", minHeight: "100px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
                 <Col span={24}>
-                    <Menu mode="horizontal" selectedKeys={[activeMenu]} onClick={({ key }) => handleMenuClick(key)}>
+                    <Menu mode="horizontal" selectedKeys={[activeMenu]} onClick={({ key }) => handleMenuClick(key)} style={{ display: 'flex', justifyContent: 'center' }}>
                         <Menu.Item key="description"><div style={{ fontSize: '18px', color: '#555555', fontWeight: '500' }}>Mô tả sản phẩm</div></Menu.Item>
                         <Menu.Item key="review" onClick={handleReview}><div style={{ fontSize: '18px', color: '#555555', fontWeight: '500' }}>Thống kê</div></Menu.Item>
-                        <Menu.Item key="reviewComment" onClick={handleReview}><div style={{ fontSize: '18px', color: '#555555', fontWeight: '500' }}>Bình luận</div></Menu.Item>
+                        <Menu.Item key="reviewComment" onClick={handleReview}><div style={{ fontSize: '18px', color: '#555555', fontWeight: '500' }}>Đánh giá</div></Menu.Item>
                     </Menu>
                     {activeMenu === 'description' && (
-                        <div>
+                        <div style={{ background: "#fff", paddingBottom: "50px", marginTop: "20px" }}>
 
-                            <div style={{ color: '#555555', paddingTop: "20px", paddingLeft: "30px" }} dangerouslySetInnerHTML={{ __html: productDetails?.product.description }} />
+                            <div style={{ color: '#555555', paddingTop: "10px", paddingLeft: "30px" }} dangerouslySetInnerHTML={{ __html: productDetails?.product.description }} />
                         </div>
                     )}
                     {activeMenu === 'review' && (
-                        <div>
-                            <div style={{ width: "50%" }}>
+                        <div style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}>
+                            <div style={{ width: "50%", background: "#fff", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", marginTop: "10px" }}>
                                 <RatingStatsTableComponent ratingStats={ratingStats} />
 
                             </div>
@@ -375,7 +401,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                         </div>
                     )}
                     {activeMenu === 'reviewComment' && (
-                        <div>
+                        <div style={{ width: "80%", margin: "0 auto" }}>
                             <List
                                 dataSource={comments}
                                 pagination={{
@@ -385,9 +411,9 @@ const ProductDetailsComponent = ({ idProduct }) => {
                                     onChange: onPageChange
                                 }}
                                 renderItem={(item) => (
-                                    <div style={{ borderBottom: '1px solid #ccc', paddingBottom: '8px', marginTop: "20px" }}>
-                                        <div style={{ display: 'block', marginTop: '8px', fontWeight: 'bold', display: "flex" }}>
-                                            <div >
+                                    <div style={{ borderBottom: '1px solid #ccc', paddingBottom: '8px', marginTop: "20px", background: "#fff", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)" }}>
+                                        <div style={{ display: 'block', marginTop: '8px', fontWeight: 'bold', display: "flex", paddingLeft: "20px", paddingTop: "20px" }}>
+                                            <div  >
                                                 {
                                                     item.user.avatar ? <img src={item.user.avatar} height="30" width="30" style={{ borderRadius: "50px", marginRight: "5px" }} alt="anh dai dien" /> : <UserOutlined style={{ fontSize: '30px', marginRight: "5px" }} />
                                                 }
@@ -396,8 +422,17 @@ const ProductDetailsComponent = ({ idProduct }) => {
                                         </div>
                                         <List.Item>
                                             <List.Item.Meta
-                                                title={<Rate disabled defaultValue={item.rating} />} // Hiển thị rating dưới dạng sao
-                                                description={item.content}
+                                                title={<Rate disabled defaultValue={item.rating} />}
+                                                description={
+                                                    <div>
+                                                        <div style={{ fontWeight: "600", fontSize: "16px" }}>{item.content}</div>
+                                                        <div style={{ fontWeight: "400", color: "#888888", textAlign: "right", paddingRight: "30px" }}>
+                                                            {` ${new Date(item.updatedAt).toLocaleString()}`}
+                                                        </div>
+                                                    </div>
+                                                }
+                                                style={{ paddingLeft: "50px" }}
+
                                             />
                                         </List.Item>
                                     </div>
@@ -408,7 +443,10 @@ const ProductDetailsComponent = ({ idProduct }) => {
                     )}
                 </Col>
             </Row>
-            <CommentComponent dataHref={`https://fe-deploy-yj5a-git-main-toanrrs-projects.vercel.app/${idProduct}`} />
+            <div style={{ width: "50%", marginTop: "30px" }}>
+                <CommentComponent dataHref={`https://fe-deploy-yj5a-git-main-toanrrs-projects.vercel.app/${idProduct}`} />
+            </div>
+
             <Modal
                 title="Đánh giá Sản phẩm"
                 open={isModalVisible}

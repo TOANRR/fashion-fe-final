@@ -1,68 +1,96 @@
-import React, { useState, useEffect } from 'react';
-import { DatePicker, Button } from 'antd';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import moment from 'moment';
+import React, { useState } from 'react';
+import { Layout, Pagination, Card, Row, Col } from 'antd';
+import styled from 'styled-components';
+import { useQuery } from '@tanstack/react-query';
+import * as ArticleServices from '../../services/ArticleService'
+import CardArticlesComponent from '../CardArticlesComponent/CardArticlesComponent';
+import CarouselArticlesComponent from '../CarouselArticlesComponent/CarouselArticlesComponent';
 
-const RevenueChart = () => {
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [revenueData, setRevenueData] = useState([]);
+const { Header, Content } = Layout;
 
-  useEffect(() => {
-    const today = moment().endOf('day'); // Lấy ngày hiện tại, cuối ngày (23:59:59)
-    const lastWeek = moment().subtract(1, 'week').startOf('day'); // Lấy ngày 1 tuần trước, đầu ngày (00:00:00)
-    setStartDate(lastWeek);
-    setEndDate(today);
-    fetchRevenueData(lastWeek, today);
-  }, []);
+const MyBlog = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 2;
 
-  const fetchRevenueData = async (startDate, endDate) => {
-    // Gửi yêu cầu API để lấy dữ liệu doanh thu từ startDate đến endDate
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/order/get-revenue-day?startDate=${startDate.format('YYYY-MM-DD')}&endDate=${endDate.format('YYYY-MM-DD')}`);
-      const data = await response.json();
-      setRevenueData(data);
-    } catch (error) {
-      console.error('Error fetching revenue data:', error);
-    }
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
+  const getAllArticle = async () => {
+    const res = await ArticleServices.getAllArticles()
+    console.log('res', res)
+    return res
+  }
+  const queryArtilces = useQuery({ queryKey: ['articles'], queryFn: getAllArticle })
+  const { isLoading: isLoadingArticles, isError, data } = queryArtilces
 
-  const handleRangeSelect = (dates) => {
-    // Cập nhật startDate và endDate chỉ khi cả hai giá trị đã được chọn
-    if (dates && dates.length === 2) {
-      setStartDate(dates[0]);
-      setEndDate(dates[1]);
-      fetchRevenueData(dates[0], dates[1]);
-    }
-  };
+
+
+
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+
+
 
   return (
-    <div>
-      <div style={{ marginBottom: '20px' }}>
-        <DatePicker.RangePicker
-          onChange={handleRangeSelect}
-        />
-        <Button type="primary" onClick={() => fetchRevenueData(startDate, endDate)}>Select</Button>
-      </div>
-      <ResponsiveContainer width="100%" height={300}>
-        <LineChart
-          data={revenueData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="_id"
-          // tickFormatter={(tick) => moment(tick).format('DD/MM/YYYY')} 
-          />
-          <YAxis tickFormatter={(tick) => `${tick.toLocaleString()} VNĐ`} />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="totalRevenue" stroke="#8884d8" />
-          <text x="50%" y="3%" textAnchor="middle" dominantBaseline="middle" fontSize="20px" fontWeight="bold">Doanh thu theo ngày</text>
 
-        </LineChart>
-      </ResponsiveContainer>
+    <div>
+      <CarouselArticlesComponent articles={data} />
     </div>
+
   );
 };
 
-export default RevenueChart;
+export default MyBlog;
+
+const StyledHeader = styled(Header)`
+  background: #000000;
+  padding: 0;
+  h1 {
+    color: white;
+    text-align: center;
+    margin: 0;
+    line-height: 64px;
+  }
+`;
+
+const StyledWrapperArticle = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+`;
+
+const StyledCard = styled.div`
+  margin-top: 20px;
+  padding-left: 30px;
+  display: flex;
+  .article-content {
+    display: flex;
+    width: 100%;
+  }
+  .article-image {
+    flex: 1;
+    overflow: hidden;
+  }
+  .article-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .article-text {
+    margin-left:30px;
+    flex: 2;
+  }
+  .article-text h2 {
+  }
+`;
+
+const StyledSider = styled(Col)`
+  background: #fff;
+  padding-right: 50px;
+  margin-top: 5%;
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+`;

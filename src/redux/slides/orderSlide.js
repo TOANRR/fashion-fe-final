@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { updateOrder } from '../../services/OrderService'
 
 const initialState = {
     orderItems: [],
@@ -8,20 +9,41 @@ const initialState = {
     paymentMethod: '',
     itemsPrice: 0,
     shippingPrice: 0,
-    taxPrice: 0,
+    delivery: '',
     totalPrice: 0,
     user: '',
     isPaid: false,
     paidAt: '',
     isDelivered: false,
     deliveredAt: '',
+    uuid: ''
 }
 
 export const orderSlide = createSlice({
     name: 'order',
     initialState,
     reducers: {
+        orderPayment: (state, action) => {
+            const { orderItems = [], orderItemsSlected = [], shippingAddress = {}, paymentMethod = '',
+                itemsPrice = '', shippingPrice = '', totalPrice = '', user = '', isPaid = false, paidAt = '',
+                isDelivered = false, deliveredAt = '', uuid = '', delivery = '' } = action.payload
+            console.log(action.payload)
+            state.orderItems = orderItems ? orderItems : state.orderItems;
+            state.orderItemsSlected = orderItemsSlected ? orderItemsSlected : state.orderItemsSlected;
+            state.shippingAddress = shippingAddress ? shippingAddress : state.shippingAddress;
+            state.paymentMethod = paymentMethod ? paymentMethod : state.paymentMethod;
+            state.itemsPrice = itemsPrice ? itemsPrice : state.itemsPrice;
+            state.isPaid = isPaid ? isPaid : state.isPaid;
+            state.paidAt = state.paidAt;
+            state.isDelivered = isDelivered ? isDelivered : state.isDelivered;
+            state.deliveredAt = state.deliveredAt;
+            state.shippingPrice = shippingPrice ? shippingPrice : state.shippingPrice;
+            state.totalPrice = totalPrice ? totalPrice : state.totalPrice;
+            state.user = user ? user : state.user;
+            state.delivery = delivery ? delivery : state.delivery;
 
+            state.uuid = uuid ? uuid : state.uuid;
+        },
         addOrderProduct: (state, action) => {
             const { orderItem } = action.payload
             const itemOrder = state?.orderItems?.find((item) => item?.product === orderItem.product && item?.size === orderItem.size)
@@ -47,6 +69,15 @@ export const orderSlide = createSlice({
             itemOrder.amount--;
             if (itemOrderSelected) {
                 itemOrderSelected.amount--;
+            }
+        },
+        setAmount: (state, action) => {
+            const { idProduct, size, amount } = action.payload
+            const itemOrder = state?.orderItems?.find((item) => item?.product === idProduct && item?.size === size)
+            const itemOrderSelected = state?.orderItemsSlected?.find((item) => item?.product === idProduct && item?.size === size)
+            itemOrder.amount = amount;
+            if (itemOrderSelected) {
+                itemOrderSelected.amount = amount;
             }
         },
         removeOrderProduct: (state, action) => {
@@ -77,9 +108,22 @@ export const orderSlide = createSlice({
             });
             state.orderItemsSlected = orderSelected
         },
+
         resetOrder: (state, action) => {
             state.orderItems = [];
             state.orderItemsSlected = [];
+            state.shippingAddress = {};
+            state.paymentMethod = '';
+            state.itemsPrice = 0;
+            state.shippingPrice = 0;
+            state.taxPrice = 0;
+            state.totalPrice = 0;
+            state.user = '';
+            state.isPaid = false;
+            state.paidAt = '';
+            state.isDelivered = false;
+            state.deliveredAt = '';
+            state.uuid = ''
         },
         resetState: (state, action) => {
             state.orderItems = [];
@@ -88,6 +132,6 @@ export const orderSlide = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addOrderProduct, increaseAmount, decreaseAmount, removeOrderProduct, removeAllOrderProduct, selectedOrder, resetOrder, resetState } = orderSlide.actions
+export const { addOrderProduct, increaseAmount, decreaseAmount, removeOrderProduct, removeAllOrderProduct, selectedOrder, resetOrder, resetState, setAmount, orderPayment } = orderSlide.actions
 
 export default orderSlide.reducer
