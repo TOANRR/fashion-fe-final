@@ -21,7 +21,7 @@ import RatingStatsTableComponent from '../RatingTableComponent/RatingTableCompon
 import { UserOutlined } from '@ant-design/icons';
 import LikeButtonComponent from '../LikeButtonComponent/LikeButtonComponent'
 import CommentComponent from '../CommentComponent/CommentComponent'
-import ImageZoom from '../FirebaseImage/test'
+import ImageZoomPopup from '../ImageZoomComponent/ImageZoomComponent'
 
 
 const ProductDetailsComponent = ({ idProduct }) => {
@@ -270,7 +270,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
             />
             <Row style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.7)', padding: '16px', background: '#fff', borderRadius: '4px', marginTop: "30px" }}>
                 <Col span={10} style={{ borderRight: '1px solid #e5e5e5', paddingRight: '8px' }}>
-                    <ImageZoom src={selectImage} alt="Sample Image" />
+                    <ImageZoomPopup src={selectImage} alt="Sample Image" />
                     {/* <WrapperStyleImage src={selectImage} alt="image product" /> */}
                     <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
                         <WrapperStyleColImage span={5} sty="true">
