@@ -32,7 +32,7 @@ npm start
  ```
 
 ## Cấu Trúc Dự Án
-
+```
 Cấu trúc thư mục của dự án được tổ chức như sau:
 
 src/
@@ -73,4 +73,4 @@ src/
 - **index.js**: Tệp nhập (entry point) của ứng dụng React, nơi bạn render component chính và khởi động ứng dụng.
 
 - **utils.js**: Chứa các hàm tiện ích (utility functions) được sử dụng trong toàn bộ dự án.
-
+```
