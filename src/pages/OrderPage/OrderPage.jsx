@@ -1,6 +1,6 @@
 import { Breadcrumb, Checkbox, Form } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { WrapperCountOrder, WrapperInfo, WrapperItemOrder, WrapperLeft, WrapperListOrder, WrapperRight, WrapperStyleHeader, WrapperTotal, WrapperStyleHeaderDilivery } from './style';
+import { WrapperCountOrder, WrapperInfo, WrapperItemOrder, WrapperLeft, WrapperListOrder, WrapperRight, WrapperStyleHeader, WrapperTotal, WrapperStyleHeaderDilivery, ResponsiveLink, Wrapper, ResponsiveImage, Container, ResponsiveText } from './style';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons'
 
 import { WrapperInputNumber } from '../../components/ProductDetailComponent/style';
@@ -19,6 +19,8 @@ import { updateUser } from '../../redux/slides/userSlide';
 import { useNavigate } from 'react-router-dom';
 import StepComponent from '../../components/StepComponent/StepComponent';
 import * as CardService from '../../services/CardService'
+import * as  ProductService from '../../services/ProductService'
+
 import { Select } from 'antd';
 import axios from 'axios';
 const { Option } = Select;
@@ -296,14 +298,21 @@ const OrderPage = () => {
     }
   }
 
-  const handleAddCard = () => {
+  const handleAddCard = async () => {
     if (!order?.orderItemsSlected?.length) {
       message.error('Vui lòng chọn sản phẩm')
     } else if (!user?.phone || !user?.address || !user?.name || !user?.city || !user?.ward || !user?.district) {
       setIsOpenModalUpdateInfo(true)
     }
     else {
-      navigate('/payment')
+      const res = await ProductService.checkStock(order?.orderItemsSlected)
+      console.log(res)
+      if (res.success === true)
+
+        navigate('/payment')
+      else {
+        message.error(res.message)
+      }
     }
   }
 
@@ -364,7 +373,7 @@ const OrderPage = () => {
     },
   ]
   return (
-    <div style={{ background: '#F9F9FC', minWith: '1100px', minHeight: '100vh', paddingBottom: "30px" }}>
+    <div style={{ background: '#F9F9FC', width: '100%', minHeight: '100vh', paddingBottom: "30px" }}>
       <Breadcrumb
         items={[
 
@@ -374,7 +383,7 @@ const OrderPage = () => {
         ]}
         style={{ marginBottom: "25px", paddingTop: "30px", fontSize: "24px", paddingLeft: "4%", fontWeight: "500" }}
       />
-      <div style={{ height: '100%', minWidth: '1100px', margin: '0 auto' }}>
+      <div style={{ height: '100%', width: "100%", margin: '0 auto' }}>
 
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <WrapperLeft>
@@ -384,10 +393,15 @@ const OrderPage = () => {
                   : diliveryPriceMemo === 0 && listChecked.length === 0 ? 3 : 2} />
             </WrapperStyleHeaderDilivery>
             <WrapperStyleHeader>
-              <span style={{ display: 'inline-block', width: '390px' }}>
-                <Checkbox onChange={handleOnchangeCheckAll} checked={listChecked?.length === order?.orderItems?.length}></Checkbox>
-                <span> Tất cả ({order?.orderItems?.length} sản phẩm)</span>
-              </span>
+              <Container>
+                <Checkbox
+                  onChange={handleOnchangeCheckAll}
+                  checked={listChecked?.length === order?.orderItems?.length}
+                />
+                <ResponsiveText>
+                  Tất cả ({order?.orderItems?.length} sản phẩm)
+                </ResponsiveText>
+              </Container>
               <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>Kích cỡ</span>
                 <span>Đơn giá</span>
@@ -401,23 +415,21 @@ const OrderPage = () => {
               {order?.orderItems?.map((order, index) => {
                 return (
                   <WrapperItemOrder key={index}>
-                    <div style={{ width: '390px', display: 'flex', alignItems: 'center', gap: 4 }}>
-                      <Checkbox onChange={onChangeSelect} value={{ id: order?.product, size: order?.size }} checked={listChecked.some(item => item.id === order?.product && item.size === order?.size)}></Checkbox>
-                      <img src={order?.image} style={{ width: '77px', height: '79px', objectFit: 'cover' }} />
-                      <a href={`/product-details/${order?.product}`}
-                        target="_blank" // Để mở trong một tab mới
-                        rel="noopener noreferrer" // Đảm bảo an toàn khi mở trong tab mới
-                        style={{
-                          width: 260,
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          textDecoration: 'none', // Loại bỏ gạch chân mặc định của thẻ <a>
-                          color: 'inherit', // Sử dụng màu chữ mặc định của thẻ <a>
-                          display: 'block',
-
-                        }}>{order?.name}</a>
-                    </div>
+                    <Wrapper>
+                      <Checkbox
+                        onChange={onChangeSelect}
+                        value={{ id: order?.product, size: order?.size }}
+                        checked={listChecked.some(item => item.id === order?.product && item.size === order?.size)}
+                      />
+                      <ResponsiveImage src={order?.image} />
+                      <ResponsiveLink
+                        href={`/product-details/${order?.product}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {order?.name}
+                      </ResponsiveLink>
+                    </Wrapper>
                     <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <span>
                         <span style={{ fontSize: '13px', color: '#242424' }}>{order?.size.toUpperCase()}</span>

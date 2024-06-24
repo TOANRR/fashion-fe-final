@@ -1,7 +1,7 @@
 import { ConfigProvider, Spin } from 'antd'
 import React from 'react'
 
-const Loading = ({ children, isLoading }) => {
+const Loading = ({ children, isLoading, delay = 200 }) => {
     return (
         <ConfigProvider
             theme={{
@@ -18,7 +18,7 @@ const Loading = ({ children, isLoading }) => {
                 },
             }}
         >
-            <Spin spinning={isLoading} >
+            <Spin spinning={isLoading} delay={delay} >
                 {children}
             </Spin>
         </ConfigProvider>

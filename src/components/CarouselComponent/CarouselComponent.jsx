@@ -5,7 +5,7 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 import CardComponent from '../CardComponent/CardComponent'; // Đảm bảo đã import CardComponent hoặc tương tự
 
 const ProductSlide = ({ products }) => {
-    console.log(products)
+    // console.log(products)
     const options = {
         items: 5,
         loop: true,

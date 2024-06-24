@@ -1,39 +1,4 @@
-.header {
-    background: #001529;
-    padding: 0;
-}
-
-.site-layout-content {
-    background: #fff;
-    padding: 24px;
-    min-height: 280px;
-}
-
-.article-card {
-    display: flex;
-}
-
-.article-content {
-    display: flex;
-    width: 100%;
-}
-
-.article-image {
-    flex: 1;
-    overflow: hidden;
-}
-
-.article-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.article-text {
-    flex: 2;
-    padding: 0 16px;
-}
-
-.article-text h2 {
-    margin: 0 0 8px;
+.image-container-detail {
+    position: relative;
+    display: inline-block;
 }

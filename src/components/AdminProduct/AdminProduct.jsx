@@ -889,7 +889,7 @@ const AdminProduct = () => {
                 <Form.Item
                   label="Danh mục"
                   name="category"
-                  rules={[{ required: true, message: 'Please input your type!' }]}
+                  rules={[{ required: true, message: 'Vui lòng nhập loại sản phẩm !' }]}
                 >
                   {/* <Select
                     name="category"
@@ -929,7 +929,7 @@ const AdminProduct = () => {
                 <Form.Item
                   label="Sizes"
                   name="sizes"
-                  rules={[{ required: true, message: 'nhập size và số lượng' }]}
+                  rules={[{ required: true, message: 'Nhập size và số lượng' }]}
                 >
                   <div name="sizes">
                     {renderSizeInputsAdd()}
@@ -964,7 +964,7 @@ const AdminProduct = () => {
                 <Form.Item
                   label="Discount"
                   name="discount"
-                  rules={[{ required: true, message: 'Please input your discount of product!' }]}
+                  rules={[{ required: true, message: 'Vui lòng nhập discount!' }]}
                 >
                   <InputComponent value={stateProduct.discount} onChange={handleOnchange} name="discount" />
                 </Form.Item>

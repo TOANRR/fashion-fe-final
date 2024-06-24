@@ -1,5 +1,5 @@
 import React from 'react'
-import { Lable, WrapperInfo, WrapperContainer, WrapperValue, WrapperCountOrder, WrapperItemOrder, WrapperItemOrderInfo } from './style';
+import { Lable, WrapperInfo, WrapperContainer, WrapperValue, WrapperCountOrder, WrapperItemOrder, WrapperItemOrderInfo, ImageWrapper, ProductLink, InfoWrapper, SpanStyled } from './style';
 import Loading from '../../components/LoadingComponent/LoadingComponent';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -50,29 +50,26 @@ const OrderSucess = () => {
                                 </div>
                             </WrapperInfo>
                             <WrapperItemOrderInfo>
-                                {state.orders?.map((order) => {
-                                    return (
-                                        <WrapperItemOrder>
-                                            <div style={{ width: '200px', display: 'flex', alignItems: 'center', gap: 4 }}>
-                                                <img src={order.image} style={{ width: '77px', height: '79px', objectFit: 'cover' }} />
-                                                <div style={{
-                                                    width: 260,
-                                                    overflow: 'hidden',
-                                                    textOverflow: 'ellipsis',
-                                                    whiteSpace: 'nowrap'
-                                                }}>{order?.name}</div>
-                                            </div>
-                                            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                <span>
-                                                    <span style={{ fontSize: '13px', color: '#242424' }}>Giá tiền: {convertPrice(order?.price)}</span>
-                                                </span>
-                                                <span>
-                                                    <span style={{ fontSize: '13px', color: '#242424' }}>Số lượng: {order?.amount}</span>
-                                                </span>
-                                            </div>
-                                        </WrapperItemOrder>
-                                    )
-                                })}
+                                {state.orders?.map((order) => (
+                                    <WrapperItemOrder key={order.id}>
+                                        <ImageWrapper>
+                                            <img
+                                                src={order.image}
+                                                style={{ width: '77px', height: 'auto', objectFit: 'cover' }}
+                                            />
+                                            <ProductLink href={`/product-details/${order.product}`} target="_blank" rel="noopener noreferrer">
+                                                {order?.name}
+                                            </ProductLink>
+                                        </ImageWrapper>
+                                        <InfoWrapper>
+                                            <SpanStyled>Kích cỡ: {order?.size}</SpanStyled>
+                                            <SpanStyled>Giảm giá: {order?.discount}%</SpanStyled>
+                                            <SpanStyled>Giá tiền: {convertPrice(order?.price)}</SpanStyled>
+                                            <SpanStyled>Số lượng: {order?.amount}</SpanStyled>
+
+                                        </InfoWrapper>
+                                    </WrapperItemOrder>
+                                ))}
                             </WrapperItemOrderInfo>
                             <div style={{ textAlign: 'right', marginTop: "20px" }}>
                                 <span style={{ color: '#ea8500', fontWeight: 'bold', fontSize: "20px", textAlign: 'right' }}>Tổng tiền: {convertPrice(state?.totalPriceMemo)}</span>

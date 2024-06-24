@@ -13,7 +13,7 @@ export const WrapperCardStyle = styled(Card)`
 
     img {
         width: 100%;
-        height: auto;
+        // height: auto;
     }
 `
 export const StyleNameProduct = styled.div`

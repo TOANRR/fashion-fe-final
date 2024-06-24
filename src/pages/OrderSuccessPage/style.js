@@ -30,14 +30,14 @@ export const WrapperContainer = styled.div`
 export const WrapperListOrder = styled.div`
 `
 
-export const WrapperItemOrder = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 9px 16px;
-  background: #fff;
-  margin-top: 12px;
-  justify-content: center
-`
+// export const WrapperItemOrder = styled.div`
+//   display: flex;
+//   align-items: center;
+//   padding: 9px 16px;
+//   background: #fff;
+//   margin-top: 12px;
+//   justify-content: center
+// `
 
 export const WrapperPriceDiscount = styled.span`
   color: #999;
@@ -79,8 +79,50 @@ export const WrapperItemOrderInfo = styled.div`
   border-top-left-radius: 6px;
   width: 100%;
   display: flex;
-  justify-content: center;
-`
+  flex-direction: column; /* Đảm bảo các mục được sắp xếp theo cột */
+`;
+
+export const WrapperItemOrder = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+`;
+
+export const ProductLink = styled.a`
+  width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-wrap: break-word;
+  margin-left: 10px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  text-decoration: none;
+  color: inherit;
+`;
+
+export const ImageWrapper = styled.div`
+  width: 50%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+
+export const InfoWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+export const SpanStyled = styled.span`
+  font-size: 13px;
+  color: #242424;
+`;
+
 
 export const WrapperTotal = styled.div`
   display: flex;

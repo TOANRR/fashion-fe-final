@@ -91,11 +91,16 @@ export const orderSlide = createSlice({
         },
         removeAllOrderProduct: (state, action) => {
             const { listChecked } = action.payload
+            console.log(listChecked, state.orderItems, state.orderItemsSlected)
 
-            const itemOrders = state?.orderItems?.filter((item) => !listChecked.includes(item.product))
-            const itemOrdersSelected = state?.orderItems?.filter((item) => !listChecked.includes(item.product))
-            state.orderItems = itemOrders
-            state.orderItemsSlected = itemOrdersSelected
+
+            // Lọc ra các mục mà không có trong listChecked dựa trên cả product và size
+            const itemOrders = state.orderItems.filter(item => !listChecked.some(checkItem => checkItem.product === item.product && checkItem.size === item.size));
+            const itemOrdersSelected = state.orderItemsSlected.filter(item => !listChecked.some(checkItem => checkItem.product === item.product && checkItem.size === item.size));
+
+            // Cập nhật lại state
+            state.orderItems = itemOrders;
+            state.orderItemsSelected = itemOrdersSelected;
 
         },
         selectedOrder: (state, action) => {

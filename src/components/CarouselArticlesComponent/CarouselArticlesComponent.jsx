@@ -5,7 +5,7 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 import CardArticlesComponent from '../CardArticlesComponent/CardArticlesComponent';
 
 const CarouselArticlesComponent = ({ articles }) => {
-    console.log(articles)
+    // console.log(articles)
     const options = {
         items: 5,
         loop: true,
@@ -27,10 +27,8 @@ const CarouselArticlesComponent = ({ articles }) => {
 
     return (
         <OwlCarousel className="owl-theme" {...options}>
-            {articles?.map(article => (
-
-                <CardArticlesComponent article={article} />
-
+            {articles?.map((article, index) => (
+                <CardArticlesComponent key={index} article={article} />
             ))}
         </OwlCarousel>
     );

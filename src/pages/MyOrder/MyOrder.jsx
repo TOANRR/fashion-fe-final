@@ -73,6 +73,13 @@ const MyOrderPage = () => {
 
     const handleConfirmCancel = () => {
         if (selectedOrder) {
+            if (!cancelReason) {
+                // Hiển thị một cảnh báo hoặc thông báo lỗi cho người dùng
+                // Ví dụ:
+                message.error('Vui lòng nhập lý do hủy đơn hàng');
+                return; // Ngăn người dùng tiếp tục thực hiện hành động
+            }
+
             mutation.mutate(
                 { id: selectedOrder._id, token: state.token, orderItems: selectedOrder?.orderItems, userId: user.id, reason: cancelReason },
                 {

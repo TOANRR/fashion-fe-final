@@ -20,6 +20,8 @@ import { PayPalButton } from "react-paypal-button-v2";
 import * as PaymentService from '../../services/PaymentService'
 import { Select } from 'antd';
 import axios from 'axios';
+import * as  ProductService from '../../services/ProductService'
+
 // import { v4 as uuidv4 } from 'uuid';
 const { Option } = Select;
 
@@ -162,35 +164,41 @@ const PaymentPage = () => {
     const handlePay = async () => {
         if (user?.access_token && order?.orderItemsSlected && user?.name
             && user?.address && user?.phone && user?.city && priceMemo && user?.id) {
-            const object = await OrderService.getNewId(user?.id, user?.access_token)
-            if (object.success === true) {
-                dispatch(orderPayment({
-                    orderItems: order?.orderItems,
-                    orderItemsSlected: order?.orderItemsSlected,
-                    shippingAddress:
-                    {
-                        fullName: user?.name,
-                        address: user?.address,
-                        phone: user?.phone,
-                        city: user?.city, district: user?.district,
-                        ward: user?.ward,
-                    },
-                    paymentMethod: payment, // Update this with actual payment method
-                    itemsPrice: priceMemo, // Update this with actual items price
-                    shippingPrice: diliveryPriceMemo, // Update this with actual shipping price
-                    totalPrice: totalPriceMemo, // Update this with actual total price
-                    user: user?.id,
-                    isPaid: false,
-                    delivery: delivery, // Update this with actual delivery method
-                    uuid: object?.objectId
-                }));
-                const res = await PaymentService.getVnpay({ amount: totalPriceMemo, id: object?.objectId });
-                window.location.href = res.data;
+            const checkInstock = await ProductService.checkStock(order?.orderItemsSlected)
+            console.log(checkInstock)
+            if (checkInstock.success === true) {
+                const object = await OrderService.getNewId(user?.id, user?.access_token)
+                if (object.success === true) {
+                    dispatch(orderPayment({
+                        orderItems: order?.orderItems,
+                        orderItemsSlected: order?.orderItemsSlected,
+                        shippingAddress:
+                        {
+                            fullName: user?.name,
+                            address: user?.address,
+                            phone: user?.phone,
+                            city: user?.city, district: user?.district,
+                            ward: user?.ward,
+                        },
+                        paymentMethod: payment, // Update this with actual payment method
+                        itemsPrice: priceMemo, // Update this with actual items price
+                        shippingPrice: diliveryPriceMemo, // Update this with actual shipping price
+                        totalPrice: totalPriceMemo, // Update this with actual total price
+                        user: user?.id,
+                        isPaid: false,
+                        delivery: delivery, // Update this with actual delivery method
+                        uuid: object?.objectId
+                    }));
+                    const res = await PaymentService.getVnpay({ amount: totalPriceMemo, id: object?.objectId });
+                    window.location.href = res.data;
 
+                }
             }
-            // eslint-disable-next-line no-unused-expressions
-            // const uniqueToken = uuidv4();
-            // console.log(uniqueToken); // In ra một UUID ngẫu nhiên không trùng lặp
+            else {
+                message.error(checkInstock.message)
+            }
+
+
 
 
         }
@@ -254,8 +262,11 @@ const PaymentPage = () => {
         async function handleOrder() {
             if (isSuccess && dataAdd?.status === 'OK') {
                 const arrayOrdered = [];
-                order?.orderItemsSlected?.forEach(element => {
-                    arrayOrdered.push(element.product);
+                dataAdd?.data.orderItems?.forEach(element => {
+                    arrayOrdered.push({
+                        product: element.product,
+                        size: element.size
+                    });
                 });
                 dispatch(removeAllOrderProduct({ listChecked: arrayOrdered }));
                 if (dataAdd?.data?.paymentMethod !== "vnpay") {

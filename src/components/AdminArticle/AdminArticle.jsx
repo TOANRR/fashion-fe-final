@@ -1,7 +1,6 @@
 import { Button, Form, Select, Space, Switch, Tag, Upload, Row, Col, Modal, Input } from 'antd'
 import React from 'react'
 import { WrapperHeader, WrapperUploadFile } from './style'
-import TableComponent from '../TableComponent/TableComponent'
 import InputComponent from '../InputComponent/InputComponent'
 import DrawerComponent from '../DrawerComponent/DrawerComponent'
 import Loading from '../LoadingComponent/LoadingComponent'
@@ -26,6 +25,7 @@ import ReactQuill from 'react-quill';
 import TableComponentProduct from '../TableComponentProduct/TableComponentProduct'
 import styles from './style.js'; // Đường dẫn đến file styles.js
 import './reactquill.css'
+import TableArticleComponent from '../TableArticleComponent/TableArticleComponent.jsx'
 
 const AdminArticle = () => {
     const [rowSelected, setRowSelected] = useState('')
@@ -64,7 +64,7 @@ const AdminArticle = () => {
             const { title, author, content, coverImage } = data
             const res = ArticleServices.createArticle({
                 title, author, content, coverImage
-            })
+            }, user?.access_token)
             return res
         }
     )
@@ -203,13 +203,13 @@ const AdminArticle = () => {
     }
 
     const getAllArticle = async () => {
-        const res = await ArticleServices.getAllArticles()
+        const res = await ArticleServices.getAllArticles(user?.access_token)
         console.log('res', res)
         return res
     }
 
     const fetchGetDetailsArticle = async (rowSelected) => {
-        const res = await ArticleServices.getArticleById(rowSelected)
+        const res = await ArticleServices.getArticleById(rowSelected, user?.access_token)
         console.log(res)
         if (res) {
             setStateArticleDetails({
@@ -393,7 +393,12 @@ const AdminArticle = () => {
             key: 'title',
             title: 'Tiêu đề',
             dataIndex: 'title',
-            sorter: (a, b) => a.title.length - b.title.length,
+            sorter: (a, b) => a.title.localeCompare(b.title),
+            render: (text, record) => (
+                <a href={`${process.env.REACT_APP_URL}/articles/${record._id}`} target="_blank" rel="noopener noreferrer">
+                    {text}
+                </a>
+            ),
             ...getColumnSearchProps('title'),
             fixed: 'left',
             width: 180
@@ -502,7 +507,7 @@ const AdminArticle = () => {
     }
 
     const handleDeleteArticle = () => {
-        mutationDeleted.mutate({ id: rowSelected }, {
+        mutationDeleted.mutate({ id: rowSelected, token: user?.access_token }, {
             onSettled: () => {
                 queryArtilces.refetch()
             }
@@ -549,7 +554,7 @@ const AdminArticle = () => {
                         </span>
                     ))}
                 </div>
-                <TableComponentProduct style={{ width: '1000px' }} columns={columns.filter((column) => !column.hidden)} isLoading={isLoadingArticles} data={dataTable} scroll={{ x: 800 }} onRow={(record, rowIndex) => {
+                <TableArticleComponent style={{ width: '1000px' }} columns={columns.filter((column) => !column.hidden)} isLoading={isLoadingArticles} data={dataTable} scroll={{ x: 800 }} onRow={(record, rowIndex) => {
                     return {
                         onClick: event => {
                             setRowSelected(record._id)
@@ -576,9 +581,6 @@ const AdminArticle = () => {
                         >
                             <InputComponent value={stateArticle.title} onChange={handleOnchange} name="title" />
                         </Form.Item>
-
-
-
 
                         <Form.Item
                             label="Ảnh bìa"
@@ -660,18 +662,6 @@ const AdminArticle = () => {
                             />
 
                         </Form.Item>
-
-
-
-
-
-
-
-
-
-
-
-
                         <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
                             <Button style={{ backgroundColor: "#000000", color: "#fff" }} htmlType="submit">
                                 Submit
@@ -785,17 +775,6 @@ const AdminArticle = () => {
 
                         </Form.Item>
 
-
-
-
-
-
-
-
-
-
-
-
                         <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
                             <Button style={{ backgroundColor: "#000000", color: "#fff" }} htmlType="submit">
                                 Submit
@@ -806,7 +785,7 @@ const AdminArticle = () => {
             </DrawerComponent>
             <ModalComponent title="Xóa bài viết" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteArticle} forceRender={true}>
                 <Loading isLoading={isLoadingDeleted}>
-                    <div>Bạn có chắc xóa tài khoản này không?</div>
+                    <div>Bạn có chắc xóa bài viết này không?</div>
                 </Loading>
             </ModalComponent>
         </div >

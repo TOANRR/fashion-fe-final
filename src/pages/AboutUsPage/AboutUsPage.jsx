@@ -110,7 +110,7 @@ const AboutUsPage = () => {
                         title: <a href="/">Trang chủ</a>,
                     },
                     {
-                        title: <a href="">About us</a>,
+                        title: <a href="">Về chúng tôi</a>,
                     }
                 ]}
                style= {{ marginBottom: "25px", paddingTop: "30px", fontSize: "20px", paddingLeft: "3%" , fontWeight:"500"}}

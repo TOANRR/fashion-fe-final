@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Loading from '../../components/LoadingComponent/LoadingComponent'
 import { Excel } from "antd-table-saveas-excel";
 import { useMemo } from 'react';
-const TableOrderComponent = (props) => {
+const TableArticleComponent = (props) => {
     const { selectionType = 'radio', data: dataSource = [], isLoading = false, columns = [], handleDelteMany } = props
     const [rowSelectedKeys, setRowSelectedKeys] = useState([])
     const newColumnExport = useMemo(() => {
@@ -38,7 +38,6 @@ const TableOrderComponent = (props) => {
     return (
         <Loading isLoading={isLoading}>
 
-            <button onClick={exportExcel}>Export Excel</button>
             <Table
                 // rowSelection={{
                 //     // type: selectionType,
@@ -53,4 +52,4 @@ const TableOrderComponent = (props) => {
     )
 }
 
-export default TableOrderComponent
+export default TableArticleComponent

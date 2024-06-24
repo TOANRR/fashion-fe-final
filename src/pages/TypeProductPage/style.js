@@ -1,6 +1,8 @@
 
-import { Col } from "antd"
+import { Col, Layout } from "antd"
 import styled from "styled-components"
+
+const { Header, Content } = Layout;
 
 export const WrapperProducts = styled.div`
     display: flex;
@@ -43,3 +45,13 @@ export const RightContent = styled.div`
 
     /* Cố định phần bên phải */
 `
+export const StyledHeader = styled(Header)`
+  background: #000000;
+  padding: 0;
+  h1 {
+    color: white;
+    text-align: center;
+    margin: 0;
+    line-height: 64px;
+  }
+`;

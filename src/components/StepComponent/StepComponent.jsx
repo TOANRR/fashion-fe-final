@@ -1,6 +1,5 @@
 import { Steps } from 'antd'
 import React from 'react'
-import './Step.css'
 const StepComponent = ({ current = 0, items = [] }) => {
     const { Step } = Steps;
     return (

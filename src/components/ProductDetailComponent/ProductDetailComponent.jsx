@@ -21,6 +21,7 @@ import RatingStatsTableComponent from '../RatingTableComponent/RatingTableCompon
 import { UserOutlined } from '@ant-design/icons';
 import LikeButtonComponent from '../LikeButtonComponent/LikeButtonComponent'
 import CommentComponent from '../CommentComponent/CommentComponent'
+import ImageZoom from '../FirebaseImage/test'
 
 
 const ProductDetailsComponent = ({ idProduct }) => {
@@ -269,20 +270,21 @@ const ProductDetailsComponent = ({ idProduct }) => {
             />
             <Row style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.7)', padding: '16px', background: '#fff', borderRadius: '4px', marginTop: "30px" }}>
                 <Col span={10} style={{ borderRight: '1px solid #e5e5e5', paddingRight: '8px' }}>
-                    <WrapperStyleImage src={selectImage} alt="image product" />
+                    <ImageZoom src={selectImage} alt="Sample Image" />
+                    {/* <WrapperStyleImage src={selectImage} alt="image product" /> */}
                     <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
-                        <WrapperStyleColImage span={4} sty="true">
+                        <WrapperStyleColImage span={5} sty="true">
                             <WrapperStyleImageSmall src={productDetails?.product.images[0]} onClick={() => handleSelect(0)} alt="image small" />
                         </WrapperStyleColImage>
-                        <WrapperStyleColImage span={4}>
+                        <WrapperStyleColImage span={5}>
                             <WrapperStyleImageSmall src={productDetails?.product.images[1]} onClick={() => handleSelect(1)} alt="image small" />
                         </WrapperStyleColImage>
 
-                        <WrapperStyleColImage span={4}>
+                        <WrapperStyleColImage span={5}>
                             <WrapperStyleImageSmall src={productDetails?.product.images[2]} onClick={() => handleSelect(2)} alt="image small" />
                         </WrapperStyleColImage>
 
-                        <WrapperStyleColImage span={4}>
+                        <WrapperStyleColImage span={5}>
                             <WrapperStyleImageSmall src={productDetails?.product.images[3]} onClick={() => handleSelect(3)} alt="image small" />
                         </WrapperStyleColImage>
 
@@ -323,11 +325,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                         </PriceContainer>
                     </StyledPriceWrapper>
 
-                    {/* <WrapperAddressProduct>
-                        <span>Giao đến </span>
-                        <span className='address'>{user?.address}</span> -
-                        <span className='change-address'>Đổi địa chỉ</span>
-                    </WrapperAddressProduct> */}
+
                     <div style={{ margin: '10px 0 20px', padding: '10px 0', borderTop: '1px solid #e5e5e5', borderBottom: '1px solid #e5e5e5', display: 'flex' }}>
                         <div style={{ marginBottom: '10px', marginRight: "30px", color: "rgb(120, 120, 120)", fontWeight: "500", fontSize: "16px" }}>Số lượng</div>
                         <WrapperQualityProduct>

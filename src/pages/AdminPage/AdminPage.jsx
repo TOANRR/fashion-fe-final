@@ -1,13 +1,14 @@
 import { ConfigProvider, Menu } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { getItem } from '../../utils'
-import { UserOutlined, AppstoreOutlined, ShoppingCartOutlined, DashboardOutlined, ReadOutlined } from '@ant-design/icons'
+import { UserOutlined, AppstoreOutlined, ShoppingCartOutlined, DashboardOutlined, ReadOutlined, MessageOutlined } from '@ant-design/icons'
 import HeaderComponent from '../../components/HeaderComponent/HeaderComponent';
 import AdminUser from '../../components/AdminUser/AdminUser';
 import AdminProduct from '../../components/AdminProduct/AdminProduct';
 import AdminOrder from '../../components/AdminOrder/AdminOrder';
 import AdminDashboard from '../../components/AdminDashboard/AdminDashboard';
 import AdminArticle from '../../components/AdminArticle/AdminArticle';
+import AdminComment from '../../components/AdminComment/AdminComment';
 
 
 const AdminPage = () => {
@@ -17,6 +18,7 @@ const AdminPage = () => {
     getItem('Sản phẩm', 'product', <AppstoreOutlined />),
     getItem('Đơn hàng', 'order', <ShoppingCartOutlined />),
     getItem('Bài đăng', 'article', <ReadOutlined />),
+    getItem('Bình luận', 'comment', <MessageOutlined />),
 
   ];
 
@@ -53,6 +55,12 @@ const AdminPage = () => {
         {
           return (
             <AdminArticle />
+          )
+        }
+      case 'comment':
+        {
+          return (
+            <AdminComment />
           )
         }
       default:

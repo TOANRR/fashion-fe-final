@@ -15,7 +15,7 @@ const SliderArticlesComponent = () => {
 
     const getAllArticle = async () => {
         const res = await ArticleServices.getAllArticles()
-        console.log('res', res)
+        // console.log('res', res)
         return res
     }
     const queryArtilces = useQuery({ queryKey: ['articles'], queryFn: getAllArticle })

@@ -35,6 +35,13 @@ export const WrapperLabel = styled.div`
   text-transform: uppercase;
   margin-bottom: 15px;
 `
+export const WrapperLabelCode = styled.div`
+  color: rgb(36, 36, 36);
+  font-size: 15px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  font-weight: 600;
+`
 export const WrapperContentInfo = styled.div`
   height: 118px;
   width: 320px;

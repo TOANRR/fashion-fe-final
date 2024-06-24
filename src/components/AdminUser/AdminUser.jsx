@@ -343,7 +343,7 @@ const AdminUser = () => {
       key: 'name',
       title: 'Tên',
       dataIndex: 'name',
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.name?.localeCompare(b.name),
       ...getColumnSearchProps('name'),
       fixed: 'left',
       width: 180
@@ -352,7 +352,7 @@ const AdminUser = () => {
       key: 'email',
       title: 'Email',
       dataIndex: 'email',
-      sorter: (a, b) => a.email.length - b.email.length,
+      sorter: (a, b) => a.email?.localeCompare(b.email),
       ...getColumnSearchProps('email'),
       width: 250,
       fixed: 'left',
@@ -404,7 +404,7 @@ const AdminUser = () => {
       key: 'city',
       title: 'Tỉnh/Thành Phố',
       dataIndex: 'city',
-      sorter: (a, b) => a.city?.length - b.city?.length,
+      sorter: (a, b) => a.city?.localeCompare(b.city),
       ...getColumnSearchProps('city'),
       width: 150
     },
@@ -412,7 +412,7 @@ const AdminUser = () => {
       key: 'district',
       title: 'Quận/huyện',
       dataIndex: 'district',
-      sorter: (a, b) => a.city?.length - b.city?.length,
+      sorter: (a, b) => a.district?.localeCompare(b.district),
       ...getColumnSearchProps('district'),
       width: 150
     },
@@ -420,7 +420,7 @@ const AdminUser = () => {
       key: 'ward',
       title: 'Phường/Xã',
       dataIndex: 'ward',
-      sorter: (a, b) => a.city?.length - b.city?.length,
+      sorter: (a, b) => a.ward?.localeCompare(b.ward),
       ...getColumnSearchProps('ward'),
       width: 150
     },

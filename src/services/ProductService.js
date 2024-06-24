@@ -136,3 +136,7 @@ export const getSearchResult = async (search) => {
 
     return res.data
 }
+export const checkStock = async (data) => {
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/product/check-stock`, { products: data })
+    return res.data
+}

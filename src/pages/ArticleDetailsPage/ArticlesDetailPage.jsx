@@ -4,12 +4,21 @@ import { useParams } from 'react-router-dom';
 import { Breadcrumb, Layout } from 'antd';
 import styled from 'styled-components';
 import SliderArticlesComponent from '../../components/SliderArtilcesComponent/SliderArticlesComponent';
+import LikeButtonComponent from '../../components/LikeButtonComponent/LikeButtonComponent';
+import { initFacebookSDK } from '../../utils';
+import CommentComponent from '../../components/CommentComponent/CommentComponent';
+import Loading from '../../components/LoadingComponent/LoadingComponent';
+import { useSelector } from 'react-redux';
+import CommentComponentArticle from '../../components/ArticleCommentComponent/ArticleCommentComponent';
 
 const { Content, Sider } = Layout;
 
 const ArticleDetailsPage = () => {
     const [article, setArticle] = useState(null);
     const { id } = useParams(); // Lấy id từ đường link
+    const [loading, setLoading] = useState(false)
+    const user = useSelector((state) => state.user);
+
     useEffect(() => {
         const fetchArticle = async () => {
             try {
@@ -21,7 +30,11 @@ const ArticleDetailsPage = () => {
         };
         fetchArticle();
     }, [id]);
-
+    useEffect(() => {
+        setLoading(true)
+        initFacebookSDK()
+        setLoading(false)
+    }, []);
     return (
         <div>
             <Layout style={{ background: "#fff", paddingBottom: "100px" }}>
@@ -45,16 +58,28 @@ const ArticleDetailsPage = () => {
                         ]}
                         style={{ fontSize: "18px", fontWeight: "500", marginTop: "15px", marginBottom: "30px", paddingLeft: "1%" }}
                     />
+
                     {article ? (
                         <>
                             <ArticleTitle>{article.title}</ArticleTitle>
                             <ArticleCreatedAt>Được tạo vào lúc: {new Date(article.createdAt).toLocaleString()}</ArticleCreatedAt>
                             <CoverImage src={article.coverImage} alt="Ảnh bìa" />
                             <ArticleContent>
-                                <div
+                                <div className='html-content'
                                     dangerouslySetInnerHTML={{ __html: article.content }}
-                                    style={{ width: "100%", overflowWrap: "break-word" }}
+                                    style={{ width: "100%", overflowWrap: "break-word", marginBottom: "100px" }}
                                 />
+                                <style>
+                                    {`
+                                        .html-content img {
+                                            display: block;
+                                            margin: 0 auto; /* Căn giữa ảnh */
+                                            width: 500px;
+                                            height: auto; /* Đảm bảo giữ tỷ lệ khung hình */
+                                        }
+                                        `}
+                                </style>
+                                <CommentComponentArticle articleId={id} author={user?.id} image={user?.avatar} />
                             </ArticleContent>
 
                         </>
@@ -70,7 +95,9 @@ const ArticleDetailsPage = () => {
                     />
                 </Sider>
             </Layout>
+
             <SliderArticlesComponent />
+
 
         </div>
 

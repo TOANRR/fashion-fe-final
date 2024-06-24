@@ -93,13 +93,14 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
 
   const content = (
     <div>
-      <WrapperContentPopup onClick={() => handleClickNavigate('profile')}><EditOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Thông tin người dùng</WrapperContentPopup>
-      <WrapperContentPopup onClick={() => handleClickNavigate('change-password')}><KeyOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Đổi mật khẩu</WrapperContentPopup>
-
       {user?.isAdmin && (
 
         <WrapperContentPopup onClick={() => handleClickNavigate('admin')}> <SettingOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Quản lí hệ thống</WrapperContentPopup>
       )}
+      <WrapperContentPopup onClick={() => handleClickNavigate('profile')}><EditOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Thông tin người dùng</WrapperContentPopup>
+      <WrapperContentPopup onClick={() => handleClickNavigate('change-password')}><KeyOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Đổi mật khẩu</WrapperContentPopup>
+
+
       <WrapperContentPopup onClick={() => handleClickNavigate('my-order')}><ShoppingCartOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Đơn hàng của tôi</WrapperContentPopup>
       <WrapperContentPopup onClick={() => handleClickNavigate()}> <PoweroffOutlined style={{ fontSize: '14px', marginRight: "5px" }} />Đăng xuất</WrapperContentPopup>
     </div>

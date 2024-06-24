@@ -1,56 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { Layout } from 'antd';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
-import CardComponent from '../CardComponent/CardComponent';
 
-const { Content, Sider } = Layout;
+const WrapperStyleImage = styled.img`
+    height: auto; 
+    width: 100%;
+    border: 2px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer; /* Thay đổi con trỏ thành pointer khi di chuột vào ảnh */
 
-const ArticlePage = () => {
-    const [article, setArticle] = useState(null);
-    const { id } = useParams(); // Lấy id từ đường link
-    useEffect(() => {
-        const fetchArticle = async () => {
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/article/get-article/${id}`);
-                console.log(response.data)
-                setArticle(response.data);
-            } catch (error) {
-                console.error('Error fetching article:', error);
-            }
-        };
-        fetchArticle();
-    }, [id]);
+    // &:hover {
+    //     transform: scale(1.05);
+    //     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    // }
+`;
+
+const ZoomedImagePopup = styled.div`
+  position: absolute;
+  border: 2px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 400px; /* Chiều rộng của popup */
+  height: 600px; /* Chiều cao của popup */
+  background-image: url(${props => props.src});
+  background-size: 300%; /* Điều chỉnh kích thước phóng to */
+  background-position: ${props => props.position};
+  z-index: 10; /* Đảm bảo popup hiển thị trên các phần tử khác */
+  pointer-events: none; /* Để popup không cản trở thao tác chuột */
+`;
+
+const ImageZoomPopup = ({ src, alt }) => {
+    const [isZoomed, setIsZoomed] = useState(false);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const imgRef = useRef(null);
+
+    const handleMouseMove = (e) => {
+        const rect = imgRef.current.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        setPosition({ x, y });
+    };
+
+    const handleMouseEnter = () => {
+        setIsZoomed(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsZoomed(false);
+    };
 
     return (
-        <div>
-            {/* <CardComponent /> */}
+        <div
+            className="image-container-detail"
+            onMouseMove={handleMouseMove}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            style={{ position: 'relative', display: 'inline-block' }}
+        >
+            <WrapperStyleImage
+                ref={imgRef}
+                src={src}
+                alt={alt}
+            />
+            {isZoomed && (
+                <ZoomedImagePopup
+                    src={src}
+                    position={`${position.x}% ${position.y}%`}
+                    style={{ top: '0', left: 'calc(100% + 20px)' }} /* Đặt popup phía tay phải */
+                />
+            )}
         </div>
     );
 };
 
-const ArticleContainer = styled.div`
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-`;
-
-const ArticleTitle = styled.h1`
-    color: #555;
-    text-align: center;
-`;
-
-const ArticleCreatedAt = styled.div`
-    color: #888;
-    text-align: center;
-    margin-bottom: 20px;
-`;
-
-const ArticleContent = styled.div`
-    border-top: 1px solid #ccc;
-    padding-top: 20px;
-`;
-
-export default ArticlePage;
+export default ImageZoomPopup;

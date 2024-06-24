@@ -69,6 +69,7 @@ const SearchImagePage = () => {
 
                     const res = await ProductService.getSearchImage({ query_img: urlUpload });
                     console.log(res);
+                    setCurrentPage(1)
                     setSearchResult(res.products)
                     setLoading(false);
 
@@ -160,7 +161,7 @@ const SearchImagePage = () => {
 
         // Converting to base64
         console.log(canvas)
-
+        if (canvas.width === 0 || canvas.height === 0) return
         const base64Image = canvas.toDataURL('image/jpeg');
         // Lấy dữ liệu của canvas dưới dạng blob
         canvas.toBlob((blob) => {

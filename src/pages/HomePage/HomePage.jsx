@@ -39,7 +39,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false)
   const [stateProducts, setStateProducts] = useState([])
   const [typeProducts, setTypeProducts] = useState([])
-  const [limit, setLimit] = useState(8)
+  const [limit, setLimit] = useState(12)
 
 
 
@@ -149,7 +149,7 @@ const HomePage = () => {
             </Col>
           </Row>
           <div style={{ width: '100%', height: "70px", margin: '0 auto', backgroundColor: '#000000', marginBottom: "30px", marginTop: "40px" }}>
-            <WrapperTypeFeatured>FEATURED PRODUCTS</WrapperTypeFeatured>
+            <WrapperTypeFeatured>SẢN PHẨM</WrapperTypeFeatured>
           </div>
           <div id="container" style={{ height: '100%', width: '80%', margin: '0 auto' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -199,57 +199,78 @@ const HomePage = () => {
               </div>
             </div>
           </div>;
-
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '4px',
-            padding: '20px',
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)',
-            marginTop: "40px",
-            marginBottom: "20px"
-          }}>
-            <div id="nam-gioi-section" style={{ width: '100%', height: "70px", margin: '0 auto', backgroundColor: '#ffff' }}>
-              <WrapperTypeFeaturedSec>THỜI TRANG CHO NAM</WrapperTypeFeaturedSec>
-            </div>
+          <div id="nam-gioi-section">
             <Loading isLoading={menLoad}>
-              <CarouselComponent products={productsMen} />
+              <div style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '4px',
+                padding: '20px',
+                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)',
+                marginTop: "40px",
+                marginBottom: "20px"
+              }}>
+                <img src="https://routine.vn/media/catalog/category/ao-nam-thoi-trang-routine-dep-cao-cap-chinh-hang_1.jpg" alt=" Fashion" style={{ width: "100%", height: "auto" }} />
+
+                <div style={{ width: '100%', height: "70px", margin: '0 auto', backgroundColor: '#ffff' }}>
+                  <WrapperTypeFeaturedSec>THỜI TRANG CHO NAM</WrapperTypeFeaturedSec>
+                </div>
+
+                <CarouselComponent products={productsMen} />
+
+              </div>
             </Loading>
           </div>
-
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '4px',
-            padding: '20px',
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)',
-            marginBottom: "20px"
-          }}>
-            <div id="nu-gioi-section" style={{ width: '100%', height: "70px", margin: '0 auto', backgroundColor: '#ffff' }}>
-              <WrapperTypeFeaturedSec>THỜI TRANG CHO NỮ </WrapperTypeFeaturedSec>
-            </div>
+          <div id="nu-gioi-section">
             <Loading isLoading={womenLoad}>
-              <CarouselComponent products={productsWomen} />
+              <div style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '4px',
+                padding: '20px',
+                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)',
+                marginBottom: "20px",
+
+              }}>
+                <img src="https://routine.vn/media/catalog/category/thoi-trang-nu-thuong-hieu-routine-dep-cao-cap-chinh-hang_1.jpg" alt=" Fashion" style={{ width: "100%", height: "auto" }} />
+
+                <div style={{ width: '100%', height: "70px", margin: '0 auto', backgroundColor: '#ffff' }}>
+                  <WrapperTypeFeaturedSec>THỜI TRANG CHO NỮ </WrapperTypeFeaturedSec>
+
+                </div>
+                <div>
+                  <CarouselComponent products={productsWomen} />
+
+                </div>
+
+
+              </div>
             </Loading>
           </div>
-
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '4px',
-            padding: '20px',
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)',
-            marginBottom: "20px"
-          }}>
-            <div id="be-section" style={{ width: '100%', height: "70px", margin: '0 auto', backgroundColor: '#ffff' }}>
-              <WrapperTypeFeaturedSec>THỜI TRANG CHO BÉ</WrapperTypeFeaturedSec>
-            </div>
+          <div id="be-section" >
             <Loading isLoading={kidLoad}>
-              <CarouselComponent products={productsKids} />
+              <div style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '4px',
+                padding: '20px',
+                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)',
+                marginBottom: "20px"
+              }}>
+                <img src="https://media.canifa.com/Simiconnector/Girl_banner-cate_desktop-19.04a.webp" alt=" Fashion" style={{ width: "100%", height: "auto" }} />
+
+                <div style={{ width: '100%', height: "70px", margin: '0 auto', backgroundColor: '#ffff' }}>
+                  <WrapperTypeFeaturedSec>THỜI TRANG CHO BÉ</WrapperTypeFeaturedSec>
+                </div>
+
+                <CarouselComponent products={productsKids} />
+
+
+              </div>
             </Loading>
-            <SliderArticlesComponent />
           </div>
 
+          <SliderArticlesComponent />
 
         </div>
-      </Loading>
+      </Loading >
 
     </>
 

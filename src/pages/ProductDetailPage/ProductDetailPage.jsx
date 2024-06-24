@@ -9,7 +9,7 @@ const ProductDetailsPage = () => {
   const navigate = useNavigate()
   return (
     <div style={{ minHeight: '110vh', with: '100%', background: '#ffff', paddingBottom: "50px" }}>
-      <div style={{ width: '1100px', height: '100%', margin: '0 auto' }}>
+      <div style={{ width: '80%', height: '100%', margin: '0 auto' }}>
 
         <ProductDetailsComponent idProduct={id} />
       </div>

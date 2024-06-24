@@ -9,8 +9,7 @@ const CardComponent = (props) => {
   const { countInStock, description, images, name, price, rating, type, discount, selled, id } = props
   const navigate = useNavigate()
   const handleDetailsProduct = (id) => {
-    window.location.href = `/product-details/${id}`;
-
+    window.open(`/product-details/${id}`, '_blank');
   }
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const handleMouseEnter = () => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { WrapperAllPrice, WrapperContentInfo, WrapperHeaderUser, WrapperInfoUser, WrapperItem, WrapperItemLabel, WrapperLabel, WrapperNameProduct, WrapperProduct, WrapperStyleContent, WrapperWatermark } from './style'
+import { WrapperAllPrice, WrapperContentInfo, WrapperHeaderUser, WrapperInfoUser, WrapperItem, WrapperItemLabel, WrapperLabel, WrapperLabelCode, WrapperNameProduct, WrapperProduct, WrapperStyleContent, WrapperWatermark } from './style'
 import logo from '../../assets/images/logo.png'
 import { useLocation, useParams } from 'react-router-dom'
 import { useEffect } from 'react'
@@ -10,6 +10,7 @@ import { convertPrice, formatDate } from '../../utils'
 import { useMemo } from 'react'
 import Loading from '../../components/LoadingComponent/LoadingComponent'
 import { Breadcrumb, Watermark } from 'antd'
+import { ProductLink } from '../OrderPage/style'
 
 const DetailsOrderPage = () => {
     const params = useParams()
@@ -53,7 +54,7 @@ const DetailsOrderPage = () => {
                     />
                     {/* <h3 style={{ fontStyle: "italic" }}>Chi tiết đơn hàng</h3> */}
                     <Watermark content={`${data?.isCancel ? 'Đã Hủy' : ''}`}>
-
+                        <WrapperLabelCode>Mã đơn hàng: {data?._id}</WrapperLabelCode>
 
                         <WrapperHeaderUser>
                             <WrapperInfoUser>
@@ -101,7 +102,8 @@ const DetailsOrderPage = () => {
                                 return (
                                     <WrapperProduct>
                                         <WrapperNameProduct>
-                                            <img src={order?.image}
+                                            <img
+                                                src={order?.image}
                                                 style={{
                                                     width: '70px',
                                                     height: '70px',
@@ -110,14 +112,9 @@ const DetailsOrderPage = () => {
                                                     padding: '2px'
                                                 }}
                                             />
-                                            <div style={{
-                                                width: 260,
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                marginLeft: '10px',
-                                                height: '70px',
-                                            }}>{order?.name}</div>
+                                            <ProductLink href={`/product-details/${order?.product}`} target="_blank" rel="noopener noreferrer">
+                                                {order?.name}
+                                            </ProductLink>
                                         </WrapperNameProduct>
                                         <WrapperItem>{order?.size}</WrapperItem>
                                         <WrapperItem>{convertPrice(order?.price)}</WrapperItem>

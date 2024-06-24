@@ -48,7 +48,10 @@ const OrderSuccessVnpay = () => {
                     message.success('Đặt hàng thành công');
                     const arrayOrdered = [];
                     res?.data.orderItems?.forEach(element => {
-                        arrayOrdered.push(element.product);
+                        arrayOrdered.push({
+                            product: element.product,
+                            size: element.size
+                        });
                     });
                     console.log("array", arrayOrdered)
                     dispatch(removeAllOrderProduct({ listChecked: arrayOrdered }));
@@ -100,11 +103,11 @@ const OrderSuccessVnpay = () => {
                         )
 
                     }
-                    {
+                    {/* {
                         (success === '') && (
                             <div class="loading-spinner"></div>
                         )
-                    }
+                    } */}
                 </div>
 
             </Loading>
