@@ -1,4 +1,4 @@
-# Tên Dự Án ReactJS
+# Giao diện web thời trang
 
 Đây là một ứng dụng ReactJS để tạo giao diện cho web thời trang
 
@@ -22,6 +22,7 @@
     ```sh
     npm install
     ```
+3. Tạo .env tương tự.
 
 ## Sử Dụng
 
