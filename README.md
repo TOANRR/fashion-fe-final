@@ -1,70 +1,68 @@
-# Getting Started with Create React App
+# Tên Dự Án ReactJS
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Đây là một ứng dụng ReactJS để lam giao diện cho web thời trang.
 
-## Available Scripts
+## Cài Đặt
 
-In the project directory, you can run:
+Để cài đặt ứng dụng và các phụ thuộc, làm theo các bước sau:
 
-### `npm start`
+1. Clone repository:
+    ```sh
+    git clone https://github.com/your-username/your-repo.git
+    cd your-repo
+    ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. Cài đặt các phụ thuộc:
+    ```sh
+    npm install
+    ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Cấu Trúc Thư Mục
 
-### `npm test`
+Cấu trúc thư mục của dự án được tổ chức như sau:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+src/
+├── assets/ # Thư mục chứa các tài nguyên (ảnh, font chữ, ...)
+├── components/ # Thư mục chứa các thành phần React tái sử dụng
+├── hooks/ # Thư mục chứa các hooks custom (nếu có)
+├── pages/ # Thư mục chứa các trang chính của ứng dụng
+├── redux/ # Thư mục chứa các reducers và actions của Redux
+│ ├── actions/
+│ └── reducers/
+├── routes/ # Thư mục chứa các tuyến đường của ứng dụng
+├── services/ # Thư mục chứa các dịch vụ (API services, ...)
+├── App.js # Component chính của ứng dụng
+├── constants.js # Các hằng số và cấu hình cho ứng dụng
+├── index.js # Tệp nhập (entry point) của ứng dụng React
+└── utils.js # Các hàm tiện ích (utility functions) cho dự án
 
-### `npm run build`
+### Chi Tiết Thêm
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **assets/**: Chứa các tài nguyên như hình ảnh, font chữ, và các tài nguyên khác cần thiết cho giao diện.
+  
+- **components/**: Chứa các thành phần React tái sử dụng như Button, Header, Footer, ...
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **hooks/**: Chứa các hooks custom (nếu có) như useFetch, useLocalStorage, ...
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **pages/**: Chứa các thành phần trang chính của ứng dụng. Mỗi tệp trong thư mục này có thể đại diện cho một trang nhất định của ứng dụng.
 
-### `npm run eject`
+- **redux/**: Chứa các reducers và actions của Redux để quản lý trạng thái toàn cục của ứng dụng.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **routes/**: Chứa các tệp định nghĩa các tuyến đường của ứng dụng. Các tuyến đường có thể sử dụng để điều hướng giữa các trang hoặc phần khác nhau của ứng dụng.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **services/**: Chứa các dịch vụ (services) như các hàm gọi API, xử lý dữ liệu, ...
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **App.js**: Component chính của ứng dụng, là nơi bắt đầu của cây component trong React.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **constants.js**: Chứa các hằng số và cấu hình cho ứng dụng như các URL endpoint, giá trị hằng số, ...
 
-## Learn More
+- **index.js**: Tệp nhập (entry point) của ứng dụng React, nơi bạn render component chính và khởi động ứng dụng.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **utils.js**: Chứa các hàm tiện ích (utility functions) được sử dụng trong toàn bộ dự án.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Sử Dụng
 
-### Code Splitting
+Để chạy ứng dụng trong môi trường phát triển, sử dụng lệnh sau:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```sh
+npm start
