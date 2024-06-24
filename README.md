@@ -29,6 +29,7 @@
 
 ```sh
 npm start
+ ```
 
 ## Cấu Trúc Dự Án
 
