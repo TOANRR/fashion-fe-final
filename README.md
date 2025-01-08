@@ -14,7 +14,7 @@
 
 1. Clone repository:
     ```sh
-    git clone https://github.com/your-username/your-repo.git
+    git clone https://github.com/TOANRR/fashion-fe-final.git
     cd your-repo
     ```
 
